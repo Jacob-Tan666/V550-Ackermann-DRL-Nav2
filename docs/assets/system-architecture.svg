@@ -26,6 +26,9 @@
     <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ce38b"/>
     </marker>
+    <clipPath id="robotClip">
+      <rect x="840" y="146" width="184" height="128" rx="7"/>
+    </clipPath>
     <style>
       .title { font: 700 30px Inter, ui-sans-serif, system-ui, sans-serif; fill: #f5f8fb; letter-spacing: 0; }
       .subtitle { font: 400 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #94a8ba; letter-spacing: 0; }
@@ -34,7 +37,7 @@
       .nodeTitle { font: 700 16px Inter, ui-sans-serif, system-ui, sans-serif; fill: #eef4f8; letter-spacing: 0; }
       .nodeText { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #9fb0c2; letter-spacing: 0; }
       .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #9fb0c2; letter-spacing: 0; }
-      .flowLabel { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .flowLabel { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; paint-order: stroke fill; stroke: #091018; stroke-width: 5px; stroke-linejoin: round; }
       .panel { fill: #0f1822; stroke: #2a3947; stroke-width: 1.5; }
       .node { fill: #14212c; stroke: #334554; stroke-width: 1.25; }
       .cyanLine { fill: none; stroke: #49d6e9; stroke-width: 2.5; marker-end: url(#arrowCyan); }
@@ -74,22 +77,16 @@
     <text x="68" y="226" class="nodeText">Gazebo Classic &#8226; static map &#8226; physics</text>
     <text x="68" y="248" class="nodeText">forklifts &#8226; AGV &#8226; worker &#8226; randomized goals</text>
 
-    <rect x="605" y="132" width="390" height="156" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
-    <rect x="605" y="132" width="390" height="5" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
-    <g transform="translate(637 166)" stroke="#7ce38b" fill="none" stroke-width="2">
-      <rect x="8" y="3" width="48" height="30" rx="5"/>
-      <line x1="19" y1="3" x2="15" y2="-7"/>
-      <line x1="45" y1="3" x2="49" y2="-7"/>
-      <line x1="19" y1="33" x2="19" y2="42"/>
-      <line x1="45" y1="33" x2="45" y2="42"/>
-      <circle cx="32" cy="18" r="5" fill="#7ce38b" stroke="none"/>
-    </g>
-    <text x="720" y="169" class="eyebrow" fill="#7ce38b">SHARED DIGITAL TWIN</text>
-    <text x="720" y="201" class="section">WHEELTEC V550</text>
-    <text x="720" y="226" class="nodeText">Ackermann kinematics &#8226; rear-wheel drive</text>
-    <text x="720" y="248" class="nodeText">LaserScan &#8226; odometry &#8226; TF &#8226; joint states</text>
-    <rect x="720" y="262" width="177" height="20" rx="8" fill="#173629"/>
-    <text x="808" y="276" class="small" text-anchor="middle" fill="#7ce38b">0.45 m TURNING RADIUS</text>
+    <rect x="560" y="132" width="480" height="156" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
+    <rect x="560" y="132" width="480" height="5" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
+    <text x="585" y="162" class="eyebrow" fill="#7ce38b">SHARED DIGITAL TWIN</text>
+    <text x="585" y="192" class="section">WHEELTEC V550</text>
+    <text x="585" y="217" class="nodeText">Ackermann kinematics &#8226; rear-wheel drive</text>
+    <text x="585" y="239" class="nodeText">LaserScan &#8226; odometry &#8226; TF</text>
+    <rect x="585" y="254" width="203" height="22" rx="8" fill="#173629"/>
+    <text x="686" y="269" class="small" text-anchor="middle" fill="#7ce38b">0.45 m TURNING RADIUS</text>
+    <rect x="838" y="144" width="188" height="132" rx="8" fill="#091410" stroke="#7ce38b" stroke-width="1.5"/>
+    <image href="v550-robot.jpg" x="840" y="146" width="184" height="128" preserveAspectRatio="xMidYMid slice" clip-path="url(#robotClip)"/>
 
     <rect x="1160" y="142" width="400" height="136" rx="8" class="panel"/>
     <rect x="1554" y="142" width="6" height="136" rx="3" fill="#9aa8ff"/>
@@ -99,10 +96,10 @@
     <text x="1188" y="248" class="nodeText">CSV/JSON metrics &#8226; checkpoints &#8226; best policy</text>
   </g>
 
-  <path d="M 440 210 L 605 210" class="greenLine"/>
-  <text x="522" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">world state</text>
-  <path d="M 995 210 L 1160 210" class="greenLine"/>
-  <text x="1078" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">telemetry</text>
+  <path d="M 440 210 L 560 210" class="greenLine"/>
+  <text x="500" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">world state</text>
+  <path d="M 1040 210 L 1160 210" class="greenLine"/>
+  <text x="1100" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">telemetry</text>
 
   <!-- DRL panel -->
   <g filter="url(#shadow)">
@@ -159,8 +156,8 @@
   <path d="M 509 637 L 536 637" class="cyanLine"/>
   <path d="M 638 588 C 638 548 406 560 406 522" class="cyanLine" stroke-dasharray="7 6"/>
   <text x="522" y="550" class="flowLabel" text-anchor="middle" fill="#49d6e9">policy update</text>
-  <path d="M 685 288 C 650 334 174 334 174 424" class="cyanLine" stroke-dasharray="7 6"/>
-  <text x="375" y="348" class="flowLabel" text-anchor="middle" fill="#49d6e9">scan + odometry feedback</text>
+  <path d="M 685 288 C 640 310 56 298 56 350 L 56 412 L 174 412 L 174 424" class="cyanLine" stroke-dasharray="7 6"/>
+  <text x="365" y="313" class="flowLabel" text-anchor="middle" fill="#49d6e9">scan + odometry feedback</text>
 
   <rect x="72" y="719" width="669" height="32" rx="8" fill="#102832" stroke="#24505c"/>
   <text x="406" y="740" class="small" text-anchor="middle" fill="#49d6e9">OU EXPLORATION &#8226; TARGET SMOOTHING &#8226; DOMAIN RANDOMIZATION &#8226; GRADIENT CLIPPING</text>
@@ -219,17 +216,17 @@
   <path d="M 1423 522 C 1423 556 1248 548 1228 588" class="amberLine"/>
   <path d="M 1191 522 L 1191 588" class="amberLine"/>
   <path d="M 1294 637 L 1321 637" class="amberLine"/>
-  <path d="M 915 288 C 950 334 959 334 959 424" class="amberLine" stroke-dasharray="7 6"/>
-  <text x="974" y="348" class="flowLabel" fill="#ffb454">pose + sensors</text>
+  <path d="M 915 288 C 950 310 840 300 840 350 L 840 412 L 959 412 L 959 424" class="amberLine" stroke-dasharray="7 6"/>
+  <text x="940" y="313" class="flowLabel" text-anchor="middle" fill="#ffb454">pose + sensors</text>
 
   <rect x="857" y="719" width="669" height="32" rx="8" fill="#2a2217" stroke="#604a29"/>
   <text x="1191" y="740" class="small" text-anchor="middle" fill="#ffb454">AMCL &#8226; BEHAVIOR TREE &#8226; DYNAMIC COSTMAPS &#8226; HYBRID-A* &#8226; MPPI</text>
 
   <!-- Shared actuation -->
-  <path d="M 638 522 L 638 798 L 692 798 L 692 820" class="cyanLine"/>
-  <text x="650" y="797" class="flowLabel" fill="#49d6e9">speed + steering</text>
-  <path d="M 1423 686 L 1423 798 L 908 798 L 908 820" class="amberLine"/>
-  <text x="1310" y="793" class="flowLabel" text-anchor="middle" fill="#ffb454">smoothed velocity</text>
+  <path d="M 741 473 L 760 473 L 760 790 L 692 790 L 692 820" class="cyanLine"/>
+  <text x="748" y="707" class="flowLabel" text-anchor="end" fill="#49d6e9">speed + steering</text>
+  <path d="M 1423 686 L 1542 686 L 1542 790 L 908 790 L 908 820" class="amberLine"/>
+  <text x="1320" y="783" class="flowLabel" text-anchor="middle" fill="#ffb454">smoothed velocity</text>
 
   <g filter="url(#shadow)">
     <rect x="530" y="820" width="540" height="80" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
