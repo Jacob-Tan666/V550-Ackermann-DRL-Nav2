@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">V550 TD3 state, action, and reward design</title>
+  <desc id="desc">Three lidar and kinematic frames form a 165-dimensional state, which a TD3 actor maps to speed and steering commands while dense and terminal rewards evaluate each transition.</desc>
+
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#d6dee8" stroke-width="1" opacity="0.64"/>
+    </pattern>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#1e293b" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#087f8c"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16803a"/>
+    </marker>
+    <style>
+      .title { font: 700 29px Inter, ui-sans-serif, system-ui, sans-serif; fill: #10243e; letter-spacing: 0; }
+      .subtitle { font: 400 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #596b80; letter-spacing: 0; }
+      .eyebrow { font: 700 12px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .heading { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .nodeTitle { font: 700 16px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .body { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #586b82; letter-spacing: 0; }
+      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #5f7289; letter-spacing: 0; }
+      .tiny { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; fill: #65788f; letter-spacing: 0; }
+      .flow { fill: none; stroke: #087f8c; stroke-width: 2.5; marker-end: url(#arrowTeal); }
+      .feedback { fill: none; stroke: #16803a; stroke-width: 2.5; marker-end: url(#arrowGreen); stroke-dasharray: 8 6; }
+      .panel { fill: #ffffff; stroke: #c5d1dd; stroke-width: 1.5; }
+      .node { fill: #f8fafc; stroke: #c5d1dd; stroke-width: 1.25; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="760" fill="#f3f6fa"/>
+  <rect width="1440" height="760" fill="url(#grid)"/>
+  <rect x="1" y="1" width="1438" height="758" rx="8" fill="none" stroke="#c5d1dd" stroke-width="2"/>
+
+  <g transform="translate(40 31)">
+    <rect x="0" y="2" width="5" height="62" rx="2" fill="#087f8c"/>
+    <text x="23" y="29" class="title">TD3 OBSERVATION &amp; CONTROL DESIGN</text>
+    <text x="23" y="54" class="subtitle">Temporal lidar encoding, Ackermann-aware action mapping, and shaped navigation rewards</text>
+  </g>
+  <g transform="translate(1040 38)">
+    <rect width="110" height="31" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="55" y="20" class="small" text-anchor="middle" fill="#087f8c">3 FRAMES</text>
+    <rect x="120" width="110" height="31" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="175" y="20" class="small" text-anchor="middle" fill="#087f8c">165-D STATE</text>
+    <rect x="240" width="110" height="31" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="295" y="20" class="small" text-anchor="middle" fill="#087f8c">2-D ACTION</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="40" y="130" width="300" height="410" rx="8" class="panel"/>
+    <rect x="40" y="130" width="300" height="5" rx="2" fill="#4959c7"/>
+  </g>
+  <text x="64" y="165" class="eyebrow" fill="#4959c7">TEMPORAL OBSERVATION</text>
+  <text x="64" y="193" class="heading">Three synchronized frames</text>
+
+  <g>
+    <rect x="64" y="216" width="252" height="86" rx="8" class="node"/>
+    <rect x="64" y="216" width="6" height="86" rx="3" fill="#8b5cf6"/>
+    <text x="84" y="243" class="nodeTitle">Frame t-2</text>
+    <text x="84" y="265" class="body">50 min-pooled lidar bins</text>
+    <text x="84" y="285" class="body">distance, cos, sin, v, steer</text>
+    <path d="M 250 275 L 260 258 L 270 279 L 280 250 L 290 272" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+
+    <rect x="64" y="320" width="252" height="86" rx="8" class="node"/>
+    <rect x="64" y="320" width="6" height="86" rx="3" fill="#4959c7"/>
+    <text x="84" y="347" class="nodeTitle">Frame t-1</text>
+    <text x="84" y="369" class="body">50 min-pooled lidar bins</text>
+    <text x="84" y="389" class="body">distance, cos, sin, v, steer</text>
+    <path d="M 250 379 L 260 362 L 270 383 L 280 354 L 290 376" fill="none" stroke="#4959c7" stroke-width="2"/>
+
+    <rect x="64" y="424" width="252" height="86" rx="8" class="node"/>
+    <rect x="64" y="424" width="6" height="86" rx="3" fill="#087f8c"/>
+    <text x="84" y="451" class="nodeTitle">Frame t</text>
+    <text x="84" y="473" class="body">50 min-pooled lidar bins</text>
+    <text x="84" y="493" class="body">distance, cos, sin, v, steer</text>
+    <path d="M 250 483 L 260 466 L 270 487 L 280 458 L 290 480" fill="none" stroke="#087f8c" stroke-width="2"/>
+  </g>
+
+  <path d="M 340 335 L 390 335" class="flow"/>
+  <text x="365" y="321" class="tiny" text-anchor="middle">stack</text>
+
+  <g filter="url(#shadow)">
+    <rect x="390" y="190" width="225" height="290" rx="8" class="panel"/>
+    <rect x="390" y="190" width="225" height="5" rx="2" fill="#087f8c"/>
+  </g>
+  <text x="414" y="225" class="eyebrow" fill="#087f8c">STATE ASSEMBLY</text>
+  <text x="414" y="254" class="heading">165-D vector</text>
+  <rect x="414" y="278" width="177" height="62" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="502" y="303" class="nodeTitle" text-anchor="middle">150 lidar values</text>
+  <text x="502" y="324" class="small" text-anchor="middle">50 bins × 3 frames</text>
+  <rect x="414" y="354" width="177" height="62" rx="8" fill="#eef0fb" stroke="#b6bce9"/>
+  <text x="502" y="379" class="nodeTitle" text-anchor="middle">15 kinematic values</text>
+  <text x="502" y="400" class="small" text-anchor="middle">5 values × 3 frames</text>
+  <text x="502" y="445" class="body" text-anchor="middle">normalized and finite-clamped</text>
+
+  <path d="M 615 335 L 665 335" class="flow"/>
+
+  <g filter="url(#shadow)">
+    <rect x="665" y="190" width="230" height="290" rx="8" class="panel"/>
+    <rect x="665" y="190" width="230" height="5" rx="2" fill="#087f8c"/>
+  </g>
+  <text x="689" y="225" class="eyebrow" fill="#087f8c">TD3 ACTOR</text>
+  <text x="689" y="254" class="heading">Policy inference</text>
+  <rect x="689" y="278" width="182" height="58" rx="8" class="node"/>
+  <text x="780" y="303" class="nodeTitle" text-anchor="middle">Conv1D encoder</text>
+  <text x="780" y="323" class="small" text-anchor="middle">temporal lidar features</text>
+  <rect x="689" y="350" width="182" height="58" rx="8" class="node"/>
+  <text x="780" y="375" class="nodeTitle" text-anchor="middle">MLP fusion</text>
+  <text x="780" y="395" class="small" text-anchor="middle">scan + kinematics</text>
+  <rect x="712" y="424" width="136" height="34" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="780" y="446" class="small" text-anchor="middle" fill="#087f8c">action ∈ [-1, 1]²</text>
+
+  <path d="M 895 335 L 945 335" class="flow"/>
+
+  <g filter="url(#shadow)">
+    <rect x="945" y="190" width="455" height="290" rx="8" class="panel"/>
+    <rect x="945" y="190" width="455" height="5" rx="2" fill="#16803a"/>
+  </g>
+  <text x="969" y="225" class="eyebrow" fill="#16803a">ACKERMANN ACTION MAPPING</text>
+  <text x="969" y="254" class="heading">Normalized policy to feasible motion</text>
+  <rect x="969" y="280" width="180" height="130" rx="8" fill="#f0faf3" stroke="#93c5a3"/>
+  <text x="1059" y="308" class="nodeTitle" text-anchor="middle">Linear command</text>
+  <text x="1059" y="338" class="heading" text-anchor="middle" fill="#16803a">±0.45 m/s</text>
+  <text x="1059" y="365" class="body" text-anchor="middle">forward / reverse scale</text>
+  <text x="1059" y="387" class="body" text-anchor="middle">rolling-drag variation</text>
+  <rect x="1172" y="280" width="204" height="130" rx="8" fill="#f0faf3" stroke="#93c5a3"/>
+  <text x="1274" y="308" class="nodeTitle" text-anchor="middle">Steering command</text>
+  <text x="1274" y="338" class="heading" text-anchor="middle" fill="#16803a">≤ 0.34 rad</text>
+  <text x="1274" y="365" class="body" text-anchor="middle">speed-aware limit</text>
+  <text x="1274" y="387" class="body" text-anchor="middle">response smoothing</text>
+  <rect x="1008" y="428" width="329" height="31" rx="8" fill="#ddf2e4" stroke="#93c5a3"/>
+  <text x="1172" y="448" class="small" text-anchor="middle" fill="#16803a">zero steering below minimum motion speed</text>
+
+  <path d="M 1172 480 L 1172 526" class="feedback"/>
+  <text x="1185" y="510" class="tiny" fill="#16803a">environment feedback</text>
+
+  <g filter="url(#shadow)">
+    <rect x="390" y="526" width="1010" height="188" rx="8" class="panel"/>
+    <rect x="390" y="526" width="1010" height="5" rx="2" fill="#9b2fb3"/>
+  </g>
+  <text x="414" y="560" class="eyebrow" fill="#9b2fb3">REWARD &amp; TERMINAL SIGNAL</text>
+  <rect x="414" y="581" width="172" height="94" rx="8" fill="#eaf8ee" stroke="#8fc19f"/>
+  <text x="500" y="610" class="nodeTitle" text-anchor="middle">Goal reached</text>
+  <text x="500" y="646" class="heading" text-anchor="middle" fill="#16803a">+200</text>
+  <rect x="604" y="581" width="172" height="94" rx="8" fill="#fff0f0" stroke="#e4a2a2"/>
+  <text x="690" y="610" class="nodeTitle" text-anchor="middle">Collision</text>
+  <text x="690" y="646" class="heading" text-anchor="middle" fill="#b42318">-200</text>
+  <rect x="794" y="581" width="270" height="94" rx="8" fill="#f0faf3" stroke="#93c5a3"/>
+  <text x="929" y="608" class="nodeTitle" text-anchor="middle">Dense positive terms</text>
+  <text x="929" y="633" class="body" text-anchor="middle">goal progress • motion alignment</text>
+  <text x="929" y="655" class="small" text-anchor="middle">distance delta + heading cosine</text>
+  <rect x="1082" y="581" width="294" height="94" rx="8" fill="#fff7ed" stroke="#e6bd84"/>
+  <text x="1229" y="608" class="nodeTitle" text-anchor="middle">Dense penalties</text>
+  <text x="1229" y="633" class="body" text-anchor="middle">clearance • curvature • steer delta</text>
+  <text x="1229" y="655" class="small" text-anchor="middle">stagnation • elapsed time • timeout</text>
+  <text x="895" y="699" class="tiny" text-anchor="middle">reward is clipped to [-200, 200] before the transition enters replay</text>
+
+  <text x="40" y="742" class="small">ROS 2 observation loop • PyTorch TD3 • V550 Ackermann control</text>
+</svg>

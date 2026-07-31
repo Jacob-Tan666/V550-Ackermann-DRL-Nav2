@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">V550 industrial Nav2 navigation flow</title>
+  <desc id="desc">A light-themed closed-loop diagram showing warehouse perception, dynamic obstacle prediction, layered Nav2 costmaps, Hybrid-A-star planning, MPPI Ackermann control, velocity smoothing, command adaptation, and V550 feedback.</desc>
+
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#d6dee8" stroke-width="1" opacity="0.64"/>
+    </pattern>
+    <filter id="shadow" x="-18%" y="-22%" width="136%" height="154%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#1e293b" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b85f00"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#087f8c"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16803a"/>
+    </marker>
+    <clipPath id="robotPhotoClip">
+      <rect x="1118" y="214" width="246" height="146" rx="7"/>
+    </clipPath>
+    <style>
+      .title { font: 700 29px Inter, ui-sans-serif, system-ui, sans-serif; fill: #10243e; letter-spacing: 0; }
+      .subtitle { font: 400 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #596b80; letter-spacing: 0; }
+      .eyebrow { font: 700 12px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .heading { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .nodeTitle { font: 700 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .body { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #586b82; letter-spacing: 0; }
+      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #5f7289; letter-spacing: 0; }
+      .tiny { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; fill: #65788f; letter-spacing: 0; }
+      .label { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; paint-order: stroke fill; stroke: #f3f6fa; stroke-width: 6px; stroke-linejoin: round; }
+      .plan { fill: none; stroke: #b85f00; stroke-width: 2.5; marker-end: url(#arrowAmber); }
+      .prediction { fill: none; stroke: #7c3aed; stroke-width: 2.3; marker-end: url(#arrowPurple); stroke-dasharray: 8 6; }
+      .command { fill: none; stroke: #087f8c; stroke-width: 2.6; marker-end: url(#arrowTeal); }
+      .feedback { fill: none; stroke: #16803a; stroke-width: 2.4; marker-end: url(#arrowGreen); stroke-dasharray: 8 6; }
+      .panel { fill: #ffffff; stroke: #c5d1dd; stroke-width: 1.5; }
+      .node { fill: #f8fafc; stroke: #c5d1dd; stroke-width: 1.25; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="820" fill="#f3f6fa"/>
+  <rect width="1440" height="820" fill="url(#grid)"/>
+  <rect x="1" y="1" width="1438" height="818" rx="8" fill="none" stroke="#c5d1dd" stroke-width="2"/>
+
+  <g transform="translate(40 31)">
+    <rect x="0" y="2" width="5" height="62" rx="2" fill="#b85f00"/>
+    <text x="23" y="29" class="title">INDUSTRIAL NAV2 CLOSED LOOP</text>
+    <text x="23" y="54" class="subtitle">Dynamic warehouse perception, Ackermann-aware planning, smoothed actuation, and V550 feedback</text>
+  </g>
+  <g transform="translate(998 38)">
+    <rect width="116" height="31" rx="8" fill="#fff3e3" stroke="#e2ba80"/>
+    <text x="58" y="20" class="small" text-anchor="middle" fill="#b85f00">HYBRID-A*</text>
+    <rect x="126" width="92" height="31" rx="8" fill="#fff3e3" stroke="#e2ba80"/>
+    <text x="172" y="20" class="small" text-anchor="middle" fill="#b85f00">MPPI</text>
+    <rect x="228" width="132" height="31" rx="8" fill="#f0faf3" stroke="#93c5a3"/>
+    <text x="294" y="20" class="small" text-anchor="middle" fill="#16803a">0.45 m RADIUS</text>
+  </g>
+
+  <!-- Warehouse inputs -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="126" width="292" height="536" rx="8" class="panel"/>
+    <rect x="40" y="126" width="292" height="5" rx="2" fill="#7c3aed"/>
+  </g>
+  <text x="64" y="160" class="eyebrow" fill="#7c3aed">WAREHOUSE CONTEXT</text>
+  <text x="64" y="188" class="heading">Perception and intent</text>
+
+  <rect x="64" y="214" width="244" height="94" rx="8" class="node"/>
+  <rect x="64" y="214" width="6" height="94" rx="3" fill="#b85f00"/>
+  <text x="84" y="242" class="nodeTitle">Mission + Static Map</text>
+  <text x="84" y="266" class="body">goal pose and occupancy map</text>
+  <text x="84" y="287" class="tiny">behavior tree navigation request</text>
+
+  <rect x="64" y="330" width="244" height="94" rx="8" class="node"/>
+  <rect x="64" y="330" width="6" height="94" rx="3" fill="#16803a"/>
+  <text x="84" y="358" class="nodeTitle">AMCL + TF</text>
+  <text x="84" y="382" class="body">map-relative V550 pose</text>
+  <text x="84" y="403" class="tiny">map &#8594; odom &#8594; base footprint</text>
+
+  <rect x="64" y="446" width="244" height="120" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+  <rect x="64" y="446" width="6" height="120" rx="3" fill="#7c3aed"/>
+  <text x="84" y="474" class="nodeTitle">Dynamic Traffic</text>
+  <text x="84" y="498" class="body">2 forklifts &#8226; AGV &#8226; worker</text>
+  <text x="84" y="520" class="body">3.0 s swept-path prediction</text>
+  <rect x="84" y="536" width="198" height="18" rx="5" fill="#e4dcf8"/>
+  <text x="183" y="549" class="tiny" text-anchor="middle" fill="#7c3aed">/predicted_dynamic_obstacles</text>
+
+  <rect x="64" y="590" width="244" height="44" rx="8" fill="#eaf8ee" stroke="#93c5a3"/>
+  <text x="186" y="617" class="small" text-anchor="middle" fill="#16803a">LaserScan &#8226; odometry &#8226; joint state</text>
+
+  <!-- Nav2 decision core -->
+  <g filter="url(#shadow)">
+    <rect x="382" y="126" width="656" height="536" rx="8" class="panel"/>
+    <rect x="382" y="126" width="656" height="5" rx="2" fill="#b85f00"/>
+  </g>
+  <text x="406" y="160" class="eyebrow" fill="#b85f00">NAV2 DECISION CORE</text>
+  <text x="406" y="188" class="heading">Plan globally, control locally</text>
+
+  <rect x="406" y="214" width="180" height="104" rx="8" class="node"/>
+  <rect x="406" y="214" width="180" height="4" rx="2" fill="#b85f00"/>
+  <text x="496" y="244" class="nodeTitle" text-anchor="middle">Global Costmap</text>
+  <text x="496" y="269" class="body" text-anchor="middle">static + obstacle layers</text>
+  <text x="496" y="291" class="tiny" text-anchor="middle">inflated predicted occupancy</text>
+
+  <rect x="616" y="214" width="180" height="104" rx="8" fill="#fff7ed" stroke="#e6bd84"/>
+  <rect x="616" y="214" width="180" height="4" rx="2" fill="#b85f00"/>
+  <text x="706" y="244" class="nodeTitle" text-anchor="middle">Smac Hybrid-A*</text>
+  <text x="706" y="269" class="body" text-anchor="middle">Ackermann motion model</text>
+  <text x="706" y="291" class="tiny" text-anchor="middle">kinematically feasible path</text>
+
+  <rect x="826" y="214" width="188" height="104" rx="8" class="node"/>
+  <rect x="826" y="214" width="188" height="4" rx="2" fill="#b85f00"/>
+  <text x="920" y="244" class="nodeTitle" text-anchor="middle">Smoothed Path</text>
+  <text x="920" y="269" class="body" text-anchor="middle">curvature-aware route</text>
+  <text x="920" y="291" class="tiny" text-anchor="middle">controller reference trajectory</text>
+
+  <path d="M 586 266 L 616 266" class="plan"/>
+  <path d="M 796 266 L 826 266" class="plan"/>
+
+  <rect x="406" y="364" width="180" height="112" rx="8" class="node"/>
+  <rect x="406" y="364" width="180" height="4" rx="2" fill="#7c3aed"/>
+  <text x="496" y="394" class="nodeTitle" text-anchor="middle">Local Costmap</text>
+  <text x="496" y="419" class="body" text-anchor="middle">scan + dynamic prediction</text>
+  <text x="496" y="441" class="tiny" text-anchor="middle">rolling obstacle context</text>
+  <rect x="450" y="451" width="92" height="16" rx="4" fill="#e4dcf8"/>
+  <text x="496" y="463" class="tiny" text-anchor="middle" fill="#7c3aed">short horizon</text>
+
+  <rect x="616" y="364" width="180" height="112" rx="8" fill="#fff7ed" stroke="#e6bd84"/>
+  <rect x="616" y="364" width="180" height="4" rx="2" fill="#b85f00"/>
+  <text x="706" y="394" class="nodeTitle" text-anchor="middle">MPPI Controller</text>
+  <text x="706" y="419" class="body" text-anchor="middle">Ackermann trajectory rollouts</text>
+  <text x="706" y="441" class="tiny" text-anchor="middle">path, obstacle, goal critics</text>
+  <rect x="651" y="451" width="110" height="16" rx="4" fill="#fde5c5"/>
+  <text x="706" y="463" class="tiny" text-anchor="middle" fill="#b85f00">bounded curvature</text>
+
+  <rect x="826" y="364" width="188" height="112" rx="8" class="node"/>
+  <rect x="826" y="364" width="188" height="4" rx="2" fill="#087f8c"/>
+  <text x="920" y="394" class="nodeTitle" text-anchor="middle">Raw Velocity</text>
+  <text x="920" y="419" class="body" text-anchor="middle">linear.x + angular.z</text>
+  <text x="920" y="441" class="tiny" text-anchor="middle">controller server output</text>
+  <rect x="865" y="451" width="110" height="16" rx="4" fill="#d8f0f2"/>
+  <text x="920" y="463" class="tiny" text-anchor="middle" fill="#087f8c">/cmd_vel_raw</text>
+
+  <path d="M 586 420 L 616 420" class="plan"/>
+  <path d="M 796 420 L 826 420" class="command"/>
+  <path d="M 920 318 L 920 342 L 706 342 L 706 364" class="plan"/>
+
+  <rect x="406" y="520" width="256" height="94" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="534" y="549" class="nodeTitle" text-anchor="middle">Velocity Smoother</text>
+  <text x="534" y="574" class="body" text-anchor="middle">acceleration and deceleration limits</text>
+  <text x="534" y="596" class="tiny" text-anchor="middle" fill="#087f8c">/cmd_vel_raw &#8594; /cmd_vel_nav</text>
+
+  <rect x="702" y="520" width="312" height="94" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="858" y="549" class="nodeTitle" text-anchor="middle">Ackermann Command Adapter</text>
+  <text x="858" y="574" class="body" text-anchor="middle">yaw rate &#8594; bounded steering angle</text>
+  <text x="858" y="596" class="tiny" text-anchor="middle" fill="#087f8c">rate limit &#8226; timeout stop &#8226; /cmd_vel</text>
+
+  <path d="M 920 476 L 920 496 L 534 496 L 534 520" class="command"/>
+  <path d="M 662 567 L 702 567" class="command"/>
+
+  <!-- V550 actuation and feedback -->
+  <g filter="url(#shadow)">
+    <rect x="1088" y="126" width="312" height="536" rx="8" class="panel"/>
+    <rect x="1088" y="126" width="312" height="5" rx="2" fill="#16803a"/>
+  </g>
+  <text x="1112" y="160" class="eyebrow" fill="#16803a">V550 DIGITAL TWIN</text>
+  <text x="1112" y="188" class="heading">Execute and observe</text>
+
+  <rect x="1116" y="212" width="250" height="150" rx="8" fill="#eef3f6" stroke="#93c5a3" stroke-width="1.5"/>
+  <!-- Native illustration remains visible if a renderer blocks linked raster images. -->
+  <g clip-path="url(#robotPhotoClip)">
+    <rect x="1118" y="214" width="246" height="146" fill="#eef3f6"/>
+    <path d="M 1118 252 L 1364 252 M 1118 290 L 1364 290 M 1118 328 L 1364 328" stroke="#d5dee8"/>
+    <ellipse cx="1242" cy="338" rx="74" ry="14" fill="#8ca0b5" opacity="0.24"/>
+    <g transform="translate(1242 295) rotate(-8)">
+      <rect x="-58" y="-35" width="22" height="20" rx="5" fill="#18283b"/>
+      <rect x="36" y="-35" width="22" height="20" rx="5" fill="#18283b"/>
+      <rect x="-58" y="15" width="22" height="20" rx="5" fill="#18283b"/>
+      <rect x="36" y="15" width="22" height="20" rx="5" fill="#18283b"/>
+      <path d="M -46 -31 L 37 -31 L 51 -17 L 51 17 L 37 31 L -46 31 L -53 18 L -53 -18 Z" fill="#263d58" stroke="#10243e" stroke-width="2"/>
+      <rect x="-35" y="-23" width="64" height="46" rx="6" fill="#e9eef3" stroke="#7d91a8" stroke-width="1.5"/>
+      <rect x="-25" y="-16" width="43" height="32" rx="4" fill="#16803a"/>
+      <circle cx="-3" cy="0" r="12" fill="#ffffff" stroke="#4959c7" stroke-width="3"/>
+    </g>
+  </g>
+  <image href="v550-robot.jpg" x="1118" y="214" width="246" height="146" preserveAspectRatio="xMidYMid slice" clip-path="url(#robotPhotoClip)"/>
+
+  <rect x="1116" y="378" width="250" height="106" rx="8" fill="#eaf8ee" stroke="#93c5a3"/>
+  <text x="1241" y="407" class="nodeTitle" text-anchor="middle">Gazebo Drive Plugin</text>
+  <text x="1241" y="432" class="body" text-anchor="middle">rear-wheel drive + front steering</text>
+  <text x="1241" y="454" class="tiny" text-anchor="middle">signed speed and steering command</text>
+  <rect x="1182" y="463" width="118" height="15" rx="4" fill="#d9f0e0"/>
+  <text x="1241" y="474" class="tiny" text-anchor="middle" fill="#16803a">Ackermann kinematics</text>
+
+  <rect x="1116" y="510" width="250" height="104" rx="8" class="node"/>
+  <text x="1241" y="539" class="nodeTitle" text-anchor="middle">Sensor Feedback</text>
+  <text x="1241" y="564" class="body" text-anchor="middle">scan &#8226; odometry &#8226; TF</text>
+  <text x="1241" y="586" class="tiny" text-anchor="middle">localization and costmap updates</text>
+
+  <path d="M 1014 567 L 1060 567 L 1060 431 L 1116 431" class="command"/>
+  <text x="1069" y="495" class="label" text-anchor="middle" fill="#087f8c" transform="rotate(-90 1069 495)">/cmd_vel</text>
+  <path d="M 1241 484 L 1241 510" class="feedback"/>
+
+  <!-- Prediction bus enters both costmaps without crossing nodes. -->
+  <path d="M 308 506 L 352 506 L 352 336 L 496 336 L 496 318" class="prediction"/>
+  <path d="M 352 506 L 352 488 L 496 488 L 496 476" class="prediction"/>
+  <text x="361" y="347" class="label" fill="#7c3aed">predicted occupancy</text>
+
+  <!-- Closed-loop feedback stays below the functional panels. -->
+  <path d="M 1241 614 L 1241 704 L 186 704 L 186 634" class="feedback"/>
+  <text x="710" y="723" class="small" text-anchor="middle" fill="#16803a">closed-loop feedback: robot state updates localization, local costmaps, visualization, and the next control cycle</text>
+  <rect x="40" y="750" width="1360" height="36" rx="8" fill="#ffffff" stroke="#c5d1dd"/>
+  <text x="720" y="773" class="small" text-anchor="middle">/cmd_vel_raw &#8594; velocity smoother &#8594; /cmd_vel_nav &#8594; Ackermann adapter &#8594; /cmd_vel &#8594; V550 drive plugin</text>
+</svg>

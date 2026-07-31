@@ -82,6 +82,12 @@ with Hybrid-A* planning and MPPI control before reaching the shared drive plugin
 
 ### DRL state, action, and reward
 
+<p align="center">
+  <a href="./docs/assets/td3-state-action-reward.png">
+    <img src="./docs/assets/td3-state-action-reward.png" width="100%" alt="V550 Ackermann TD3 temporal state, action mapping, and reward design">
+  </a>
+</p>
+
 With the default `SCAN_BINS=50` and `FRAME_STACK=3`, the TD3 state has 165 values:
 50 minimum-pooled lidar bins plus five kinematic values per frame (normalized goal
 distance, goal-bearing cosine/sine, previous speed, and previous steering). The
@@ -95,12 +101,24 @@ configurable penalty.
 
 ### Parallel training data flow
 
+<p align="center">
+  <a href="./docs/assets/parallel-training-flow.png">
+    <img src="./docs/assets/parallel-training-flow.png" width="100%" alt="V550 Ackermann multi-process TD3 sampling, centralized learning, weight synchronization, and evaluation flow">
+  </a>
+</p>
+
 Each sampling worker owns an isolated Gazebo/ROS 2 environment and an inference-only
 actor. Workers send transitions to one learner process, which owns the replay buffer,
 optimizers, TensorBoard writer, evaluation environment, and checkpoints. The learner
 periodically publishes the latest actor weights back to every worker.
 
 ### Industrial navigation data flow
+
+<p align="center">
+  <a href="./docs/assets/industrial-nav2-flow.png">
+    <img src="./docs/assets/industrial-nav2-flow.png" width="100%" alt="V550 Ackermann industrial Nav2 dynamic prediction, planning, MPPI control, and actuation feedback loop">
+  </a>
+</p>
 
 The industrial launch starts Gazebo, robot-state publishing, AMCL, Nav2 servers,
 dynamic obstacles, command conversion, TF synchronization, trajectory history, and

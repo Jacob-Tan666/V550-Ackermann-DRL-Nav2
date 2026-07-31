@@ -58,15 +58,33 @@ TD3 与 Nav2 两条自主导航路径共享同一套 V550 传感器、运动学�
 
 ### TD3 状态、动作与奖励
 
+<p align="center">
+  <a href="./docs/assets/td3-state-action-reward.png">
+    <img src="./docs/assets/td3-state-action-reward.png" width="100%" alt="V550 Ackermann TD3 时序状态、动作映射与奖励函数设计图">
+  </a>
+</p>
+
 默认 `SCAN_BINS=50`、`FRAME_STACK=3` 时，状态空间包含 165 个数值：每帧 50 个最小池化雷达扇区，以及归一化目标距离、目标方向余弦/正弦、上一时刻速度和转向角共 5 个运动学量。Actor 输出两个 `[-1, 1]` 范围内的动作，环境将其映射为有符号车速和随速度变化的转向上限。
 
 奖励函数综合目标距离进展、运动方向一致性与安全间距，并对高速大曲率、突变转向、停滞和时间消耗施加惩罚。到达目标和发生碰撞对应 `+200` 与 `-200` 的终止奖励，超时惩罚可通过环境变量配置。
 
 ### 并行训练数据流
 
+<p align="center">
+  <a href="./docs/assets/parallel-training-flow.png">
+    <img src="./docs/assets/parallel-training-flow.png" width="100%" alt="V550 Ackermann 多进程 TD3 采样、集中学习、参数同步与评估数据流图">
+  </a>
+</p>
+
 每个采样进程独占一个 Gazebo/ROS 2 环境和仅用于推理的 Actor。采样进程将 transition 发送给唯一的 learner；learner 负责经验回放、优化器、TensorBoard、评估环境和检查点，并周期性向各采样进程广播最新 Actor 参数。
 
 ### 工业导航数据流
+
+<p align="center">
+  <a href="./docs/assets/industrial-nav2-flow.png">
+    <img src="./docs/assets/industrial-nav2-flow.png" width="100%" alt="V550 Ackermann 工业 Nav2 动态预测、路径规划、MPPI 控制与执行反馈闭环图">
+  </a>
+</p>
 
 工业导航入口会启动 Gazebo、robot state publisher、AMCL、Nav2 服务、动态障碍物、速度指令转换、TF 同步、轨迹记录和 RViz。Nav2 将平滑后的速度发布到 `/cmd_vel_nav`；适配器把 `angular.z` 转换为有界转向角，再通过 `/cmd_vel` 发送给 V550 Gazebo 驱动插件。
 
