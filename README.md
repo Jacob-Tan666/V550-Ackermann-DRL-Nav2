@@ -49,8 +49,8 @@ V550 根据激光雷达观测、目标相对几何关系和近期控制历史，
 ## 系统架构
 
 <p align="center">
-  <a href="./docs/assets/system-architecture.svg">
-    <img src="./docs/assets/system-architecture.svg" width="100%" alt="V550 Ackermann TD3、Nav2、Gazebo 数字孪生和执行网关系统架构图">
+  <a href="./docs/assets/system-architecture.png">
+    <img src="./docs/assets/system-architecture.png" width="100%" alt="V550 Ackermann TD3、Nav2、Gazebo 数字孪生和执行网关系统架构图，包含 V550 实车照片">
   </a>
 </p>
 

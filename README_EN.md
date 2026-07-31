@@ -70,8 +70,8 @@ relative goal geometry, and recent control history.
 ## System Architecture
 
 <p align="center">
-  <a href="./docs/assets/system-architecture.svg">
-    <img src="./docs/assets/system-architecture.svg" width="100%" alt="V550 Ackermann system architecture showing the TD3 learning loop, industrial Nav2 pipeline, shared Gazebo digital twin, observability, and Ackermann actuation gateway">
+  <a href="./docs/assets/system-architecture.png">
+    <img src="./docs/assets/system-architecture.png" width="100%" alt="V550 Ackermann system architecture with a real V550 robot photo, TD3 learning loop, industrial Nav2 pipeline, shared Gazebo digital twin, observability, and Ackermann actuation gateway">
   </a>
 </p>
 

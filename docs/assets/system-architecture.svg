@@ -109,6 +109,7 @@
       <rect x="849" y="253" width="44" height="15" rx="5" fill="#ffffff" stroke="#9fb0c1"/>
       <text x="871" y="264" class="small" text-anchor="middle" fill="#16803a">V550</text>
     </g>
+    <image href="v550-robot.jpg" x="840" y="146" width="184" height="128" preserveAspectRatio="xMidYMid slice" clip-path="url(#robotClip)"/>
 
     <rect x="1160" y="142" width="400" height="136" rx="8" class="panel"/>
     <rect x="1554" y="142" width="6" height="136" rx="3" fill="#4959c7"/>
