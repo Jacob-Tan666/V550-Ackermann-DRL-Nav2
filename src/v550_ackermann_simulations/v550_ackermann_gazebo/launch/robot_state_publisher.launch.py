@@ -32,9 +32,7 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="false")
     urdf_file = LaunchConfiguration("urdf_file")
-    default_urdf_file = os.path.join(
-        v550_ackermann_description_dir, "urdf", wheeltec_model, urdf_variant + ".urdf"
-    )
+    default_urdf_file = os.path.join(v550_ackermann_description_dir, "urdf", wheeltec_model, urdf_variant + ".urdf")
 
     return LaunchDescription(
         [

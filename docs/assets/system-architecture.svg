@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="940" viewBox="0 0 1600 940" role="img" aria-labelledby="title desc">
   <title id="title">V550 Ackermann autonomous navigation system architecture</title>
-  <desc id="desc">A shared Gazebo V550 digital twin connects a TD3 and SAC learning loop, an industrial Nav2 autonomy pipeline, observability tools, and an Ackermann actuation gateway.</desc>
+  <desc id="desc">A shared Gazebo V550 digital twin connects a TD3 learning loop, an industrial Nav2 autonomy pipeline, observability tools, and an Ackermann actuation gateway.</desc>
 
   <defs>
     <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#23313d" stroke-width="1" opacity="0.24"/>
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#c7d2df" stroke-width="1" opacity="0.62"/>
     </pattern>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.32"/>
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1e293b" flood-opacity="0.13"/>
     </filter>
     <filter id="cyanGlow" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="3" result="blur"/>
@@ -18,131 +18,131 @@
       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <marker id="arrowCyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#49d6e9"/>
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#087f8c"/>
     </marker>
     <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb454"/>
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b85f00"/>
     </marker>
     <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ce38b"/>
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16803a"/>
     </marker>
     <clipPath id="robotClip">
       <rect x="840" y="146" width="184" height="128" rx="7"/>
     </clipPath>
     <style>
-      .title { font: 700 30px Inter, ui-sans-serif, system-ui, sans-serif; fill: #f5f8fb; letter-spacing: 0; }
-      .subtitle { font: 400 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #94a8ba; letter-spacing: 0; }
+      .title { font: 700 30px Inter, ui-sans-serif, system-ui, sans-serif; fill: #10243e; letter-spacing: 0; }
+      .subtitle { font: 400 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #56677a; letter-spacing: 0; }
       .eyebrow { font: 700 12px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
-      .section { font: 700 20px Inter, ui-sans-serif, system-ui, sans-serif; fill: #f5f8fb; letter-spacing: 0; }
-      .nodeTitle { font: 700 16px Inter, ui-sans-serif, system-ui, sans-serif; fill: #eef4f8; letter-spacing: 0; }
-      .nodeText { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #9fb0c2; letter-spacing: 0; }
-      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #9fb0c2; letter-spacing: 0; }
-      .flowLabel { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; paint-order: stroke fill; stroke: #091018; stroke-width: 5px; stroke-linejoin: round; }
-      .panel { fill: #0f1822; stroke: #2a3947; stroke-width: 1.5; }
-      .node { fill: #14212c; stroke: #334554; stroke-width: 1.25; }
-      .cyanLine { fill: none; stroke: #49d6e9; stroke-width: 2.5; marker-end: url(#arrowCyan); }
-      .amberLine { fill: none; stroke: #ffb454; stroke-width: 2.5; marker-end: url(#arrowAmber); }
-      .greenLine { fill: none; stroke: #7ce38b; stroke-width: 2.5; marker-end: url(#arrowGreen); }
+      .section { font: 700 20px Inter, ui-sans-serif, system-ui, sans-serif; fill: #16243a; letter-spacing: 0; }
+      .nodeTitle { font: 700 16px Inter, ui-sans-serif, system-ui, sans-serif; fill: #1a2b42; letter-spacing: 0; }
+      .nodeText { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #56677a; letter-spacing: 0; }
+      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #607188; letter-spacing: 0; }
+      .flowLabel { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; paint-order: stroke fill; stroke: #f3f6fa; stroke-width: 6px; stroke-linejoin: round; }
+      .panel { fill: #ffffff; stroke: #c5d1dd; stroke-width: 1.5; }
+      .node { fill: #f8fafc; stroke: #c5d1dd; stroke-width: 1.25; }
+      .cyanLine { fill: none; stroke: #087f8c; stroke-width: 2.5; marker-end: url(#arrowCyan); }
+      .amberLine { fill: none; stroke: #b85f00; stroke-width: 2.5; marker-end: url(#arrowAmber); }
+      .greenLine { fill: none; stroke: #16803a; stroke-width: 2.5; marker-end: url(#arrowGreen); }
     </style>
   </defs>
 
-  <rect width="1600" height="940" fill="#091018"/>
+  <rect width="1600" height="940" fill="#f3f6fa"/>
   <rect width="1600" height="940" fill="url(#grid)"/>
-  <rect x="1" y="1" width="1598" height="938" rx="8" fill="none" stroke="#283744" stroke-width="2"/>
+  <rect x="1" y="1" width="1598" height="938" rx="8" fill="none" stroke="#c5d1dd" stroke-width="2"/>
 
   <!-- Header -->
   <g transform="translate(40 32)">
-    <rect x="0" y="2" width="5" height="65" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
+    <rect x="0" y="2" width="5" height="65" rx="2" fill="#16803a"/>
     <text x="23" y="30" class="title">V550 ACKERMANN AUTONOMY STACK</text>
     <text x="23" y="56" class="subtitle">Deep reinforcement learning and ROS 2 Nav2 on a shared Gazebo digital twin</text>
   </g>
 
   <g transform="translate(1042 38)">
-    <rect x="0" y="0" width="116" height="32" rx="8" fill="#152530" stroke="#2d4c58"/>
-    <text x="58" y="21" class="small" text-anchor="middle" fill="#49d6e9">165-D STATE</text>
-    <rect x="126" y="0" width="108" height="32" rx="8" fill="#152530" stroke="#2d4c58"/>
-    <text x="180" y="21" class="small" text-anchor="middle" fill="#49d6e9">2-D ACTION</text>
-    <rect x="244" y="0" width="128" height="32" rx="8" fill="#292318" stroke="#604c2d"/>
-    <text x="308" y="21" class="small" text-anchor="middle" fill="#ffb454">HYBRID-A*</text>
-    <rect x="382" y="0" width="98" height="32" rx="8" fill="#292318" stroke="#604c2d"/>
-    <text x="431" y="21" class="small" text-anchor="middle" fill="#ffb454">MPPI</text>
+    <rect x="0" y="0" width="116" height="32" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="58" y="21" class="small" text-anchor="middle" fill="#087f8c">165-D STATE</text>
+    <rect x="126" y="0" width="108" height="32" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="180" y="21" class="small" text-anchor="middle" fill="#087f8c">2-D ACTION</text>
+    <rect x="244" y="0" width="128" height="32" rx="8" fill="#fff3e3" stroke="#e2ba80"/>
+    <text x="308" y="21" class="small" text-anchor="middle" fill="#b85f00">HYBRID-A*</text>
+    <rect x="382" y="0" width="98" height="32" rx="8" fill="#fff3e3" stroke="#e2ba80"/>
+    <text x="431" y="21" class="small" text-anchor="middle" fill="#b85f00">MPPI</text>
   </g>
 
   <!-- Shared simulation spine -->
   <g filter="url(#shadow)">
     <rect x="40" y="142" width="400" height="136" rx="8" class="panel"/>
-    <rect x="40" y="142" width="6" height="136" rx="3" fill="#e88bff"/>
-    <text x="68" y="169" class="eyebrow" fill="#e88bff">SIMULATED WORLD</text>
+    <rect x="40" y="142" width="6" height="136" rx="3" fill="#9b2fb3"/>
+    <text x="68" y="169" class="eyebrow" fill="#9b2fb3">SIMULATED WORLD</text>
     <text x="68" y="201" class="section">Industrial Warehouse</text>
     <text x="68" y="226" class="nodeText">Gazebo Classic &#8226; static map &#8226; physics</text>
     <text x="68" y="248" class="nodeText">forklifts &#8226; AGV &#8226; worker &#8226; randomized goals</text>
 
-    <rect x="560" y="132" width="480" height="156" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
-    <rect x="560" y="132" width="480" height="5" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
-    <text x="585" y="162" class="eyebrow" fill="#7ce38b">SHARED DIGITAL TWIN</text>
+    <rect x="560" y="132" width="480" height="156" rx="8" fill="#f0faf3" stroke="#7fbd93" stroke-width="2"/>
+    <rect x="560" y="132" width="480" height="5" rx="2" fill="#16803a"/>
+    <text x="585" y="162" class="eyebrow" fill="#16803a">SHARED DIGITAL TWIN</text>
     <text x="585" y="192" class="section">WHEELTEC V550</text>
     <text x="585" y="217" class="nodeText">Ackermann kinematics &#8226; rear-wheel drive</text>
     <text x="585" y="239" class="nodeText">LaserScan &#8226; odometry &#8226; TF</text>
-    <rect x="585" y="254" width="203" height="22" rx="8" fill="#173629"/>
-    <text x="686" y="269" class="small" text-anchor="middle" fill="#7ce38b">0.45 m TURNING RADIUS</text>
-    <rect x="838" y="144" width="188" height="132" rx="8" fill="#091410" stroke="#7ce38b" stroke-width="1.5"/>
+    <rect x="585" y="254" width="203" height="22" rx="8" fill="#ddf2e4"/>
+    <text x="686" y="269" class="small" text-anchor="middle" fill="#16803a">0.45 m TURNING RADIUS</text>
+    <rect x="838" y="144" width="188" height="132" rx="8" fill="#ffffff" stroke="#66a87d" stroke-width="1.5"/>
     <image href="data:image/jpeg;base64,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" x="840" y="146" width="184" height="128" preserveAspectRatio="xMidYMid slice" clip-path="url(#robotClip)"/>
 
     <rect x="1160" y="142" width="400" height="136" rx="8" class="panel"/>
-    <rect x="1554" y="142" width="6" height="136" rx="3" fill="#9aa8ff"/>
-    <text x="1188" y="169" class="eyebrow" fill="#9aa8ff">OBSERVABILITY</text>
+    <rect x="1554" y="142" width="6" height="136" rx="3" fill="#4959c7"/>
+    <text x="1188" y="169" class="eyebrow" fill="#4959c7">OBSERVABILITY</text>
     <text x="1188" y="201" class="section">Inspect, Measure, Replay</text>
     <text x="1188" y="226" class="nodeText">RViz trajectories &#8226; TensorBoard learning curves</text>
     <text x="1188" y="248" class="nodeText">CSV/JSON metrics &#8226; checkpoints &#8226; best policy</text>
   </g>
 
   <path d="M 440 210 L 560 210" class="greenLine"/>
-  <text x="500" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">world state</text>
+  <text x="500" y="197" class="flowLabel" text-anchor="middle" fill="#16803a">world state</text>
   <path d="M 1040 210 L 1160 210" class="greenLine"/>
-  <text x="1100" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">telemetry</text>
+  <text x="1100" y="197" class="flowLabel" text-anchor="middle" fill="#16803a">telemetry</text>
 
   <!-- DRL panel -->
   <g filter="url(#shadow)">
     <rect x="40" y="326" width="735" height="450" rx="8" class="panel"/>
-    <rect x="40" y="326" width="735" height="5" rx="2" fill="#49d6e9"/>
+    <rect x="40" y="326" width="735" height="5" rx="2" fill="#087f8c"/>
   </g>
-  <text x="72" y="367" class="eyebrow" fill="#49d6e9">MODE 01 &#8226; LEARN</text>
-  <text x="72" y="397" class="section">TD3 / SAC closed-loop training</text>
+  <text x="72" y="367" class="eyebrow" fill="#087f8c">MODE 01 &#8226; LEARN</text>
+  <text x="72" y="397" class="section">TD3 closed-loop training</text>
   <text x="742" y="367" class="small" text-anchor="end">single or multi-process Gazebo workers</text>
 
   <g>
     <rect x="72" y="424" width="205" height="98" rx="8" class="node"/>
-    <rect x="72" y="424" width="205" height="4" rx="2" fill="#49d6e9"/>
+    <rect x="72" y="424" width="205" height="4" rx="2" fill="#087f8c"/>
     <text x="92" y="454" class="nodeTitle">State Encoder</text>
     <text x="92" y="478" class="nodeText">3-frame lidar stack</text>
     <text x="92" y="499" class="nodeText">goal + action history</text>
 
     <rect x="304" y="424" width="205" height="98" rx="8" class="node"/>
-    <rect x="304" y="424" width="205" height="4" rx="2" fill="#49d6e9"/>
+    <rect x="304" y="424" width="205" height="4" rx="2" fill="#087f8c"/>
     <text x="324" y="454" class="nodeTitle">Policy Actor</text>
     <text x="324" y="478" class="nodeText">Conv1D + MLP</text>
     <text x="324" y="499" class="nodeText">normalized action [-1, 1]</text>
 
     <rect x="536" y="424" width="205" height="98" rx="8" class="node"/>
-    <rect x="536" y="424" width="205" height="4" rx="2" fill="#49d6e9"/>
+    <rect x="536" y="424" width="205" height="4" rx="2" fill="#087f8c"/>
     <text x="556" y="454" class="nodeTitle">Control Mapping</text>
     <text x="556" y="478" class="nodeText">signed speed</text>
     <text x="556" y="499" class="nodeText">speed-aware steering limit</text>
 
     <rect x="72" y="588" width="205" height="98" rx="8" class="node"/>
-    <rect x="72" y="588" width="205" height="4" rx="2" fill="#e88bff"/>
+    <rect x="72" y="588" width="205" height="4" rx="2" fill="#9b2fb3"/>
     <text x="92" y="618" class="nodeTitle">Reward + Terminal</text>
     <text x="92" y="642" class="nodeText">progress &#8226; clearance &#8226; smoothness</text>
     <text x="92" y="663" class="nodeText">goal &#8226; collision &#8226; timeout</text>
 
     <rect x="304" y="588" width="205" height="98" rx="8" class="node"/>
-    <rect x="304" y="588" width="205" height="4" rx="2" fill="#e88bff"/>
+    <rect x="304" y="588" width="205" height="4" rx="2" fill="#9b2fb3"/>
     <text x="324" y="618" class="nodeTitle">Prioritized Replay</text>
     <text x="324" y="642" class="nodeText">TD-error sampling</text>
     <text x="324" y="663" class="nodeText">importance weights</text>
 
     <rect x="536" y="588" width="205" height="98" rx="8" class="node"/>
-    <rect x="536" y="588" width="205" height="4" rx="2" fill="#e88bff"/>
+    <rect x="536" y="588" width="205" height="4" rx="2" fill="#9b2fb3"/>
     <text x="556" y="618" class="nodeTitle">Twin-Critic Learner</text>
     <text x="556" y="642" class="nodeText">target networks &#8226; soft updates</text>
     <text x="556" y="663" class="nodeText">policy + checkpoint sync</text>
@@ -151,59 +151,59 @@
   <path d="M 277 473 L 304 473" class="cyanLine"/>
   <path d="M 509 473 L 536 473" class="cyanLine"/>
   <path d="M 174 522 L 174 588" class="cyanLine"/>
-  <text x="185" y="557" class="flowLabel" fill="#49d6e9">step</text>
+  <text x="185" y="557" class="flowLabel" fill="#087f8c">step</text>
   <path d="M 277 637 L 304 637" class="cyanLine"/>
   <path d="M 509 637 L 536 637" class="cyanLine"/>
   <path d="M 638 588 C 638 548 406 560 406 522" class="cyanLine" stroke-dasharray="7 6"/>
-  <text x="522" y="550" class="flowLabel" text-anchor="middle" fill="#49d6e9">policy update</text>
+  <text x="522" y="550" class="flowLabel" text-anchor="middle" fill="#087f8c">policy update</text>
   <path d="M 685 288 C 640 310 56 298 56 350 L 56 412 L 174 412 L 174 424" class="cyanLine" stroke-dasharray="7 6"/>
-  <text x="365" y="313" class="flowLabel" text-anchor="middle" fill="#49d6e9">scan + odometry feedback</text>
+  <text x="365" y="313" class="flowLabel" text-anchor="middle" fill="#087f8c">scan + odometry feedback</text>
 
-  <rect x="72" y="719" width="669" height="32" rx="8" fill="#102832" stroke="#24505c"/>
-  <text x="406" y="740" class="small" text-anchor="middle" fill="#49d6e9">OU EXPLORATION &#8226; TARGET SMOOTHING &#8226; DOMAIN RANDOMIZATION &#8226; GRADIENT CLIPPING</text>
+  <rect x="72" y="719" width="669" height="32" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="406" y="740" class="small" text-anchor="middle" fill="#087f8c">OU EXPLORATION &#8226; TARGET SMOOTHING &#8226; DOMAIN RANDOMIZATION &#8226; GRADIENT CLIPPING</text>
 
   <!-- Nav2 panel -->
   <g filter="url(#shadow)">
     <rect x="825" y="326" width="735" height="450" rx="8" class="panel"/>
-    <rect x="825" y="326" width="735" height="5" rx="2" fill="#ffb454"/>
+    <rect x="825" y="326" width="735" height="5" rx="2" fill="#b85f00"/>
   </g>
-  <text x="857" y="367" class="eyebrow" fill="#ffb454">MODE 02 &#8226; DEPLOY</text>
+  <text x="857" y="367" class="eyebrow" fill="#b85f00">MODE 02 &#8226; DEPLOY</text>
   <text x="857" y="397" class="section">Industrial Nav2 autonomy</text>
   <text x="1527" y="367" class="small" text-anchor="end">Ackermann-aware planning and control</text>
 
   <g>
     <rect x="857" y="424" width="205" height="98" rx="8" class="node"/>
-    <rect x="857" y="424" width="205" height="4" rx="2" fill="#ffb454"/>
+    <rect x="857" y="424" width="205" height="4" rx="2" fill="#b85f00"/>
     <text x="877" y="454" class="nodeTitle">Map + Localization</text>
     <text x="877" y="478" class="nodeText">warehouse occupancy map</text>
     <text x="877" y="499" class="nodeText">AMCL pose + TF</text>
 
     <rect x="1089" y="424" width="205" height="98" rx="8" class="node"/>
-    <rect x="1089" y="424" width="205" height="4" rx="2" fill="#ffb454"/>
+    <rect x="1089" y="424" width="205" height="4" rx="2" fill="#b85f00"/>
     <text x="1109" y="454" class="nodeTitle">Layered Costmaps</text>
     <text x="1109" y="478" class="nodeText">static + obstacle layers</text>
     <text x="1109" y="499" class="nodeText">local and global prediction</text>
 
     <rect x="1321" y="424" width="205" height="98" rx="8" class="node"/>
-    <rect x="1321" y="424" width="205" height="4" rx="2" fill="#ffb454"/>
+    <rect x="1321" y="424" width="205" height="4" rx="2" fill="#b85f00"/>
     <text x="1341" y="454" class="nodeTitle">Smac Hybrid-A*</text>
     <text x="1341" y="478" class="nodeText">kinematically feasible path</text>
     <text x="1341" y="499" class="nodeText">minimum-radius constraints</text>
 
     <rect x="857" y="588" width="205" height="98" rx="8" class="node"/>
-    <rect x="857" y="588" width="205" height="4" rx="2" fill="#9aa8ff"/>
+    <rect x="857" y="588" width="205" height="4" rx="2" fill="#4959c7"/>
     <text x="877" y="618" class="nodeTitle">Motion Predictor</text>
     <text x="877" y="642" class="nodeText">forklift + AGV + worker</text>
     <text x="877" y="663" class="nodeText">short-horizon swept paths</text>
 
     <rect x="1089" y="588" width="205" height="98" rx="8" class="node"/>
-    <rect x="1089" y="588" width="205" height="4" rx="2" fill="#ffb454"/>
+    <rect x="1089" y="588" width="205" height="4" rx="2" fill="#b85f00"/>
     <text x="1109" y="618" class="nodeTitle">MPPI Controller</text>
     <text x="1109" y="642" class="nodeText">Ackermann motion model</text>
     <text x="1109" y="663" class="nodeText">trajectory sampling + critics</text>
 
     <rect x="1321" y="588" width="205" height="98" rx="8" class="node"/>
-    <rect x="1321" y="588" width="205" height="4" rx="2" fill="#ffb454"/>
+    <rect x="1321" y="588" width="205" height="4" rx="2" fill="#b85f00"/>
     <text x="1341" y="618" class="nodeTitle">Velocity Smoother</text>
     <text x="1341" y="642" class="nodeText">acceleration constraints</text>
     <text x="1341" y="663" class="nodeText">stable /cmd_vel_nav</text>
@@ -212,38 +212,38 @@
   <path d="M 1062 473 L 1089 473" class="amberLine"/>
   <path d="M 1294 473 L 1321 473" class="amberLine"/>
   <path d="M 959 588 C 959 548 1191 560 1191 522" class="amberLine" stroke-dasharray="7 6"/>
-  <text x="1075" y="550" class="flowLabel" text-anchor="middle" fill="#ffb454">predicted occupancy</text>
+  <text x="1075" y="550" class="flowLabel" text-anchor="middle" fill="#b85f00">predicted occupancy</text>
   <path d="M 1423 522 C 1423 556 1248 548 1228 588" class="amberLine"/>
   <path d="M 1191 522 L 1191 588" class="amberLine"/>
   <path d="M 1294 637 L 1321 637" class="amberLine"/>
   <path d="M 915 288 C 950 310 840 300 840 350 L 840 412 L 959 412 L 959 424" class="amberLine" stroke-dasharray="7 6"/>
-  <text x="940" y="313" class="flowLabel" text-anchor="middle" fill="#ffb454">pose + sensors</text>
+  <text x="940" y="313" class="flowLabel" text-anchor="middle" fill="#b85f00">pose + sensors</text>
 
-  <rect x="857" y="719" width="669" height="32" rx="8" fill="#2a2217" stroke="#604a29"/>
-  <text x="1191" y="740" class="small" text-anchor="middle" fill="#ffb454">AMCL &#8226; BEHAVIOR TREE &#8226; DYNAMIC COSTMAPS &#8226; HYBRID-A* &#8226; MPPI</text>
+  <rect x="857" y="719" width="669" height="32" rx="8" fill="#fff3e3" stroke="#e2ba80"/>
+  <text x="1191" y="740" class="small" text-anchor="middle" fill="#b85f00">AMCL &#8226; BEHAVIOR TREE &#8226; DYNAMIC COSTMAPS &#8226; HYBRID-A* &#8226; MPPI</text>
 
   <!-- Shared actuation -->
   <path d="M 741 473 L 760 473 L 760 790 L 692 790 L 692 820" class="cyanLine"/>
-  <text x="748" y="707" class="flowLabel" text-anchor="end" fill="#49d6e9">speed + steering</text>
+  <text x="748" y="707" class="flowLabel" text-anchor="end" fill="#087f8c">speed + steering</text>
   <path d="M 1423 686 L 1542 686 L 1542 790 L 908 790 L 908 820" class="amberLine"/>
-  <text x="1320" y="783" class="flowLabel" text-anchor="middle" fill="#ffb454">smoothed velocity</text>
+  <text x="1320" y="783" class="flowLabel" text-anchor="middle" fill="#b85f00">smoothed velocity</text>
 
   <g filter="url(#shadow)">
-    <rect x="530" y="820" width="540" height="80" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
-    <rect x="530" y="820" width="540" height="5" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
+    <rect x="530" y="820" width="540" height="80" rx="8" fill="#f0faf3" stroke="#7fbd93" stroke-width="2"/>
+    <rect x="530" y="820" width="540" height="5" rx="2" fill="#16803a"/>
     <text x="800" y="852" class="nodeTitle" text-anchor="middle">ACKERMANN ACTUATION GATEWAY</text>
     <text x="800" y="878" class="nodeText" text-anchor="middle">command adapter &#8226; steering bounds &#8226; V550 Gazebo drive plugin</text>
   </g>
   <path d="M 800 820 L 800 288" class="greenLine" stroke-dasharray="9 7"/>
-  <rect x="744" y="302" width="112" height="24" rx="8" fill="#153026" stroke="#315c44"/>
-  <text x="800" y="318" class="small" text-anchor="middle" fill="#7ce38b">/cmd_vel</text>
+  <rect x="744" y="302" width="112" height="24" rx="8" fill="#ddf2e4" stroke="#8fc19f"/>
+  <text x="800" y="318" class="small" text-anchor="middle" fill="#16803a">/cmd_vel</text>
 
   <g transform="translate(40 918)">
-    <circle cx="5" cy="0" r="4" fill="#49d6e9"/>
+    <circle cx="5" cy="0" r="4" fill="#087f8c"/>
     <text x="17" y="4" class="small">learning path</text>
-    <circle cx="132" cy="0" r="4" fill="#ffb454"/>
+    <circle cx="132" cy="0" r="4" fill="#b85f00"/>
     <text x="144" y="4" class="small">Nav2 path</text>
-    <circle cx="242" cy="0" r="4" fill="#7ce38b"/>
+    <circle cx="242" cy="0" r="4" fill="#16803a"/>
     <text x="254" y="4" class="small">shared platform</text>
     <text x="1520" y="4" class="small" text-anchor="end">ROS 2 Humble &#8226; Gazebo Classic &#8226; PyTorch</text>
   </g>

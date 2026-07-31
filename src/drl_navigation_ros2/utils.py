@@ -1,25 +1,21 @@
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
 
 import numpy as np
 
 
-@dataclass
-class pos_data:
-    name = None
-    x = None
-    y = None
-    angle = None
+@dataclass(slots=True)
+class PositionData:
+    """Named pose used to build deterministic evaluation scenarios."""
+
+    name: str
+    x: float
+    y: float
+    angle: float
 
 
 def check_position(x, y, element_positions, min_dist):
-    pos = True
-    for element in element_positions:
-        distance_vector = [element[0] - x, element[1] - y]
-        distance = np.linalg.norm(distance_vector)
-        if distance < min_dist:
-            pos = False
-    return pos
+    return all(np.linalg.norm([element[0] - x, element[1] - y]) >= min_dist for element in element_positions)
 
 
 def _env_float(name, default):
@@ -87,30 +83,25 @@ def check_dynamic_lane_keepout(x, y, margin=0.0):
 
 def set_random_position(name, element_positions):
     angle = np.random.uniform(-np.pi, np.pi)
-    pos = False
+    position_is_valid = False
     min_x = _env_float("WORLD_MIN_X", -4.6)
     max_x = _env_float("WORLD_MAX_X", 3.7)
     min_y = _env_float("WORLD_MIN_Y", -6.8)
     max_y = _env_float("WORLD_MAX_Y", 6.8)
     attempts = 0
-    while not pos:
+    while not position_is_valid:
         attempts += 1
         if attempts > 1000:
             raise RuntimeError(f"Unable to sample a valid eval position for {name}. Check WORLD_* bounds and keepouts.")
         x = np.random.uniform(min_x, max_x)
         y = np.random.uniform(min_y, max_y)
-        pos = (
+        position_is_valid = (
             check_position(x, y, element_positions, 1.8)
             and check_static_keepout(x, y, 0.8)
             and (not name.startswith("obstacle") or check_dynamic_lane_keepout(x, y, 0.2))
         )
     element_positions.append([x, y])
-    eval_element = pos_data()
-    eval_element.name = name
-    eval_element.x = x
-    eval_element.y = y
-    eval_element.angle = angle
-    return eval_element
+    return PositionData(name=name, x=float(x), y=float(y), angle=float(angle))
 
 
 def record_eval_positions(n_eval_scenarios=10):

@@ -40,9 +40,7 @@ class GoalDistanceDisplay(Node):
         distance_topic = str(self.get_parameter("distance_topic").value)
         marker_topic = str(self.get_parameter("marker_topic").value)
         plan_topic = str(self.get_parameter("plan_topic").value)
-        self.goal_tolerance_cm = 100.0 * max(
-            float(self.get_parameter("goal_tolerance").value), 0.0
-        )
+        self.goal_tolerance_cm = 100.0 * max(float(self.get_parameter("goal_tolerance").value), 0.0)
         self.marker_height = float(self.get_parameter("marker_height").value)
         self.text_height = max(float(self.get_parameter("text_height").value), 0.05)
         publish_rate = max(float(self.get_parameter("publish_rate").value), 1.0)
@@ -55,16 +53,10 @@ class GoalDistanceDisplay(Node):
         self.distance_publisher = self.create_publisher(Float32, distance_topic, 10)
         self.marker_publisher = self.create_publisher(Marker, marker_topic, 10)
         self.plan_clear_publisher = self.create_publisher(Path, plan_topic, 10)
-        self.goal_subscription = self.create_subscription(
-            PoseStamped, goal_topic, self.on_goal, 10
-        )
-        self.odom_subscription = self.create_subscription(
-            Odometry, odom_topic, self.on_odom, 50
-        )
+        self.goal_subscription = self.create_subscription(PoseStamped, goal_topic, self.on_goal, 10)
+        self.odom_subscription = self.create_subscription(Odometry, odom_topic, self.on_odom, 50)
         self.timer = self.create_timer(1.0 / publish_rate, self.publish_distance)
-        self.get_logger().info(
-            f"Displaying goal distance on {marker_topic} and {distance_topic}"
-        )
+        self.get_logger().info(f"Displaying goal distance on {marker_topic} and {distance_topic}")
 
     def on_goal(self, msg):
         values = (msg.pose.position.x, msg.pose.position.y)
@@ -95,9 +87,7 @@ class GoalDistanceDisplay(Node):
             now_ns = self.get_clock().now().nanoseconds
             if now_ns - self.last_tf_warning_ns >= 2_000_000_000:
                 self.last_tf_warning_ns = now_ns
-                self.get_logger().warn(
-                    f"Cannot display goal distance: {source_frame} -> {target_frame}: {error}"
-                )
+                self.get_logger().warn(f"Cannot display goal distance: {source_frame} -> {target_frame}: {error}")
             return None
 
     def publish_distance(self):
@@ -109,9 +99,7 @@ class GoalDistanceDisplay(Node):
             return
 
         robot = self.odom.pose.pose.position
-        distance_cm = planar_distance_cm(
-            goal_pose.position.x, goal_pose.position.y, robot.x, robot.y
-        )
+        distance_cm = planar_distance_cm(goal_pose.position.x, goal_pose.position.y, robot.x, robot.y)
         self.distance_publisher.publish(Float32(data=float(distance_cm)))
 
         marker = Marker()

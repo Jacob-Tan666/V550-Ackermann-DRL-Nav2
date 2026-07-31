@@ -10,11 +10,10 @@ import rclpy
 import torch
 from geometry_msgs.msg import Point
 from rclpy.node import Node
-from visualization_msgs.msg import Marker
-
+from ros_python import ROSEnvironment
 from TD3.TD3 import TD3
-from ros_python import ROS_env
 from utils import record_eval_positions
+from visualization_msgs.msg import Marker
 
 
 def _env_int(name, default):
@@ -145,9 +144,7 @@ def run_evaluation(model, env, scenarios, max_steps, trajectory_publisher=None):
         goal = False
         trajectory = []
 
-        latest_scan, distance, cos, sin, collision, goal, action, reward = env.eval(
-            scenario=scenario
-        )
+        latest_scan, distance, cos, sin, collision, goal, action, reward = env.eval(scenario=scenario)
         start_time = time.perf_counter()
 
         initial_xy = _get_robot_xy(env)
@@ -155,9 +152,7 @@ def run_evaluation(model, env, scenarios, max_steps, trajectory_publisher=None):
             trajectory.append(initial_xy)
 
         while step_count < max_steps:
-            state, terminal = model.prepare_state(
-                latest_scan, distance, cos, sin, collision, goal, action
-            )
+            state, terminal = model.prepare_state(latest_scan, distance, cos, sin, collision, goal, action)
             if terminal:
                 break
 
@@ -319,7 +314,7 @@ def main():
     model.critic.eval()
     model.critic_target.eval()
 
-    env = ROS_env()
+    env = ROSEnvironment()
     trajectory_publisher = TrajectoryPublisher() if args.publish_trajectory else None
 
     try:

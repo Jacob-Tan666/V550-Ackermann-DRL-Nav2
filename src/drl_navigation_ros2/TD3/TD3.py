@@ -4,10 +4,8 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from numpy import inf
 from torch.utils.tensorboard import SummaryWriter
-
 
 DEFAULT_KINEMATIC_FRAME_DIM = 5
 DEFAULT_SCAN_MAX_RANGE = 8.0
@@ -41,9 +39,7 @@ class OUNoiseProcess:
     ):
         self.action_dim = int(action_dim)
         self.theta = np.broadcast_to(np.asarray(theta, dtype=np.float32), (self.action_dim,))
-        self.sigma_start = np.broadcast_to(
-            np.asarray(sigma_start, dtype=np.float32), (self.action_dim,)
-        )
+        self.sigma_start = np.broadcast_to(np.asarray(sigma_start, dtype=np.float32), (self.action_dim,))
         self.sigma_end = np.broadcast_to(np.asarray(sigma_end, dtype=np.float32), (self.action_dim,))
         self.sigma_decay_steps = int(sigma_decay_steps)
         self.clip = None if clip is None else np.broadcast_to(np.asarray(clip, dtype=np.float32), (self.action_dim,))
@@ -73,7 +69,7 @@ class OUNoiseProcess:
 
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim, kinematic_state_dim):
-        super(Actor, self).__init__()
+        super().__init__()
 
         self.kinematic_state_dim = int(kinematic_state_dim)
         self.lidar_dim = max(1, int(state_dim) - self.kinematic_state_dim)
@@ -116,7 +112,7 @@ class Actor(nn.Module):
 
 class Critic(nn.Module):
     def __init__(self, state_dim, action_dim, kinematic_state_dim):
-        super(Critic, self).__init__()
+        super().__init__()
 
         self.kinematic_state_dim = int(kinematic_state_dim)
         self.lidar_dim = max(1, int(state_dim) - self.kinematic_state_dim)
@@ -176,7 +172,7 @@ class Critic(nn.Module):
         return q1, q2
 
 
-class TD3(object):
+class TD3:
     def __init__(
         self,
         state_dim,
@@ -373,9 +369,7 @@ class TD3(object):
 
             td_error_1 = target_Q - current_Q1
             td_error_2 = target_Q - current_Q2
-            critic_loss = (
-                (weights * td_error_1.pow(2)).mean() + (weights * td_error_2.pow(2)).mean()
-            )
+            critic_loss = (weights * td_error_1.pow(2)).mean() + (weights * td_error_2.pow(2)).mean()
             if not torch.isfinite(critic_loss):
                 fallback_priority = np.full(
                     batch_indices.shape[0],
@@ -409,9 +403,9 @@ class TD3(object):
                 torch.nn.utils.clip_grad_norm_(self.actor.parameters(), 10.0)
                 self.actor_optimizer.step()
 
-                for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
+                for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters(), strict=False):
                     target_param.data.copy_(tau * param.data + (1 - tau) * target_param.data)
-                for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+                for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters(), strict=False):
                     target_param.data.copy_(tau * param.data + (1 - tau) * target_param.data)
 
         self.iter_count += 1
@@ -419,9 +413,7 @@ class TD3(object):
             self.writer.add_scalar("train/loss", av_loss / max(iterations, 1), self.iter_count)
             self.writer.add_scalar("train/avg_Q", av_Q / max(iterations, 1), self.iter_count)
             self.writer.add_scalar("train/max_Q", max_Q, self.iter_count)
-            self.writer.add_scalar(
-                "train/importance_weight_mean", av_weight / max(iterations, 1), self.iter_count
-            )
+            self.writer.add_scalar("train/importance_weight_mean", av_weight / max(iterations, 1), self.iter_count)
             sigma = self.get_exploration_noise_sigma(priority_step)
             self.writer.add_scalar("train/exploration_sigma_linear", sigma["linear"], self.iter_count)
             self.writer.add_scalar("train/exploration_sigma_steer", sigma["steer"], self.iter_count)

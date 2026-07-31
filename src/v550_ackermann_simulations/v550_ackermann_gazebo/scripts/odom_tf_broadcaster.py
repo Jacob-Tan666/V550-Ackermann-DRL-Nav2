@@ -21,9 +21,7 @@ class OdomTfBroadcaster(Node):
 
         self.broadcaster = TransformBroadcaster(self)
         self.subscription = self.create_subscription(Odometry, odom_topic, self.on_odom, 20)
-        self.get_logger().info(
-            f"Broadcasting TF {self.parent_frame} -> {self.child_frame} from {odom_topic}"
-        )
+        self.get_logger().info(f"Broadcasting TF {self.parent_frame} -> {self.child_frame} from {odom_topic}")
 
     @staticmethod
     def _finite_pose(msg):

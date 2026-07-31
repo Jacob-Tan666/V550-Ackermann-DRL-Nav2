@@ -25,9 +25,7 @@ class AckermannCmdVelAdapter(Node):
 
         input_topic = str(self.get_parameter("input_topic").value)
         output_topic = str(self.get_parameter("output_topic").value)
-        self.output_rate = self._positive_float(
-            "output_rate", self.get_parameter("output_rate").value
-        )
+        self.output_rate = self._positive_float("output_rate", self.get_parameter("output_rate").value)
         self._apply_tunable_parameters(
             {
                 "wheel_base": self.get_parameter("wheel_base").value,
@@ -38,9 +36,7 @@ class AckermannCmdVelAdapter(Node):
                 "max_steer_rate": self.get_parameter("max_steer_rate").value,
                 "stop_angular_threshold": self.get_parameter("stop_angular_threshold").value,
                 "command_timeout": self.get_parameter("command_timeout").value,
-                "plugin_flips_reverse_steering": self.get_parameter(
-                    "plugin_flips_reverse_steering"
-                ).value,
+                "plugin_flips_reverse_steering": self.get_parameter("plugin_flips_reverse_steering").value,
             }
         )
         self.last_steering = 0.0
@@ -83,25 +79,15 @@ class AckermannCmdVelAdapter(Node):
     def _apply_tunable_parameters(self, values):
         self.wheel_base = self._positive_float("wheel_base", values["wheel_base"])
         self.max_speed = self._nonnegative_float("max_speed", values["max_speed"])
-        self.max_reverse_speed = self._nonnegative_float(
-            "max_reverse_speed", values["max_reverse_speed"]
-        )
+        self.max_reverse_speed = self._nonnegative_float("max_reverse_speed", values["max_reverse_speed"])
         self.max_steer = self._positive_float("max_steer", values["max_steer"])
-        self.min_turning_speed = self._positive_float(
-            "min_turning_speed", values["min_turning_speed"]
-        )
-        self.max_steer_rate = self._nonnegative_float(
-            "max_steer_rate", values["max_steer_rate"]
-        )
+        self.min_turning_speed = self._positive_float("min_turning_speed", values["min_turning_speed"])
+        self.max_steer_rate = self._nonnegative_float("max_steer_rate", values["max_steer_rate"])
         self.stop_angular_threshold = self._nonnegative_float(
             "stop_angular_threshold", values["stop_angular_threshold"]
         )
-        self.command_timeout = self._positive_float(
-            "command_timeout", values["command_timeout"]
-        )
-        self.plugin_flips_reverse_steering = bool(
-            values["plugin_flips_reverse_steering"]
-        )
+        self.command_timeout = self._positive_float("command_timeout", values["command_timeout"])
+        self.plugin_flips_reverse_steering = bool(values["plugin_flips_reverse_steering"])
 
     def on_parameters_changed(self, parameters):
         restart_only = {"input_topic", "output_topic", "output_rate"}

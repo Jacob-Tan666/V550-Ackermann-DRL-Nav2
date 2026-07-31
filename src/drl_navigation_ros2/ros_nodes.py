@@ -1,17 +1,15 @@
-import rclpy
 import os
-from rclpy.node import Node
-from sensor_msgs.msg import LaserScan
-from rclpy.qos import QoSDurabilityPolicy, QoSHistoryPolicy, QoSReliabilityPolicy
-from rclpy.qos import QoSProfile
-from nav_msgs.msg import Odometry
-from std_srvs.srv import Empty
-from gazebo_msgs.srv import SetEntityState
-from geometry_msgs.msg import Pose, Twist
-from visualization_msgs.msg import Marker
-from rclpy.logging import LoggingSeverity
 
+import rclpy
 from gazebo_msgs.msg import ContactsState, ModelStates
+from gazebo_msgs.srv import SetEntityState
+from geometry_msgs.msg import Twist
+from rclpy.logging import LoggingSeverity
+from rclpy.node import Node
+from rclpy.qos import DurabilityPolicy, QoSProfile, ReliabilityPolicy
+from sensor_msgs.msg import LaserScan
+from std_srvs.srv import Empty
+from visualization_msgs.msg import Marker
 
 
 def _env_float(name, default):
@@ -23,13 +21,12 @@ def _env_float(name, default):
     except ValueError:
         return default
 
+
 class BumperSubscriber(Node):
     def __init__(self):
         super().__init__("bumper_subscriber")
         self.get_logger().set_level(SEVERITY)
-        self.subscriber_ = self.create_subscription(
-            ContactsState, "bumper_states", self.listener_callback, 10
-        )
+        self.subscriber_ = self.create_subscription(ContactsState, "bumper_states", self.listener_callback, 10)
         self.latest_collision = False
 
     def listener_callback(self, msg):
@@ -42,6 +39,7 @@ class BumperSubscriber(Node):
     def reset_collision(self):
         self.latest_collision = False
 
+
 SEVERITY = LoggingSeverity.ERROR
 
 
@@ -49,9 +47,7 @@ class SensorSubscriber(Node):
     def __init__(self):
         super().__init__("sensor_subscriber")
         self.get_logger().set_level(SEVERITY)
-        self.scan_subscriber_ = self.create_subscription(
-            LaserScan, "scan", self.scan_listener_callback, 1
-        )
+        self.scan_subscriber_ = self.create_subscription(LaserScan, "scan", self.scan_listener_callback, 1)
         self.odom_subscriber_ = self.create_subscription(
             ModelStates, "/gazebo/model_states", self.odom_listener_callback, 1
         )
@@ -79,9 +75,7 @@ class ScanSubscriber(Node):
     def __init__(self):
         super().__init__("scan_subscriber")
         self.get_logger().set_level(SEVERITY)
-        self.subscriber_ = self.create_subscription(
-            LaserScan, "scan", self.listener_callback, 1
-        )
+        self.subscriber_ = self.create_subscription(LaserScan, "scan", self.listener_callback, 1)
         self.latest_scan = None
 
     def listener_callback(self, msg):
@@ -95,9 +89,7 @@ class OdomSubscriber(Node):
     def __init__(self):
         super().__init__("odom_subscriber")
         self.get_logger().set_level(SEVERITY)
-        self.subscriber_ = self.create_subscription(
-            ModelStates, "/gazebo/model_states", self.listener_callback, 1
-        )
+        self.subscriber_ = self.create_subscription(ModelStates, "/gazebo/model_states", self.listener_callback, 1)
         self.latest_position = None
         self.latest_heading = None
 
@@ -125,9 +117,7 @@ class ResetWorldClient(Node):
         timeout = _env_float("ROS_SERVICE_TIMEOUT", 45.0) if timeout is None else timeout
         self.get_logger().info(f"Waiting for {service_name} service...")
         if not client.wait_for_service(timeout_sec=timeout):
-            self.get_logger().error(
-                f"Service {service_name} not available after waiting."
-            )
+            self.get_logger().error(f"Service {service_name} not available after waiting.")
             raise RuntimeError(f"Service {service_name} not available.")
 
     def reset_world(self):
@@ -157,9 +147,7 @@ class PhysicsClient(Node):
         timeout = _env_float("ROS_SERVICE_TIMEOUT", 45.0) if timeout is None else timeout
         self.get_logger().info(f"Waiting for {service_name} service...")
         if not client.wait_for_service(timeout_sec=timeout):
-            self.get_logger().error(
-                f"Service {service_name} not available after waiting."
-            )
+            self.get_logger().error(f"Service {service_name} not available after waiting.")
             raise RuntimeError(f"Service {service_name} not available.")
 
     def pause_physics(self):
@@ -225,7 +213,6 @@ class CmdVelPublisher(Node):
         super().__init__("cmd_vel_publisher")
         self.get_logger().set_level(SEVERITY)
         self.publisher_ = self.create_publisher(Twist, "cmd_vel", 1)
-        self._warned_reverse_clamp = False
 
     def publish_cmd_vel(self, linear_velocity=0.0, angular_velocity=0.0):
         twist_msg = Twist()
@@ -243,8 +230,11 @@ class MarkerPublisher(Node):
     def __init__(self):
         super().__init__("marker_publisher")
         self.get_logger().set_level(SEVERITY)
-        from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSReliabilityPolicy
-        qos = QoSProfile(depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL, reliability=QoSReliabilityPolicy.RELIABLE)
+        qos = QoSProfile(
+            depth=1,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            reliability=ReliabilityPolicy.RELIABLE,
+        )
         self.publisher = self.create_publisher(Marker, "visualization_marker", qos)
 
     def publish(self, x, y):
@@ -274,20 +264,5 @@ class MarkerPublisher(Node):
         marker.color.b = 0.0
 
         self.publisher.publish(marker)
-        import rclpy
         rclpy.spin_once(self, timeout_sec=0.05)
         self.get_logger().info("Publishing Marker")
-
-
-def run_scan(args=None):
-    rclpy.init()
-    reading_laser = ScanSubscriber()
-    reading_laser.get_logger().info("Hello friend!")
-    rclpy.spin(reading_laser)
-
-    reading_laser.destroy_node()
-    rclpy.shutdown()
-
-
-if __name__ == "__main__":
-    run_scan()

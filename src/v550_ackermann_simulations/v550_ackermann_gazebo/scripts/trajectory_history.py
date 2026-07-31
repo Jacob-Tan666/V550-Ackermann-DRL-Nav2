@@ -4,7 +4,7 @@ import math
 from collections import deque
 
 import rclpy
-from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry, Path
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
@@ -43,12 +43,8 @@ class TrajectoryHistory(Node):
         path_qos.reliability = ReliabilityPolicy.RELIABLE
         path_qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
         self.publisher = self.create_publisher(Path, path_topic, path_qos)
-        self.odom_subscription = self.create_subscription(
-            Odometry, odom_topic, self.on_odom, 50
-        )
-        self.reset_subscription = self.create_subscription(
-            PoseWithCovarianceStamped, reset_topic, self.on_reset, 10
-        )
+        self.odom_subscription = self.create_subscription(Odometry, odom_topic, self.on_odom, 50)
+        self.reset_subscription = self.create_subscription(PoseWithCovarianceStamped, reset_topic, self.on_reset, 10)
 
         self.poses = deque(maxlen=max_points)
         self.frame_id = "odom"

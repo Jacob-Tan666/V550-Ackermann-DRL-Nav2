@@ -5,7 +5,6 @@ import os
 import time
 from ctypes.util import find_library
 
-
 CLIENT_MESSAGE = 33
 SUBSTRUCTURE_NOTIFY_MASK = 1 << 19
 SUBSTRUCTURE_REDIRECT_MASK = 1 << 20
@@ -135,9 +134,7 @@ def get_property(x11, display, window, property_atom):
 
     try:
         if actual_format.value == 32:
-            values = ctypes.cast(
-                data_pointer, ctypes.POINTER(ctypes.c_ulong)
-            )
+            values = ctypes.cast(data_pointer, ctypes.POINTER(ctypes.c_ulong))
             return [int(values[index]) for index in range(item_count.value)]
         if actual_format.value == 8:
             return ctypes.string_at(data_pointer, item_count.value)
@@ -225,12 +222,8 @@ def tile_window(x11, display, root, window, geometry):
     )
 
     x, y, width, height = geometry
-    frame_extents = get_property(
-        x11, display, window, atom(x11, display, "_NET_FRAME_EXTENTS")
-    )
-    left, right, top, bottom = (
-        frame_extents[:4] if len(frame_extents) >= 4 else (0, 0, 0, 0)
-    )
+    frame_extents = get_property(x11, display, window, atom(x11, display, "_NET_FRAME_EXTENTS"))
+    left, right, top, bottom = frame_extents[:4] if len(frame_extents) >= 4 else (0, 0, 0, 0)
     client_width = max(width - left - right, 100)
     client_height = max(height - top - bottom, 100)
     move_resize_atom = atom(x11, display, "_NET_MOVERESIZE_WINDOW")
@@ -249,13 +242,11 @@ def tile_window(x11, display, root, window, geometry):
 
 def desktop_work_area(x11, display, root, screen):
     work_areas = get_property(x11, display, root, atom(x11, display, "_NET_WORKAREA"))
-    current_desktop = get_property(
-        x11, display, root, atom(x11, display, "_NET_CURRENT_DESKTOP")
-    )
+    current_desktop = get_property(x11, display, root, atom(x11, display, "_NET_CURRENT_DESKTOP"))
     desktop_index = current_desktop[0] if current_desktop else 0
     offset = desktop_index * 4
     if len(work_areas) >= offset + 4:
-        x, y, width, height = work_areas[offset:offset + 4]
+        x, y, width, height = work_areas[offset : offset + 4]
         if width > 0 and height > 0:
             return x, y, width, height
     return 0, 0, x11.XDisplayWidth(display, screen), x11.XDisplayHeight(display, screen)
@@ -299,10 +290,7 @@ def main():
                 if role:
                     current_matches[role] = (window, identity)
 
-            next_matched = {
-                role: window_and_identity[0]
-                for role, window_and_identity in current_matches.items()
-            }
+            next_matched = {role: window_and_identity[0] for role, window_and_identity in current_matches.items()}
             if next_matched != matched:
                 complete_since = None
                 matched = next_matched
@@ -322,8 +310,7 @@ def main():
                     complete_since = time.monotonic()
                 if time.monotonic() - complete_since >= max(args.settle_time, 1.0):
                     print(
-                        f"Tiled Gazebo left and RViz right in work area "
-                        f"{width}x{height}+{x}+{y}",
+                        f"Tiled Gazebo left and RViz right in work area " f"{width}x{height}+{x}+{y}",
                         flush=True,
                     )
                     return

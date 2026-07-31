@@ -16,18 +16,10 @@ def generate_launch_description():
     pause = LaunchConfiguration("pause", default="false")
     gui = LaunchConfiguration("gui", default="false")
     urdf_file = LaunchConfiguration("urdf_file")
-    default_urdf_file = os.path.join(
-        v550_ackermann_description_dir, "urdf", DRL_MODEL, "rl_training.urdf"
-    )
-    world_file_name = LaunchConfiguration(
-        "world", default="v550_drl/" + DRL_MODEL + ".model"
-    )
-    world = PathJoinSubstitution(
-        [get_package_share_directory("v550_ackermann_gazebo"), "worlds", world_file_name]
-    )
-    launch_file_dir = os.path.join(
-        get_package_share_directory("v550_ackermann_gazebo"), "launch"
-    )
+    default_urdf_file = os.path.join(v550_ackermann_description_dir, "urdf", DRL_MODEL, "rl_training.urdf")
+    world_file_name = LaunchConfiguration("world", default="v550_drl/" + DRL_MODEL + ".model")
+    world = PathJoinSubstitution([get_package_share_directory("v550_ackermann_gazebo"), "worlds", world_file_name])
+    launch_file_dir = os.path.join(get_package_share_directory("v550_ackermann_gazebo"), "launch")
     pkg_gazebo_ros = get_package_share_directory("gazebo_ros")
 
     return LaunchDescription(
@@ -47,32 +39,16 @@ def generate_launch_description():
                 default_value=default_urdf_file,
                 description="Robot URDF used by robot_state_publisher during DRL training",
             ),
-            DeclareLaunchArgument(
-                "dynamic_obstacles",
-                default_value="false",
-                description="Deprecated for DRL training; use industrial_navigation.launch.py for dynamic industrial obstacles",
-            ),
-            DeclareLaunchArgument(
-                "dynamic_speed_scale",
-                default_value="1.0",
-                description="Deprecated for DRL training; use industrial_navigation.launch.py for dynamic industrial obstacles",
-            ),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(pkg_gazebo_ros, "launch", "gzserver.launch.py")
-                ),
+                PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, "launch", "gzserver.launch.py")),
                 launch_arguments={"world": world, "pause": pause}.items(),
             ),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(pkg_gazebo_ros, "launch", "gzclient.launch.py")
-                ),
+                PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, "launch", "gzclient.launch.py")),
                 condition=IfCondition(gui),
             ),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    [launch_file_dir, "/robot_state_publisher.launch.py"]
-                ),
+                PythonLaunchDescriptionSource([launch_file_dir, "/robot_state_publisher.launch.py"]),
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "urdf_file": urdf_file,

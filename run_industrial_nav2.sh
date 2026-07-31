@@ -14,7 +14,7 @@ source /opt/ros/humble/setup.bash
 source install/setup.bash
 
 missing=0
-for pkg in nav2_smac_planner nav2_bringup nav2_map_server nav2_controller nav2_regulated_pure_pursuit_controller; do
+for pkg in nav2_smac_planner nav2_mppi_controller nav2_bringup nav2_map_server nav2_controller; do
     if ! ros2 pkg prefix "$pkg" >/dev/null 2>&1; then
         echo "[ERROR] Missing ROS package: $pkg"
         missing=1

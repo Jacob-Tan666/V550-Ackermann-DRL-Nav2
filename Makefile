@@ -1,51 +1,35 @@
-# Inspired by: https://blog.mathieu-leplatre.info/tips-for-your-makefile-with-python.html
-
-PYMODULE := drl_navigation_ros2
-TESTS := tests
-INSTALL_STAMP := .install.stamp
-POETRY := $(shell command -v poetry 2> /dev/null)
-MYPY := $(shell command -v mypy 2> /dev/null)
+POETRY ?= poetry
+PYTHON_PATHS := \
+	src/drl_navigation_ros2 \
+	src/v550_ackermann_simulations/v550_ackermann_gazebo/launch \
+	src/v550_ackermann_simulations/v550_ackermann_gazebo/scripts \
+	tests
 
 .DEFAULT_GOAL := help
 
-.PHONY: all
-all: install lint test
-
 .PHONY: help
 help:
-	@echo "Please use 'make <target>', where <target> is one of"
-	@echo ""
-	@echo "  install     install packages and prepare environment"
-	@echo "  lint        run the code linters"
-	@echo "  test        run all the tests"
-	@echo "  all         install, lint, and test the project"
-	@echo "  clean       remove all temporary files listed in .gitignore"
-	@echo ""
-	@echo "Check the Makefile to know exactly what each target is doing."
-	@echo "Most actions are configured in 'pyproject.toml'."
+	@echo "Available targets:"
+	@echo "  install  Install runtime, test, and lint dependencies"
+	@echo "  format   Apply Ruff fixes and formatting"
+	@echo "  lint     Check Python source without modifying files"
+	@echo "  test     Run the Python test suite"
 
-install: $(INSTALL_STAMP)
-$(INSTALL_STAMP): pyproject.toml
-	@if [ -z $(POETRY) ]; then echo "Poetry could not be found. See https://python-poetry.org/docs/"; exit 2; fi
-	$(POETRY) run pip install --upgrade pip setuptools
+.PHONY: install
+install:
+	@command -v $(POETRY) >/dev/null || { echo "Poetry is required: https://python-poetry.org/docs/"; exit 2; }
 	$(POETRY) install --with dev,tests,linters
-	touch $(INSTALL_STAMP)
+
+.PHONY: format
+format:
+	$(POETRY) run ruff check --fix $(PYTHON_PATHS)
+	$(POETRY) run ruff format $(PYTHON_PATHS)
 
 .PHONY: lint
-lint: $(INSTALL_STAMP)
-    # Configured in pyproject.toml
-    # Skips mypy if not installed
-    # 
-    # $(POETRY) run black --check $(TESTS) $(PYMODULE) --diff
-	@if [ -z $(MYPY) ]; then echo "Mypy not found, skipping..."; else echo "Running Mypy..."; $(POETRY) run mypy $(PYMODULE) $(TESTS); fi
-	@echo "Running Ruff..."; $(POETRY) run ruff . --fix
+lint:
+	$(POETRY) run ruff check $(PYTHON_PATHS)
+	$(POETRY) run ruff format --check $(PYTHON_PATHS)
 
 .PHONY: test
-test: $(INSTALL_STAMP)
-    # Configured in pyproject.toml
+test:
 	$(POETRY) run pytest
-
-.PHONY: clean
-clean:
-    # Delete all files in .gitignore
-	git clean -Xdf

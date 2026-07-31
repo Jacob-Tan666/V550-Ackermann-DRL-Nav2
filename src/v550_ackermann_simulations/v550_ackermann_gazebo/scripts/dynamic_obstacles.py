@@ -4,10 +4,10 @@ import time
 from dataclasses import dataclass
 
 import rclpy
-from rclpy.clock import Clock, ClockType
 from gazebo_msgs.msg import ModelStates
 from gazebo_msgs.srv import SetEntityState
 from geometry_msgs.msg import Pose, Twist
+from rclpy.clock import Clock, ClockType
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from sensor_msgs.msg import PointCloud2
@@ -223,18 +223,10 @@ class DynamicObstacles(Node):
         self.diagnostic_period = max(float(self.get_parameter("diagnostic_period").value), 0.5)
         prediction_topic = str(self.get_parameter("prediction_topic").value)
         self.prediction_frame = str(self.get_parameter("prediction_frame").value)
-        self.prediction_horizon = max(
-            float(self.get_parameter("prediction_horizon").value), 0.0
-        )
-        self.prediction_step = max(
-            float(self.get_parameter("prediction_step").value), 0.05
-        )
-        self.prediction_padding = max(
-            float(self.get_parameter("prediction_padding").value), 0.0
-        )
-        self.prediction_point_spacing = max(
-            float(self.get_parameter("prediction_point_spacing").value), 0.05
-        )
+        self.prediction_horizon = max(float(self.get_parameter("prediction_horizon").value), 0.0)
+        self.prediction_step = max(float(self.get_parameter("prediction_step").value), 0.05)
+        self.prediction_padding = max(float(self.get_parameter("prediction_padding").value), 0.0)
+        self.prediction_point_spacing = max(float(self.get_parameter("prediction_point_spacing").value), 0.05)
         update_rate = max(float(self.get_parameter("update_rate").value), 1.0)
         self.period = 1.0 / update_rate
         self.last_update = None
@@ -261,9 +253,7 @@ class DynamicObstacles(Node):
             for route in ROUTES
         }
 
-        self.prediction_publisher = self.create_publisher(
-            PointCloud2, prediction_topic, 10
-        )
+        self.prediction_publisher = self.create_publisher(PointCloud2, prediction_topic, 10)
         self.wall_clock = Clock(clock_type=ClockType.STEADY_TIME)
         self.timer = self.create_timer(self.period, self.on_timer, clock=self.wall_clock)
         self.get_logger().info(
@@ -371,9 +361,7 @@ class DynamicObstacles(Node):
         header = Header()
         header.stamp = self.get_clock().now().to_msg()
         header.frame_id = self.prediction_frame
-        self.prediction_publisher.publish(
-            point_cloud2.create_cloud_xyz32(header, points)
-        )
+        self.prediction_publisher.publish(point_cloud2.create_cloud_xyz32(header, points))
 
     def resolve_service_name(self):
         requested = self.requested_state_service.strip()
@@ -401,11 +389,7 @@ class DynamicObstacles(Node):
 
     @staticmethod
     def select_name_by_type(names_and_types, type_name, preferred_names):
-        matches = sorted(
-            name
-            for name, types in names_and_types
-            if type_name in types
-        )
+        matches = sorted(name for name, types in names_and_types if type_name in types)
         if not matches:
             return None
         for preferred_name in preferred_names:
@@ -426,14 +410,10 @@ class DynamicObstacles(Node):
 
     def visible_gazebo_interfaces(self):
         service_names = sorted(
-            name
-            for name, _ in self.get_service_names_and_types()
-            if "gazebo" in name or "entity_state" in name
+            name for name, _ in self.get_service_names_and_types() if "gazebo" in name or "entity_state" in name
         )
         topic_names = sorted(
-            name
-            for name, _ in self.get_topic_names_and_types()
-            if "gazebo" in name or "model_states" in name
+            name for name, _ in self.get_topic_names_and_types() if "gazebo" in name or "model_states" in name
         )
         return f"services={service_names or 'none'}, topics={topic_names or 'none'}"
 

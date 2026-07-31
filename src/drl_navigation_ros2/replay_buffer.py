@@ -23,7 +23,7 @@ def _env_int(name, default):
         return default
 
 
-class ReplayBuffer(object):
+class ReplayBuffer:
     def __init__(
         self,
         buffer_size,
@@ -43,27 +43,15 @@ class ReplayBuffer(object):
         self.rng = np.random.default_rng(random_seed)
 
         self.prioritized = (
-            prioritized
-            if prioritized is not None
-            else os.environ.get("REPLAY_STRATEGY", "per").lower() == "per"
+            prioritized if prioritized is not None else os.environ.get("REPLAY_STRATEGY", "per").lower() == "per"
         )
         self.alpha = float(alpha if alpha is not None else _env_float("PER_ALPHA", 0.6))
-        self.beta_start = float(
-            beta_start if beta_start is not None else _env_float("PER_BETA_START", 0.4)
-        )
-        self.beta_end = float(
-            beta_end if beta_end is not None else _env_float("PER_BETA_END", 1.0)
-        )
+        self.beta_start = float(beta_start if beta_start is not None else _env_float("PER_BETA_START", 0.4))
+        self.beta_end = float(beta_end if beta_end is not None else _env_float("PER_BETA_END", 1.0))
         self.beta_decay_steps = int(
-            beta_decay_steps
-            if beta_decay_steps is not None
-            else _env_int("PER_BETA_DECAY_STEPS", 400000)
+            beta_decay_steps if beta_decay_steps is not None else _env_int("PER_BETA_DECAY_STEPS", 400000)
         )
-        self.priority_epsilon = float(
-            priority_epsilon
-            if priority_epsilon is not None
-            else _env_float("PER_EPS", 1e-4)
-        )
+        self.priority_epsilon = float(priority_epsilon if priority_epsilon is not None else _env_float("PER_EPS", 1e-4))
         self.success_priority_boost = float(
             success_priority_boost
             if success_priority_boost is not None
@@ -170,7 +158,7 @@ class ReplayBuffer(object):
 
         if self.prioritized:
             priorities = self._sanitize_priority_array(self.priorities[: self.count])
-            scaled_priorities = priorities ** self.alpha
+            scaled_priorities = priorities**self.alpha
             total_priority = float(np.sum(scaled_priorities))
             if (not np.isfinite(total_priority)) or total_priority <= 0.0:
                 probs = np.full(self.count, 1.0 / self.count, dtype=np.float64)

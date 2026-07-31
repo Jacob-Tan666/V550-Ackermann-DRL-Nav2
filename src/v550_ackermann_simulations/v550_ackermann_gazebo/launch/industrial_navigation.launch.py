@@ -14,7 +14,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
-
 ROBOT_MODEL = "wheeltec_v550_ackermann"
 
 
@@ -36,17 +35,13 @@ def generate_launch_description():
     rviz = LaunchConfiguration("rviz", default="true")
     tile_windows = LaunchConfiguration("tile_windows", default="true")
     pause = LaunchConfiguration("pause", default="false")
-    world_file_name = LaunchConfiguration(
-        "world", default="warehouse_demo/" + ROBOT_MODEL + ".model"
-    )
+    world_file_name = LaunchConfiguration("world", default="warehouse_demo/" + ROBOT_MODEL + ".model")
     dynamic_obstacles = LaunchConfiguration("dynamic_obstacles", default="true")
     dynamic_speed_scale = LaunchConfiguration("dynamic_speed_scale", default="0.8")
     nav2_startup_timeout = LaunchConfiguration("nav2_startup_timeout", default="90.0")
     odom_tf_bridge = LaunchConfiguration("odom_tf_bridge", default="true")
     urdf_file = LaunchConfiguration("urdf_file")
-    default_urdf_file = os.path.join(
-        v550_ackermann_description_dir, "urdf", ROBOT_MODEL, "industrial_navigation.urdf"
-    )
+    default_urdf_file = os.path.join(v550_ackermann_description_dir, "urdf", ROBOT_MODEL, "industrial_navigation.urdf")
     params_file = LaunchConfiguration(
         "params_file",
         default=os.path.join(v550_ackermann_gazebo_dir, "config", "industrial_nav2_params.yaml"),
@@ -78,9 +73,7 @@ def generate_launch_description():
     world = PathJoinSubstitution([v550_ackermann_gazebo_dir, "worlds", world_file_name])
     existing_gazebo_model_path = os.environ.get("GAZEBO_MODEL_PATH", "")
     gazebo_model_path = os.pathsep.join(
-        path
-        for path in [os.path.join(v550_ackermann_gazebo_dir, "models"), existing_gazebo_model_path]
-        if path
+        path for path in [os.path.join(v550_ackermann_gazebo_dir, "models"), existing_gazebo_model_path] if path
     )
     existing_gazebo_plugin_path = os.environ.get("GAZEBO_PLUGIN_PATH", "")
     gazebo_plugin_path = os.pathsep.join(
@@ -159,23 +152,17 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "params_file",
-                default_value=os.path.join(
-                    v550_ackermann_gazebo_dir, "config", "industrial_nav2_params.yaml"
-                ),
+                default_value=os.path.join(v550_ackermann_gazebo_dir, "config", "industrial_nav2_params.yaml"),
                 description="Nav2 parameters using Smac Hybrid-A* planner",
             ),
             DeclareLaunchArgument(
                 "map",
-                default_value=os.path.join(
-                    v550_ackermann_gazebo_dir, "maps", "industrial_warehouse.yaml"
-                ),
+                default_value=os.path.join(v550_ackermann_gazebo_dir, "maps", "industrial_warehouse.yaml"),
                 description="Static warehouse occupancy map for Nav2",
             ),
             DeclareLaunchArgument(
                 "rviz_config",
-                default_value=os.path.join(
-                    v550_ackermann_gazebo_dir, "rviz", "industrial_nav2.rviz"
-                ),
+                default_value=os.path.join(v550_ackermann_gazebo_dir, "rviz", "industrial_nav2.rviz"),
                 description="RViz config for industrial Nav2 demo",
             ),
             DeclareLaunchArgument(
@@ -197,21 +184,15 @@ def generate_launch_description():
                 description="Ackermann-compatible NavigateThroughPoses behavior tree",
             ),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(gazebo_ros_dir, "launch", "gzserver.launch.py")
-                ),
+                PythonLaunchDescriptionSource(os.path.join(gazebo_ros_dir, "launch", "gzserver.launch.py")),
                 launch_arguments={"world": world, "pause": pause}.items(),
             ),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    os.path.join(gazebo_ros_dir, "launch", "gzclient.launch.py")
-                ),
+                PythonLaunchDescriptionSource(os.path.join(gazebo_ros_dir, "launch", "gzclient.launch.py")),
                 condition=IfCondition(gui),
             ),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    [launch_file_dir, "/robot_state_publisher.launch.py"]
-                ),
+                PythonLaunchDescriptionSource([launch_file_dir, "/robot_state_publisher.launch.py"]),
                 launch_arguments={
                     "use_sim_time": use_sim_time,
                     "urdf_file": urdf_file,
@@ -425,9 +406,22 @@ def generate_launch_description():
                 name="map_to_odom_ground_truth",
                 output="screen",
                 arguments=[
-                    "--x", "0", "--y", "0", "--z", "0",
-                    "--roll", "0", "--pitch", "0", "--yaw", "0",
-                    "--frame-id", "map", "--child-frame-id", "odom",
+                    "--x",
+                    "0",
+                    "--y",
+                    "0",
+                    "--z",
+                    "0",
+                    "--roll",
+                    "0",
+                    "--pitch",
+                    "0",
+                    "--yaw",
+                    "0",
+                    "--frame-id",
+                    "map",
+                    "--child-frame-id",
+                    "odom",
                 ],
             ),
             Node(

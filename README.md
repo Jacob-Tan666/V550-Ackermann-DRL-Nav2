@@ -1,158 +1,126 @@
+<div align="center">
+
+**简体中文** | [English](./README_EN.md)
+
+</div>
+
 # V550 Ackermann DRL-Nav2
 
-An end-to-end autonomous-navigation workspace for the **WHEELTEC V550 Ackermann**
-robot, combining deep reinforcement learning (TD3/SAC) with a production-style
-ROS 2 Nav2 stack in Gazebo Classic. The repository covers training, evaluation,
-industrial warehouse simulation, dynamic-obstacle prediction, Ackermann-aware
-planning and control, and ready-to-use model checkpoints.
+面向 **WHEELTEC V550 Ackermann** 小车的端到端自主导航工作空间，集成 TD3 深度强化学习、ROS 2 Nav2 与 Gazebo Classic。项目覆盖单环境及并行训练、模型评估、工业仓储仿真、动态障碍物预测、Ackermann 运动学约束规划与控制，并提供可直接使用的模型权重和评估结果。
 
-**Author and maintainer:** [Jacob_Tan](https://github.com/Jacob-Tan666)
+**作者与维护者：** [Jacob_Tan](https://github.com/Jacob-Tan666)
 
 ![ROS 2 Humble](https://img.shields.io/badge/ROS_2-Humble-22314E?logo=ros&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-TD3%20%7C%20SAC-EE4C2C?logo=pytorch&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-TD3-EE4C2C?logo=pytorch&logoColor=white)
 ![Gazebo](https://img.shields.io/badge/Gazebo-Classic-F58113)
 ![License](https://img.shields.io/badge/License-MIT-2EA44F)
 
-## Demonstrations
+**检索关键词：** V550 Ackermann 自主导航、ROS 2 Humble、Nav2、TD3 深度强化学习、Gazebo 机器人仿真、阿克曼转向、工业仓储导航、动态避障。
 
-### Industrial Nav2 navigation
+## 项目演示
 
-The V550 follows feasible Ackermann paths through a warehouse while Nav2 tracks
-static infrastructure and predicted motion from forklifts, an AGV, and a worker.
+### 工业动态场景 Nav2 导航
 
-<p align="center">
-  <img src="./V550_AKM_工业动态复杂场景_3x.gif" width="100%" alt="V550 Ackermann Nav2 industrial warehouse navigation">
-</p>
-
-### TD3 reinforcement-learning navigation
-
-The V550 learns collision-free point-to-point navigation from lidar observations,
-relative goal geometry, and recent control history.
+V550 在仓储环境中执行满足 Ackermann 约束的路径跟踪。Nav2 同时处理静态设施以及叉车、AGV 和行人的短时运动预测，并将预测结果融合到局部与全局代价地图。
 
 <p align="center">
-  <img src="./V550_AKM_RL.gif" width="100%" alt="V550 Ackermann TD3 reinforcement-learning navigation">
+  <img src="./V550_AKM_工业动态复杂场景_3x.gif" width="100%" alt="V550 Ackermann 工业仓储动态场景 Nav2 导航演示">
 </p>
 
-## Highlights
+### TD3 强化学习导航
 
-- **V550-specific simulation:** separate lightweight training and detailed
-  industrial URDF/SDF variants, meshes, sensors, steering joints, and rear-wheel
-  drive dynamics.
-- **Ackermann-aware Nav2:** Smac Hybrid-A* global planning, MPPI local control with
-  the Ackermann motion model, velocity smoothing, and a shared `0.45 m` minimum
-  turning radius.
-- **Dynamic warehouse traffic:** deterministic routes for two forklifts, one AGV,
-  and one worker, including robot/obstacle clearance checks and short-horizon
-  swept-path point-cloud prediction.
-- **Modernized TD3 pipeline:** temporal lidar stacking, a 1-D convolutional
-  actor/critic, Ornstein-Uhlenbeck exploration, prioritized replay, target-policy
-  smoothing, gradient clipping, checkpoint resume, and best-model selection.
-- **Single and parallel training:** one-command single-environment training or
-  isolated multi-process Gazebo workers using separate ROS domain IDs and Gazebo
-  master ports.
-- **Simulation-to-reality robustness:** optional observation noise, action delay,
-  actuator-response variation, drag variation, sensor bias, and progressive domain
-  randomization.
-- **Repeatable evaluation:** fixed evaluation scenarios, trajectory markers,
-  success/collision/timeout metrics, and CSV/JSON result export.
+V550 根据激光雷达观测、目标相对几何关系和近期控制历史，学习无碰撞的点到点导航策略。
 
-## System Architecture
+<p align="center">
+  <img src="./V550_AKM_RL.gif" width="100%" alt="V550 Ackermann TD3 强化学习导航演示">
+</p>
+
+## 核心特性
+
+- **V550 专用仿真模型：** 提供轻量训练版与工业导航版 URDF/SDF，包含车体网格、激光雷达、转向关节和后轮驱动动力学。
+- **Ackermann 感知 Nav2：** 使用 Smac Hybrid-A* 全局规划器、Ackermann 运动模型 MPPI 控制器和速度平滑器，并统一采用 `0.45 m` 最小转弯半径。
+- **动态仓储交通：** 支持两台叉车、一台 AGV 和一名行人的确定性路线，包含机器人避让、障碍物间距约束及短时扫掠路径点云预测。
+- **现代化 TD3 训练链路：** 采用时序雷达帧堆叠、Conv1D actor/critic、OU 探索噪声、优先经验回放、目标策略平滑、梯度裁剪、断点续训和最优模型选择。
+- **单环境与并行训练：** 可启动单个 Gazebo 环境，也可通过独立 ROS Domain ID 与 Gazebo Master 端口运行多进程采样。
+- **仿真到实机鲁棒性：** 可配置观测噪声、动作延迟、执行器响应、滚动阻力、传感器偏置和渐进式域随机化。
+- **可复现实验评估：** 支持固定评估场景、RViz 轨迹标记、成功/碰撞/超时统计，以及 CSV/JSON 结果导出。
+
+## 系统架构
 
 <p align="center">
   <a href="./docs/assets/system-architecture.svg">
-    <img src="./docs/assets/system-architecture.svg" width="100%" alt="V550 Ackermann system architecture showing the TD3/SAC learning loop, industrial Nav2 pipeline, shared Gazebo digital twin, observability, and Ackermann actuation gateway">
+    <img src="./docs/assets/system-architecture.svg" width="100%" alt="V550 Ackermann TD3、Nav2、Gazebo 数字孪生和执行网关系统架构图">
   </a>
 </p>
 
-Both autonomy modes share the same V550 sensor, kinematic, and actuation
-boundaries. The learning path closes the loop through prioritized replay and
-twin-critic policy updates; the Nav2 path combines predicted dynamic occupancy
-with Hybrid-A* planning and MPPI control before reaching the shared drive plugin.
+TD3 与 Nav2 两条自主导航路径共享同一套 V550 传感器、运动学和执行边界。学习路径通过优先经验回放与双 critic 更新形成闭环；工业导航路径将动态占用预测、Hybrid-A* 路径规划和 MPPI 控制串联后，经统一的 Ackermann 指令适配器驱动 Gazebo 小车。
 
-### DRL state, action, and reward
+### TD3 状态、动作与奖励
 
-With the default `SCAN_BINS=50` and `FRAME_STACK=3`, the TD3 state has 165 values:
-50 minimum-pooled lidar bins plus five kinematic values per frame (normalized goal
-distance, goal-bearing cosine/sine, previous speed, and previous steering). The
-actor outputs two values in `[-1, 1]`, which the environment maps to signed vehicle
-speed and a speed-dependent steering limit.
+默认 `SCAN_BINS=50`、`FRAME_STACK=3` 时，状态空间包含 165 个数值：每帧 50 个最小池化雷达扇区，以及归一化目标距离、目标方向余弦/正弦、上一时刻速度和转向角共 5 个运动学量。Actor 输出两个 `[-1, 1]` 范围内的动作，环境将其映射为有符号车速和随速度变化的转向上限。
 
-The reward combines goal progress and motion alignment with penalties for poor
-clearance, high-speed curvature, abrupt steering, stagnation, and elapsed time.
-Goals and collisions produce terminal rewards of `+200` and `-200`; timeouts add a
-configurable penalty.
+奖励函数综合目标距离进展、运动方向一致性与安全间距，并对高速大曲率、突变转向、停滞和时间消耗施加惩罚。到达目标和发生碰撞对应 `+200` 与 `-200` 的终止奖励，超时惩罚可通过环境变量配置。
 
-### Parallel training data flow
+### 并行训练数据流
 
-Each sampling worker owns an isolated Gazebo/ROS 2 environment and an inference-only
-actor. Workers send transitions to one learner process, which owns the replay buffer,
-optimizers, TensorBoard writer, evaluation environment, and checkpoints. The learner
-periodically publishes the latest actor weights back to every worker.
+每个采样进程独占一个 Gazebo/ROS 2 环境和仅用于推理的 Actor。采样进程将 transition 发送给唯一的 learner；learner 负责经验回放、优化器、TensorBoard、评估环境和检查点，并周期性向各采样进程广播最新 Actor 参数。
 
-### Industrial navigation data flow
+### 工业导航数据流
 
-The industrial launch starts Gazebo, robot-state publishing, AMCL, Nav2 servers,
-dynamic obstacles, command conversion, TF synchronization, trajectory history, and
-RViz. Dynamic-obstacle predictions are added to both local and global costmaps.
-Nav2 publishes smoothed velocity commands on `/cmd_vel_nav`; the adapter converts
-`angular.z` to a bounded steering angle before publishing `/cmd_vel` to the V550
-Gazebo plugin.
+工业导航入口会启动 Gazebo、robot state publisher、AMCL、Nav2 服务、动态障碍物、速度指令转换、TF 同步、轨迹记录和 RViz。Nav2 将平滑后的速度发布到 `/cmd_vel_nav`；适配器把 `angular.z` 转换为有界转向角，再通过 `/cmd_vel` 发送给 V550 Gazebo 驱动插件。
 
-## Repository Layout
+## 目录结构
 
 ```text
 .
-|-- README.md                          Project documentation and demonstrations
-|-- LICENSE                            Project-level MIT license
-|-- V550_AKM_工业动态复杂场景_3x.gif    Industrial Nav2 demonstration
-|-- V550_AKM_RL.gif                    TD3 training/evaluation demonstration
-|-- pyproject.toml / poetry.lock       Python dependency and tooling metadata
-|-- run_industrial_nav2.sh             Industrial Nav2 launcher
-|-- run_single_train.sh                Single-environment TD3 training
-|-- run_multi_train.sh                 Multi-process TD3 training
-|-- run_td3_test.sh                    Checkpoint evaluation and report export
+|-- README.md                          中文项目文档（默认）
+|-- README_EN.md                       English documentation
+|-- LICENSE                            项目级 MIT 许可证
+|-- V550_AKM_工业动态复杂场景_3x.gif    工业 Nav2 演示
+|-- V550_AKM_RL.gif                    TD3 训练与评估演示
+|-- pyproject.toml / poetry.lock       Python 依赖与工具配置
+|-- run_industrial_nav2.sh             工业 Nav2 启动脚本
+|-- run_single_train.sh                单环境 TD3 训练脚本
+|-- run_multi_train.sh                 多进程 TD3 训练脚本
+|-- run_td3_test.sh                    模型评估与结果导出脚本
+|-- docs/assets/                       架构图与展示资源
 |-- src/
-|   |-- drl_navigation_ros2/           Environment, TD3/SAC, replay, train/test code
-|   |   |-- TD3/                       Conv1D actor, twin critic, OU noise, checkpoints
-|   |   |-- SAC/                       Soft Actor-Critic implementation
-|   |   `-- models/                    V550 checkpoints and evaluation results
-|   |-- v550_ackermann_description/    V550 URDF variants and RViz description
+|   |-- drl_navigation_ros2/           环境、TD3、经验回放及训练/测试代码
+|   |   |-- TD3/                       Conv1D Actor、双 Critic 与 OU 噪声
+|   |   `-- models/                    V550 模型权重与评估结果
+|   |-- v550_ackermann_description/    V550 URDF 与 RViz 描述包
 |   `-- v550_ackermann_simulations/
-|       `-- v550_ackermann_gazebo/     Gazebo/Nav2 package, worlds, maps and assets
-`-- tests/                              Lightweight Python tests
+|       `-- v550_ackermann_gazebo/     Gazebo/Nav2 包、地图、世界与模型资源
+`-- tests/                              核心 Python 逻辑测试
 ```
 
-The repository intentionally excludes local Colcon outputs, Gazebo logs, TensorBoard
-runs, IDE state, duplicate scratch files, and raw screen recordings.
+仓库通过 `.gitignore` 排除 Colcon 构建结果、Gazebo 日志、TensorBoard 运行记录、IDE 状态、临时副本和原始录屏文件。
 
-## Requirements
-
-The current launch scripts and Nav2 configuration target the following environment:
+## 环境要求
 
 - Ubuntu 22.04
 - ROS 2 Humble
-- Gazebo Classic 11 and `gazebo_ros_pkgs`
-- Nav2, including Smac Planner and MPPI Controller
+- Gazebo Classic 11 与 `gazebo_ros_pkgs`
+- Nav2（包含 Smac Planner 和 MPPI Controller）
 - Python 3.10
-- PyTorch 2.x; CUDA is optional but recommended for parallel training
-- Colcon, rosdep, Poetry, and TensorBoard
+- PyTorch 2.x；并行训练推荐使用 CUDA
+- Colcon、rosdep、Poetry 与 TensorBoard
 
-> The project descends from a ROS 2 Foxy research codebase, but this V550 version is
-> configured and tested around ROS 2 Humble. Do not mix Foxy and Humble workspaces.
+> 项目源自 ROS 2 Foxy 研究代码，但当前 V550 版本按 ROS 2 Humble 配置和验证。请勿在同一个工作空间中混用 Foxy 与 Humble。
 
-## Installation
+## 安装
 
-### 1. Clone the repository
+### 1. 克隆仓库
 
 ```bash
 git clone https://github.com/Jacob-Tan666/V550-Ackermann-DRL-Nav2.git
 cd V550-Ackermann-DRL-Nav2
 ```
 
-### 2. Install ROS 2 dependencies
+### 2. 安装 ROS 2 依赖
 
-Install ROS 2 Humble first, then install the workspace dependencies:
+先完成 ROS 2 Humble 安装，然后执行：
 
 ```bash
 sudo apt update
@@ -164,15 +132,14 @@ sudo apt install -y \
   ros-humble-nav2-bringup \
   ros-humble-nav2-mppi-controller
 
-sudo rosdep init  # Skip this line if rosdep is already initialized.
+sudo rosdep init  # 已初始化 rosdep 时跳过此行
 rosdep update
 rosdep install --from-paths src --ignore-src -r -y --rosdistro humble
 ```
 
-### 3. Install Python dependencies
+### 3. 安装 Python 依赖
 
-The lockfile is managed with Poetry. A virtual environment with system site packages
-keeps ROS 2 Python modules such as `rclpy` visible:
+项目使用 Poetry 管理锁定依赖。创建带系统 site-packages 的虚拟环境，可继续访问 ROS 2 提供的 `rclpy` 等模块：
 
 ```bash
 python3 -m venv --system-site-packages .venv
@@ -181,11 +148,13 @@ python -m pip install --upgrade pip poetry
 poetry install
 ```
 
-For a minimal runtime-only setup, install PyTorch for your CPU/CUDA platform first,
-then install `numpy`, `PyYAML`, `squaternion`, `tensorboard`, `tqdm`, `pandas`, and
-`matplotlib`.
+开发与测试环境使用：
 
-### 4. Build and source the workspace
+```bash
+poetry install --with dev,tests,linters
+```
+
+### 4. 构建并加载工作空间
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -196,12 +165,11 @@ export DRLNAV_BASE_PATH="$PWD"
 export GAZEBO_MODEL_PATH="${GAZEBO_MODEL_PATH:+${GAZEBO_MODEL_PATH}:}$PWD/src/v550_ackermann_simulations/v550_ackermann_gazebo/models"
 ```
 
-Run the `source` and `export` commands in every new terminal, or adapt
-`src/test.env` to your shell initialization.
+每次打开新终端后均需重新执行 `source` 与 `export`，也可以根据实际环境调整 `src/test.env`。
 
-## Running the Project
+## 运行方式
 
-### Industrial warehouse navigation
+### 工业仓储导航
 
 ```bash
 source .venv/bin/activate
@@ -210,61 +178,54 @@ source install/setup.bash
 ./run_industrial_nav2.sh
 ```
 
-Use **2D Pose Estimate** in RViz if localization needs initialization, then use
-**2D Goal Pose** to send a goal. The default launch opens Gazebo and RViz, enables
-dynamic obstacles, and arranges both windows side by side.
+如定位尚未初始化，在 RViz 中先使用 **2D Pose Estimate** 设置初始位姿，再通过 **2D Goal Pose** 发送目标。默认入口会启动 Gazebo、RViz 和动态障碍物，并自动排列可视化窗口。
 
-Useful overrides:
+常用覆盖参数：
 
 ```bash
-# Disable moving traffic.
+# 关闭动态交通参与者
 DYNAMIC_OBSTACLES=false ./run_industrial_nav2.sh
 
-# Increase obstacle route speed by 50%.
+# 将动态障碍物路线速度提高 50%
 DYNAMIC_SPEED_SCALE=1.5 ./run_industrial_nav2.sh
 
-# Run headless without RViz.
+# 无 Gazebo GUI、无 RViz 运行
 INDUSTRIAL_GUI=false INDUSTRIAL_RVIZ=false ./run_industrial_nav2.sh
 ```
 
-Direct launch invocation is also supported:
+也可以直接调用 ROS 2 launch：
 
 ```bash
 ros2 launch v550_ackermann_gazebo industrial_navigation.launch.py \
   gui:=true rviz:=true dynamic_obstacles:=true
 ```
 
-### Single-environment TD3 training
+### 单环境 TD3 训练
 
 ```bash
 source .venv/bin/activate
 ./run_single_train.sh
 ```
 
-This starts one Gazebo environment on `ROS_DOMAIN_ID=1`, waits for the required
-services and sensor topics, and then runs `train_single.py`.
+脚本在 `ROS_DOMAIN_ID=1` 上启动一个 Gazebo 环境，等待控制服务与传感器话题就绪后运行 `train_single.py`。
 
-### Parallel TD3 training
+### 并行 TD3 训练
 
 ```bash
 source .venv/bin/activate
 NUM_WORKERS=8 VIS_WORKER_ID=1 ./run_multi_train.sh
 ```
 
-Workers use ROS domain IDs `1..NUM_WORKERS`; the dedicated evaluation environment
-uses domain ID `99`. `NUM_WORKERS` defaults to the available CPU count capped by
-`MAX_AUTO_WORKERS=16`.
+采样进程默认使用 `1..NUM_WORKERS` 的 ROS Domain ID，独立评估环境使用 Domain ID `99`。未设置 `NUM_WORKERS` 时，脚本根据 CPU 核心数自动选择，最大不超过 `MAX_AUTO_WORKERS=16`。
 
-### Evaluate a checkpoint
+### 模型评估
 
 ```bash
 source .venv/bin/activate
 TEST_MODEL_NAME=TD3_best TEST_EPISODES=10 ./run_td3_test.sh
 ```
 
-Results are written as CSV and JSON under
-`src/drl_navigation_ros2/models/TD3/test_results/`. RViz-compatible trajectory
-markers are published during evaluation.
+评估结果会写入 `src/drl_navigation_ros2/models/TD3/test_results/`，同时发布可在 RViz 中查看的轨迹标记。
 
 ### TensorBoard
 
@@ -272,57 +233,54 @@ markers are published during evaluation.
 tensorboard --logdir runs
 ```
 
-Open `http://localhost:6006` to inspect training and evaluation metrics.
+打开 `http://localhost:6006` 查看训练与评估曲线。
 
-## Key Configuration
+## 关键配置
 
-The launcher scripts expose the most important settings as environment variables:
-
-| Variable | Default | Purpose |
+| 环境变量 | 默认值 | 作用 |
 | --- | ---: | --- |
-| `SCAN_BINS` | `50` | Number of minimum-pooled lidar sectors per frame |
-| `FRAME_STACK` | `3` | Number of observation frames in each TD3 state |
-| `NUM_WORKERS` | auto, max `16` | Parallel Gazebo sampling processes |
-| `BATCH_SIZE` | `512` multi / `256` single | Learner minibatch size |
-| `START_TIMESTEPS` | `20000` | Uniform-random warm-up transitions |
-| `MAX_TOTAL_STEPS` | `2000000` | Multi-process environment-step budget |
-| `MAX_STEPS` | `200` | Training episode limit |
-| `EVAL_MAX_STEPS` | `250` | Evaluation episode limit |
-| `REPLAY_STRATEGY` | `per` | Prioritized (`per`) or uniform replay |
-| `RESUME_MODEL` | `0` | Resume actor, critics, optimizers, and metadata |
-| `MODEL_DIR` | `src/drl_navigation_ros2/models/TD3` | Checkpoint directory |
-| `DYNAMIC_OBSTACLES` | mode-specific | Enable warehouse moving traffic |
-| `DYNAMIC_SPEED_SCALE` | `1.0` | Dynamic-obstacle route speed multiplier |
+| `SCAN_BINS` | `50` | 每帧最小池化雷达扇区数量 |
+| `FRAME_STACK` | `3` | TD3 状态中的时序帧数 |
+| `NUM_WORKERS` | 自动，最大 `16` | 并行 Gazebo 采样进程数量 |
+| `BATCH_SIZE` | 并行 `512` / 单环境 `256` | learner 批大小 |
+| `START_TIMESTEPS` | `20000` | 均匀随机动作预热步数 |
+| `MAX_TOTAL_STEPS` | `2000000` | 并行训练环境步数上限 |
+| `MAX_STEPS` | `200` | 单个训练 episode 最大步数 |
+| `EVAL_MAX_STEPS` | `250` | 单个评估 episode 最大步数 |
+| `REPLAY_STRATEGY` | `per` | 优先经验回放 `per` 或均匀回放 |
+| `RESUME_MODEL` | `0` | 是否恢复模型、优化器和训练元数据 |
+| `MODEL_DIR` | `src/drl_navigation_ros2/models/TD3` | 检查点目录 |
+| `DYNAMIC_OBSTACLES` | `true`（工业导航） | 是否启用仓储动态交通 |
+| `DYNAMIC_SPEED_SCALE` | `1.0` | 动态障碍物速度倍率 |
 
-Additional exploration, prioritized-replay, noise, action-delay, and domain-
-randomization parameters are documented directly in `run_multi_train.sh` and
-`run_single_train.sh` with executable defaults.
+探索噪声、优先经验回放、观测噪声、动作延迟和域随机化参数均在 `run_multi_train.sh` 与 `run_single_train.sh` 中提供可执行默认值。
 
-## Models and Outputs
+## 模型与输出
 
-The `models/TD3` directory contains current and best TD3 checkpoints. A complete
-checkpoint consists of actor, actor target, critic, critic target, and trainer state
-files. The trainer state stores optimizer state, iteration count, environment steps,
-and best-evaluation metadata. `models/TD3_warehouse` contains the warehouse-specific
-checkpoint set.
+`models/TD3` 保存当前模型和最优 TD3 检查点。完整检查点由 Actor、Actor Target、Critic、Critic Target 与 Trainer 状态组成；Trainer 状态包含优化器、迭代次数、环境步数和最优评估元数据。`models/TD3_warehouse` 保存仓储场景专用权重。
 
-Generated artifacts are kept out of version control:
+以下运行时产物不会进入版本控制：
 
-- `runs/`: TensorBoard event files
-- `gazebo_logs/`: launcher and worker logs
-- `build/`, `install/`, `log/`: Colcon outputs
-- `*.webm`: raw screen recordings
+- `runs/`：TensorBoard 事件文件
+- `gazebo_logs/`：启动器与采样进程日志
+- `build/`、`install/`、`log/`：Colcon 输出
+- `*.webm`：原始录屏
 
-## Validation
+## 代码质量与验证
 
-Run the lightweight Python tests:
+运行 Python 格式和静态检查：
 
 ```bash
-source .venv/bin/activate
-pytest -q
+make lint
 ```
 
-Build and test the ROS 2 packages:
+运行核心逻辑测试：
+
+```bash
+make test
+```
+
+构建并测试 ROS 2 软件包：
 
 ```bash
 source /opt/ros/humble/setup.bash
@@ -331,24 +289,18 @@ colcon test --event-handlers console_direct+
 colcon test-result --verbose
 ```
 
-Full navigation and learning validation requires Gazebo because the environment
-depends on `/scan`, `/odom`, `/gazebo/model_states`, and Gazebo control services.
+完整导航和学习验证需要 Gazebo，因为环境依赖 `/scan`、`/odom`、`/gazebo/model_states` 以及 Gazebo 控制服务。
 
-## License and Attribution
+## 许可证与开源归属
 
-Project-level Python and orchestration code is distributed under the
-[MIT License](./LICENSE). V550 description/simulation components derived from
-ROBOTIS and Gazebo ROS retain their Apache-2.0 notices. Vendored warehouse assets
-from [AWS RoboMaker Small Warehouse World](https://github.com/aws-robotics/aws-robomaker-small-warehouse-world)
-retain the upstream license at
-`src/v550_ackermann_simulations/v550_ackermann_gazebo/models/AWS_ROBOMAKER_SMALL_WAREHOUSE_LICENSE.txt`.
+项目级 Python 与编排代码采用 [MIT License](./LICENSE)。源自 ROBOTIS 和 Gazebo ROS 的 V550 描述/仿真组件保留 Apache-2.0 声明。来自 [AWS RoboMaker Small Warehouse World](https://github.com/aws-robotics/aws-robomaker-small-warehouse-world) 的仓储资源保留上游许可证：
 
-This project builds on the following open-source work:
+`src/v550_ackermann_simulations/v550_ackermann_gazebo/models/AWS_ROBOMAKER_SMALL_WAREHOUSE_LICENSE.txt`
 
-- ROS 2 navigation adaptation: [tomasvr/turtlebot3_drlnav](https://github.com/tomasvr/turtlebot3_drlnav)
-- TD3 navigation baseline: [reiniscimurs/DRL-robot-navigation](https://github.com/reiniscimurs/DRL-robot-navigation)
-- SAC implementation: [denisyarats/pytorch_sac](https://github.com/denisyarats/pytorch_sac)
-- V550/robot-description heritage: [ROBOTIS-GIT](https://github.com/ROBOTIS-GIT)
+本项目基于以下开源工作演进：
 
-Copyright notices and licenses from upstream components remain in their respective
-files and directories.
+- ROS 2 导航适配：[tomasvr/turtlebot3_drlnav](https://github.com/tomasvr/turtlebot3_drlnav)
+- TD3 导航基线：[reiniscimurs/DRL-robot-navigation](https://github.com/reiniscimurs/DRL-robot-navigation)
+- V550/机器人描述基础：[ROBOTIS-GIT](https://github.com/ROBOTIS-GIT)
+
+所有上游组件的版权和许可证声明均保留在对应文件与目录中。

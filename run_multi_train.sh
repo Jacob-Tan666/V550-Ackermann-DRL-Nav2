@@ -78,8 +78,6 @@ export MODEL_NAME="${MODEL_NAME:-TD3}"
 export MODEL_DIR="${MODEL_DIR:-src/drl_navigation_ros2/models/TD3}"
 export TRANSITION_QUEUE_SIZE="${TRANSITION_QUEUE_SIZE:-$(( NUM_WORKERS * 1500 > 20000 ? NUM_WORKERS * 1500 : 20000 ))}"
 export GAZEBO_WORLD="${GAZEBO_WORLD:-v550_drl/wheeltec_v550_ackermann.model}"
-export DYNAMIC_OBSTACLES="${DYNAMIC_OBSTACLES:-false}"
-export DYNAMIC_SPEED_SCALE="${DYNAMIC_SPEED_SCALE:-1.0}"
 export WORLD_MIN_X="${WORLD_MIN_X:--4.0}"
 export WORLD_MAX_X="${WORLD_MAX_X:-4.0}"
 export WORLD_MIN_Y="${WORLD_MIN_Y:--4.0}"
@@ -96,12 +94,12 @@ LEARNER_LOG_FILE="$LOG_DIR/multi_learner.log"
 PIDS=""
 
 cleanup() {
-    echo -e "\n[INFO] 正在停止多进程训练和 Gazebo 仿真环境，请稍候..."
+    echo -e "\n[INFO] Stopping multi-process training and Gazebo environments..."
     for pid in $PIDS; do
         kill -2 "$pid" 2>/dev/null || true
         wait "$pid" 2>/dev/null || true
     done
-    echo "[INFO] 多进程仿真已清理完毕退出。"
+    echo "[INFO] Multi-process simulation stopped."
 }
 trap cleanup EXIT INT TERM
 
@@ -115,7 +113,7 @@ launch_worker() {
     local domain_id="$2"
     local log_file="$LOG_DIR/gazebo_worker_${worker_id}.log"
 
-    # 只有指定的 worker 打开 GUI
+    # Only the selected worker opens a Gazebo client.
     local gui_flag="false"
     if [ "$VIS_WORKER_ID" != "0" ] && [ "$worker_id" = "$VIS_WORKER_ID" ]; then
         gui_flag="true"
@@ -125,12 +123,10 @@ launch_worker() {
     export GAZEBO_MASTER_URI="http://localhost:$((11345 + domain_id))"
     ros2 launch v550_ackermann_gazebo ros2_drl.launch.py \
         gui:=${gui_flag} pause:=true \
-        world:="${GAZEBO_WORLD}" \
-        dynamic_obstacles:="${DYNAMIC_OBSTACLES}" \
-        dynamic_speed_scale:="${DYNAMIC_SPEED_SCALE}" > "$log_file" 2>&1 &
+        world:="${GAZEBO_WORLD}" > "$log_file" 2>&1 &
     local pid=$!
     PIDS="$PIDS $pid"
-    echo "  -> 训练环境 ${worker_id} 已拉起 (ROS_DOMAIN_ID=${domain_id}, gui=${gui_flag}), PID: $pid"
+    echo "  -> Worker ${worker_id} started (ROS_DOMAIN_ID=${domain_id}, gui=${gui_flag}), PID: $pid"
     sleep 3
 }
 
@@ -139,7 +135,7 @@ echo "[INFO] CPU cores: $CPU_CORES, reserve: $CPU_RESERVE_CORES, workers: $NUM_W
 echo "[INFO] scan_bins=$SCAN_BINS, frame_stack=$FRAME_STACK, replay=$REPLAY_STRATEGY"
 echo "[INFO] batch_size=$BATCH_SIZE, train_utd=$TRAIN_UTD, start_timesteps=$START_TIMESTEPS"
 echo "[INFO] max_total_steps=$MAX_TOTAL_STEPS, resume_model=$RESUME_MODEL"
-echo "[INFO] world=$GAZEBO_WORLD, dynamic_obstacles=$DYNAMIC_OBSTACLES, dynamic_speed_scale=$DYNAMIC_SPEED_SCALE"
+echo "[INFO] world=$GAZEBO_WORLD"
 echo "[INFO] sample_bounds=x[$WORLD_MIN_X,$WORLD_MAX_X], y[$WORLD_MIN_Y,$WORLD_MAX_Y], keepouts=$WAREHOUSE_KEEPOUTS_ENABLE, dynamic_lane_keepouts=$DYNAMIC_LANE_KEEPOUTS_ENABLE"
 echo "[INFO] discount=$DISCOUNT, tau=$TAU, timeout_penalty=$TIMEOUT_PENALTY"
 echo "[INFO] OU(theta=$OU_THETA sigma=$OU_SIGMA_START->$OU_SIGMA_END decay=$OU_NOISE_DECAY_STEPS)"
@@ -147,22 +143,20 @@ echo "[INFO] obs_noise=$OBS_NOISE_ENABLE action_delay=$ACTION_DELAY_ENABLE domai
 echo "[INFO] learner log: $LEARNER_LOG_FILE"
 echo "=========================================================="
 
-# 先启动 NUM_WORKERS 个训练用 Gazebo
+# Start the sampling environments first.
 for i in $(seq 1 "$NUM_WORKERS"); do
     launch_worker "$i" "$i"
 done
 
-# 再额外启动一个评估用 Gazebo（无 GUI）
+# Start one additional headless evaluation environment.
 export ROS_DOMAIN_ID="$EVAL_DOMAIN_ID"
 export GAZEBO_MASTER_URI="http://localhost:$((11345 + EVAL_DOMAIN_ID))"
 ros2 launch v550_ackermann_gazebo ros2_drl.launch.py \
     gui:=false pause:=true \
-    world:="${GAZEBO_WORLD}" \
-    dynamic_obstacles:="${DYNAMIC_OBSTACLES}" \
-    dynamic_speed_scale:="${DYNAMIC_SPEED_SCALE}" > "$LOG_DIR/gazebo_eval.log" 2>&1 &
+    world:="${GAZEBO_WORLD}" > "$LOG_DIR/gazebo_eval.log" 2>&1 &
 pid=$!
 PIDS="$PIDS $pid"
-echo "  -> 评估环境已拉起 (ROS_DOMAIN_ID=$EVAL_DOMAIN_ID, no GUI), PID: $pid"
+echo "  -> Evaluation environment started (ROS_DOMAIN_ID=$EVAL_DOMAIN_ID, no GUI), PID: $pid"
 sleep 3
 
 export ROS_DOMAIN_ID=0

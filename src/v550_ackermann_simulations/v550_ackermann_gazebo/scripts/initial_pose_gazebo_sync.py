@@ -34,24 +34,16 @@ class InitialPoseGazeboSync(Node):
         amcl_topic = str(self.get_parameter("amcl_topic").value)
         odom_topic = str(self.get_parameter("odom_topic").value)
         self.robot_name = str(self.get_parameter("robot_name").value)
-        self.requested_service = str(
-            self.get_parameter("set_entity_state_service").value
-        )
-        self.position_tolerance = max(
-            float(self.get_parameter("position_tolerance").value), 0.01
-        )
+        self.requested_service = str(self.get_parameter("set_entity_state_service").value)
+        self.position_tolerance = max(float(self.get_parameter("position_tolerance").value), 0.01)
         self.yaw_tolerance = max(float(self.get_parameter("yaw_tolerance").value), 0.01)
         self.sync_timeout = max(float(self.get_parameter("sync_timeout").value), 1.0)
 
-        self.amcl_publisher = self.create_publisher(
-            PoseWithCovarianceStamped, amcl_topic, 10
-        )
+        self.amcl_publisher = self.create_publisher(PoseWithCovarianceStamped, amcl_topic, 10)
         self.pose_subscription = self.create_subscription(
             PoseWithCovarianceStamped, input_topic, self.on_initial_pose, 10
         )
-        self.odom_subscription = self.create_subscription(
-            Odometry, odom_topic, self.on_odom, 20
-        )
+        self.odom_subscription = self.create_subscription(Odometry, odom_topic, self.on_odom, 20)
         self.timer = self.create_timer(0.05, self.on_timer)
 
         self.client = None
@@ -69,9 +61,7 @@ class InitialPoseGazeboSync(Node):
 
     def on_initial_pose(self, msg):
         if msg.header.frame_id not in ("", "map"):
-            self.get_logger().error(
-                f"Initial pose frame must be map, received {msg.header.frame_id!r}"
-            )
+            self.get_logger().error(f"Initial pose frame must be map, received {msg.header.frame_id!r}")
             return
         pose = msg.pose.pose
         values = (
@@ -118,9 +108,7 @@ class InitialPoseGazeboSync(Node):
             return requested
 
         matches = sorted(
-            name
-            for name, types in self.get_service_names_and_types()
-            if "gazebo_msgs/srv/SetEntityState" in types
+            name for name, types in self.get_service_names_and_types() if "gazebo_msgs/srv/SetEntityState" in types
         )
         for preferred in ("/gazebo/set_entity_state", "/set_entity_state"):
             if preferred in matches:
@@ -149,9 +137,7 @@ class InitialPoseGazeboSync(Node):
         request.state.twist = Twist()
 
         self.service_future = self.client.call_async(request)
-        self.service_future.add_done_callback(
-            lambda future, pose_msg=msg: self.on_pose_set(future, pose_msg)
-        )
+        self.service_future.add_done_callback(lambda future, pose_msg=msg: self.on_pose_set(future, pose_msg))
 
     def on_pose_set(self, future, msg):
         self.service_future = None
@@ -188,10 +174,7 @@ class InitialPoseGazeboSync(Node):
                 math.cos(quaternion_yaw(actual.orientation) - quaternion_yaw(target.orientation)),
             )
         )
-        timed_out = (
-            self.awaiting_since is not None
-            and time.monotonic() - self.awaiting_since > self.sync_timeout
-        )
+        timed_out = self.awaiting_since is not None and time.monotonic() - self.awaiting_since > self.sync_timeout
         if position_error > self.position_tolerance or yaw_error > self.yaw_tolerance:
             if timed_out:
                 self.get_logger().error(
@@ -209,9 +192,7 @@ class InitialPoseGazeboSync(Node):
         self.amcl_publisher.publish(msg)
         self.awaiting_odom_pose = None
         self.awaiting_since = None
-        self.get_logger().info(
-            "Gazebo, odometry, and AMCL initial pose synchronized successfully"
-        )
+        self.get_logger().info("Gazebo, odometry, and AMCL initial pose synchronized successfully")
 
 
 def main(args=None):

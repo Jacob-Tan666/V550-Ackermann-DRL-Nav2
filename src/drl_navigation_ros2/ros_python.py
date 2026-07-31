@@ -4,9 +4,7 @@ from collections import deque
 
 import numpy as np
 import rclpy
-from geometry_msgs.msg import Pose, Twist
-from squaternion import Quaternion
-
+from geometry_msgs.msg import Pose
 from ros_nodes import (
     BumperSubscriber,
     CmdVelPublisher,
@@ -18,6 +16,7 @@ from ros_nodes import (
     SensorSubscriber,
     SetModelStateClient,
 )
+from squaternion import Quaternion
 
 
 def _env_bool(name, default):
@@ -60,7 +59,7 @@ def _env_float_pair(name, default):
         return tuple(float(v) for v in default)
 
 
-class ROS_env:
+class ROSEnvironment:
     def __init__(
         self,
         init_target_distance=3.0,
@@ -142,9 +141,7 @@ class ROS_env:
         self.heading_noise_std = _env_float("HEADING_NOISE_STD", 0.03)
 
         self.action_delay_min_steps = max(0, _env_int("ACTION_DELAY_MIN_STEPS", 0))
-        self.action_delay_max_steps = max(
-            self.action_delay_min_steps, _env_int("ACTION_DELAY_MAX_STEPS", 2)
-        )
+        self.action_delay_max_steps = max(self.action_delay_min_steps, _env_int("ACTION_DELAY_MAX_STEPS", 2))
 
         self.forward_speed_scale_range = _env_float_pair("FORWARD_SPEED_SCALE_RANGE", (0.90, 1.05))
         self.reverse_speed_scale_range = _env_float_pair("REVERSE_SPEED_SCALE_RANGE", (0.85, 1.05))
@@ -249,9 +246,7 @@ class ROS_env:
         if self.enable_action_delay and (not eval_mode or self.randomize_eval):
             scaled_delay_max = int(round(self.action_delay_max_steps * randomization_scale))
             scaled_delay_max = max(self.action_delay_min_steps, scaled_delay_max)
-            self.action_delay_steps = int(
-                np.random.randint(self.action_delay_min_steps, scaled_delay_max + 1)
-            )
+            self.action_delay_steps = int(np.random.randint(self.action_delay_min_steps, scaled_delay_max + 1))
         else:
             self.action_delay_steps = 0
         self._reset_action_delay_buffer()
@@ -301,9 +296,9 @@ class ROS_env:
             spike_mask = np.random.rand(noisy_scan.size) < (self.lidar_spike_prob * noise_scale)
             spike_count = int(np.count_nonzero(spike_mask))
             if spike_count > 0:
-                noisy_scan[spike_mask] = np.random.uniform(
-                    0.0, self.scan_max_range, size=spike_count
-                ).astype(np.float32)
+                noisy_scan[spike_mask] = np.random.uniform(0.0, self.scan_max_range, size=spike_count).astype(
+                    np.float32
+                )
         noisy_scan = np.clip(noisy_scan, 0.0, self.scan_max_range)
 
         noisy_distance = float(distance) * (1.0 + self.domain_distance_bias)
@@ -350,9 +345,7 @@ class ROS_env:
         distance, cos, sin, _ = self.get_dist_sincos(latest_position, latest_orientation)
         collision = self.check_collision(latest_scan)
         goal = self.check_target(distance, collision)
-        observed_scan, obs_distance, obs_cos, obs_sin = self._apply_observation_noise(
-            latest_scan, distance, cos, sin
-        )
+        observed_scan, obs_distance, obs_cos, obs_sin = self._apply_observation_noise(latest_scan, distance, cos, sin)
         obs_action = self._normalize_executed_action(cmd_linear, cmd_steer)
         executed_action = [cmd_linear, cmd_steer]
         reward = self.get_reward(goal, collision, executed_action, latest_scan, distance, cos)
@@ -410,9 +403,7 @@ class ROS_env:
         distance, cos, sin, _ = self.get_dist_sincos(latest_position, latest_orientation)
         collision = self.check_collision(latest_scan)
         goal = self.check_target(distance, collision)
-        observed_scan, obs_distance, obs_cos, obs_sin = self._apply_observation_noise(
-            latest_scan, distance, cos, sin
-        )
+        observed_scan, obs_distance, obs_cos, obs_sin = self._apply_observation_noise(latest_scan, distance, cos, sin)
         action = [0.0, 0.0]
         reward = self.get_reward(goal, collision, action, latest_scan, distance, cos)
 
@@ -424,9 +415,7 @@ class ROS_env:
         self.eval_mode = False
         self.training_episode_count += 1
         self._configure_episode_dynamics(eval_mode=False)
-        self.target_dist = float(
-            np.clip(self.target_dist, self.init_target_distance, self.max_target_dist)
-        )
+        self.target_dist = float(np.clip(self.target_dist, self.init_target_distance, self.max_target_dist))
         self.physics_client.pause_physics()
         self._send_stop_cmd(repeat=4, interval=0.02)
 
@@ -655,10 +644,7 @@ class ROS_env:
             self.bumper_collision_streak = 0
 
         bumper_hit = self.bumper_collision_streak >= 2
-        scan_hit = (
-            front_min <= self.collision_scan_threshold
-            and close_count >= self.collision_min_close_count
-        )
+        scan_hit = front_min <= self.collision_scan_threshold and close_count >= self.collision_min_close_count
 
         if scan_hit or bumper_hit:
             if self.verbose_events:
@@ -738,12 +724,7 @@ class ROS_env:
         speed_ratio = self._speed_ratio(linear)
         low_speed_scale = float(np.clip(abs(linear) / self.min_steer_speed, 0.0, 1.0))
         high_speed_scale = 1.0 - (1.0 - self.high_speed_steer_ratio_min) * speed_ratio
-        eff_max_steer = (
-            self.max_steer_angle
-            * self.domain_steer_scale
-            * low_speed_scale
-            * high_speed_scale
-        )
+        eff_max_steer = self.max_steer_angle * self.domain_steer_scale * low_speed_scale * high_speed_scale
 
         target_steer = float(np.clip(raw_steer * eff_max_steer, -eff_max_steer, eff_max_steer))
         base_alpha = 0.25 + 0.15 * (1.0 - speed_ratio)
@@ -807,11 +788,9 @@ class ROS_env:
         body_risk = max(0.0, (danger_dist - all_min_scan) / danger_dist)
         clearance_penalty = 8.0 * (max(front_risk, 0.6 * body_risk) ** 2)
 
-        curvature_penalty = 0.8 * (speed_ratio ** 1.5) * (steer_ratio ** 2)
+        curvature_penalty = 0.8 * (speed_ratio**1.5) * (steer_ratio**2)
         steer_delta_penalty = 0.15 * steer_delta_ratio
-        stagnation_penalty = (
-            0.25 if speed_ratio < 0.05 and abs(progress) < self.stagnation_progress_eps else 0.0
-        )
+        stagnation_penalty = 0.25 if speed_ratio < 0.05 and abs(progress) < self.stagnation_progress_eps else 0.0
         time_penalty = 0.10
 
         reward = (

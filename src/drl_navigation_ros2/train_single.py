@@ -5,10 +5,9 @@ from pathlib import Path
 
 import numpy as np
 import torch
-
-from TD3.TD3 import TD3
 from replay_buffer import ReplayBuffer
-from ros_python import ROS_env
+from ros_python import ROSEnvironment
+from TD3.TD3 import TD3
 from utils import record_eval_positions
 
 
@@ -113,16 +112,12 @@ def eval_fn(model, env, scenarios, epoch, max_steps):
         count = 0
         model.reset_observation_history()
         model.reset_action_noise()
-        latest_scan, distance, cos, sin, collision, goal, action, reward = env.eval(
-            scenario=scenario
-        )
+        latest_scan, distance, cos, sin, collision, goal, action, reward = env.eval(scenario=scenario)
         scenario_collision = bool(collision)
         scenario_goal = bool(goal)
 
         while count < max_steps:
-            state, terminal = model.prepare_state(
-                latest_scan, distance, cos, sin, collision, goal, action
-            )
+            state, terminal = model.prepare_state(latest_scan, distance, cos, sin, collision, goal, action)
             if terminal:
                 break
 
@@ -297,7 +292,7 @@ def main():
     print("[Startup] TD3 model initialized", flush=True)
     replay_buffer = ReplayBuffer(buffer_size=100_000, random_seed=42)
     print("[Startup] Initializing ROS environment", flush=True)
-    ros = ROS_env()
+    ros = ROSEnvironment()
     print("[Startup] ROS environment initialized", flush=True)
     eval_scenarios = record_eval_positions(n_eval_scenarios=args["nr_eval_episodes"])
     print(f"[Startup] Prepared {len(eval_scenarios)} eval scenarios", flush=True)
@@ -320,9 +315,7 @@ def main():
 
     try:
         while epochs < max_epochs:
-            state, terminal = model.prepare_state(
-                latest_scan, distance, cos, sin, collision, goal, action
-            )
+            state, terminal = model.prepare_state(latest_scan, distance, cos, sin, collision, goal, action)
             if terminal:
                 terminal_goal = bool(goal)
                 terminal_collision = bool(collision)
@@ -367,9 +360,7 @@ def main():
             latest_scan, distance, cos, sin, collision, goal, action, reward = ros.step(
                 lin_velocity=next_action[0], ang_velocity=next_action[1]
             )
-            next_state, terminal = model.prepare_state(
-                latest_scan, distance, cos, sin, collision, goal, action
-            )
+            next_state, terminal = model.prepare_state(latest_scan, distance, cos, sin, collision, goal, action)
             timeout = bool((steps + 1) >= args["max_steps"] and not terminal)
             transition_terminal = int(bool(terminal) or timeout)
             transition_reward = float(reward) + (timeout_penalty if timeout else 0.0)
@@ -445,10 +436,18 @@ def main():
                     }
                     print(_format_metrics("[Status]", status_metrics), flush=True)
                     model.writer.add_scalar("train_status/recent_goal_rate", recent_metrics["goal_rate"], global_steps)
-                    model.writer.add_scalar("train_status/recent_collision_rate", recent_metrics["collision_rate"], global_steps)
-                    model.writer.add_scalar("train_status/recent_timeout_rate", recent_metrics["timeout_rate"], global_steps)
-                    model.writer.add_scalar("train_status/recent_episode_reward", recent_metrics["avg_reward"], global_steps)
-                    model.writer.add_scalar("train_status/recent_episode_steps", recent_metrics["avg_steps"], global_steps)
+                    model.writer.add_scalar(
+                        "train_status/recent_collision_rate", recent_metrics["collision_rate"], global_steps
+                    )
+                    model.writer.add_scalar(
+                        "train_status/recent_timeout_rate", recent_metrics["timeout_rate"], global_steps
+                    )
+                    model.writer.add_scalar(
+                        "train_status/recent_episode_reward", recent_metrics["avg_reward"], global_steps
+                    )
+                    model.writer.add_scalar(
+                        "train_status/recent_episode_steps", recent_metrics["avg_steps"], global_steps
+                    )
                     steps_since_last_status = 0
 
             if episode > 0 and episode % args["episodes_per_epoch"] == 0:

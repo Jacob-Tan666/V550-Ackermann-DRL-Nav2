@@ -34,9 +34,7 @@ class Nav2StartupGate(Node):
         self.last_status = ""
         self.timer = self.create_timer(self.check_period, self.on_timer)
 
-        self.get_logger().info(
-            "Waiting for Gazebo service, odom/scan topics, and odom TF before starting Nav2"
-        )
+        self.get_logger().info("Waiting for Gazebo service, odom/scan topics, and odom TF before starting Nav2")
 
     def on_timer(self):
         if self.started:
@@ -100,9 +98,7 @@ class Nav2StartupGate(Node):
             return requested
 
         matches = sorted(
-            name
-            for name, types in self.get_service_names_and_types()
-            if "gazebo_msgs/srv/SetEntityState" in types
+            name for name, types in self.get_service_names_and_types() if "gazebo_msgs/srv/SetEntityState" in types
         )
         if not matches:
             return None

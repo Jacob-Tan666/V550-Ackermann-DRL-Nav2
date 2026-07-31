@@ -16,12 +16,8 @@ class JointStateSanitizer(Node):
         output_topic = str(self.get_parameter("output_topic").value)
 
         self.publisher = self.create_publisher(JointState, output_topic, 10)
-        self.subscription = self.create_subscription(
-            JointState, input_topic, self.on_joint_state, 10
-        )
-        self.get_logger().info(
-            f"Sanitizing JointState {input_topic} -> {output_topic}"
-        )
+        self.subscription = self.create_subscription(JointState, input_topic, self.on_joint_state, 10)
+        self.get_logger().info(f"Sanitizing JointState {input_topic} -> {output_topic}")
 
     @staticmethod
     def _finite_sequence(values, fallback=0.0):
