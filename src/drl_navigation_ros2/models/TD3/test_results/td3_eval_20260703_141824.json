@@ -1,0 +1,36 @@
+{
+  "config": {
+    "model_dir": "src/drl_navigation_ros2/models/TD3",
+    "model_name": "TD3_best",
+    "episodes": 1,
+    "max_steps": 30,
+    "scan_bins": 50,
+    "frame_stack": 3,
+    "ros_domain_id": 99,
+    "seed": 42,
+    "device": "cpu",
+    "randomize_eval": false
+  },
+  "summary": {
+    "episodes": 1,
+    "success_rate": 0.0,
+    "collision_rate": 0.0,
+    "timeout_rate": 1.0,
+    "avg_reward": 19.495124291568157,
+    "avg_episode_steps": 30.0,
+    "avg_navigation_time_sec": 3.425505810417235,
+    "avg_final_distance": 5.521668690168146
+  },
+  "episodes": [
+    {
+      "episode": 1,
+      "success": false,
+      "collision": false,
+      "timeout": true,
+      "reward": 19.495124291568157,
+      "steps": 30,
+      "duration_sec": 3.425505810417235,
+      "final_distance": 5.521668690168146
+    }
+  ]
+}

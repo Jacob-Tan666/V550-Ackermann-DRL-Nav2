@@ -1,0 +1,42 @@
+<!--
+  Ackermann-specific replanning tree. A 2D guide supplies a feasible final
+  approach heading, then Hybrid-A* refreshes the forward-only path at 1.0 Hz so
+  moving obstacles can be incorporated without destabilizing the controller.
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="NavigateRecovery">
+      <ReactiveFallback name="StopAtGoalOrNavigate">
+        <GoalReached goal="{goal}" global_frame="map" robot_base_frame="base_footprint"/>
+        <PipelineSequence name="NavigateWithDynamicReplanning">
+          <RateController hz="1.0">
+            <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+              <Sequence name="BuildAckermannPath">
+                <ComputePathToPose goal="{goal}" path="{guide_path}" planner_id="GoalHeadingGuide"/>
+                <UsePathApproachOrientation goal="{goal}" path="{guide_path}" adjusted_goal="{approach_goal}" heading_baseline="0.35"/>
+                <ComputePathToPose goal="{approach_goal}" path="{path}" planner_id="GridBased"/>
+                <UseExactGoalPosition goal="{approach_goal}" input_path="{path}" output_path="{path}"/>
+              </Sequence>
+              <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+            </RecoveryNode>
+          </RateController>
+          <RecoveryNode number_of_retries="1" name="FollowPath">
+            <FollowPath path="{path}" controller_id="FollowPath"/>
+            <ClearEntireCostmap name="ClearLocalCostmap-Context" service_name="local_costmap/clear_entirely_local_costmap"/>
+          </RecoveryNode>
+        </PipelineSequence>
+      </ReactiveFallback>
+      <ReactiveFallback name="RecoveryFallback">
+        <GoalUpdated/>
+        <RoundRobin name="AckermannRecoveryActions">
+          <Sequence name="ClearingActions">
+            <ClearEntireCostmap name="ClearLocalCostmap-Subtree" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Subtree" service_name="global_costmap/clear_entirely_global_costmap"/>
+          </Sequence>
+          <BackUp backup_dist="0.25" backup_speed="0.08"/>
+          <Wait wait_duration="2"/>
+        </RoundRobin>
+      </ReactiveFallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

@@ -1,0 +1,2 @@
+episode,success,collision,timeout,reward,steps,duration_sec,final_distance
+1,False,False,True,19.495124291568157,30,3.425505810417235,5.521668690168146

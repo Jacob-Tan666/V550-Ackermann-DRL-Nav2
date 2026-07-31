@@ -1,0 +1,513 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="wheeltec_v550_ackermann">
+    <pose>0 0 0 0 0 0</pose>
+
+    <!-- CHASSIS -->
+    <link name="base_footprint">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.010 0.0 0.095 0 0 0</pose>
+        <mass>12.0</mass>
+        <inertia><ixx>0.18</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.24</iyy><iyz>0</iyz><izz>0.32</izz></inertia>
+      </inertial>
+      <!-- Keep the low underbody clear of the inset wheels, including at full steer. -->
+      <collision name="base_collision">
+        <pose>0.005 0 0.107 0 0 0</pose>
+        <geometry><box><size>0.310 0.190 0.080</size></box></geometry>
+        <surface>
+          <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
+          <contact><ode><kp>500000.0</kp><kd>100.0</kd></ode></contact>
+        </surface>
+      </collision>
+      <collision name="center_underbody_collision">
+        <pose>0.005 0 0.067 0 0 0</pose>
+        <geometry><box><size>0.310 0.100 0.050</size></box></geometry>
+        <surface>
+          <friction><ode><mu>1.2</mu><mu2>1.2</mu2></ode></friction>
+          <contact><ode><kp>500000.0</kp><kd>100.0</kd></ode></contact>
+        </surface>
+      </collision>
+
+      <sensor name="base_bumper" type="contact">
+        <always_on>true</always_on>
+        <update_rate>100.0</update_rate>
+        <contact><collision>base_collision</collision></contact>
+        <plugin name="base_bumper_plugin" filename="libgazebo_ros_bumper.so">
+          <ros><remapping>bumper_states:=bumper_states</remapping></ros>
+          <frame_name>base_footprint</frame_name>
+        </plugin>
+      </sensor>
+
+      <visual name="base_visual">
+        <pose>0 0 0.030 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/base_link.STL</uri></mesh></geometry>
+        <material><ambient>0.015 0.017 0.018 1</ambient><diffuse>0.025 0.028 0.030 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="lower_chassis_enclosure">
+        <pose>0.005 0 0.092 0 0 0</pose>
+        <geometry><box><size>0.310 0.190 0.110</size></box></geometry>
+        <material><ambient>0.012 0.014 0.015 1</ambient><diffuse>0.020 0.023 0.025 1</diffuse><specular>0.06 0.06 0.06 1</specular></material>
+      </visual>
+      <visual name="top_equipment_plate">
+        <pose>-0.005 0 0.274 0 0 0</pose>
+        <geometry><box><size>0.300 0.205 0.010</size></box></geometry>
+        <material><ambient>0.010 0.011 0.012 1</ambient><diffuse>0.018 0.019 0.020 1</diffuse><specular>0.10 0.10 0.10 1</specular></material>
+      </visual>
+      <visual name="top_plate_front_left_standoff">
+        <pose>0.115 0.082 0.240 0 0 0</pose>
+        <geometry><box><size>0.012 0.012 0.068</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="top_plate_front_right_standoff">
+        <pose>0.115 -0.082 0.240 0 0 0</pose>
+        <geometry><box><size>0.012 0.012 0.068</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="top_plate_rear_left_standoff">
+        <pose>-0.120 0.082 0.240 0 0 0</pose>
+        <geometry><box><size>0.012 0.012 0.068</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="top_plate_rear_right_standoff">
+        <pose>-0.120 -0.082 0.240 0 0 0</pose>
+        <geometry><box><size>0.012 0.012 0.068</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="right_side_cyan_trim">
+        <pose>0.040 -0.0965 0.078 0 0 0</pose>
+        <geometry><box><size>0.115 0.004 0.010</size></box></geometry>
+        <material><ambient>0.00 0.65 0.72 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><emissive>0.00 0.10 0.12 1</emissive></material>
+      </visual>
+      <visual name="left_side_cyan_trim">
+        <pose>0.040 0.0965 0.078 0 0 0</pose>
+        <geometry><box><size>0.115 0.004 0.010</size></box></geometry>
+        <material><ambient>0.00 0.65 0.72 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><emissive>0.00 0.10 0.12 1</emissive></material>
+      </visual>
+      <visual name="front_cyan_trim">
+        <pose>0.161 0 0.078 0 0 0</pose>
+        <geometry><box><size>0.006 0.145 0.010</size></box></geometry>
+        <material><ambient>0.00 0.65 0.72 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><emissive>0.00 0.10 0.12 1</emissive></material>
+      </visual>
+      <visual name="right_side_cyan_trim_upper">
+        <pose>0.040 -0.0965 0.108 0 0 0</pose>
+        <geometry><box><size>0.115 0.004 0.008</size></box></geometry>
+        <material><ambient>0.00 0.65 0.72 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><emissive>0.00 0.10 0.12 1</emissive></material>
+      </visual>
+      <visual name="left_side_cyan_trim_upper">
+        <pose>0.040 0.0965 0.108 0 0 0</pose>
+        <geometry><box><size>0.115 0.004 0.008</size></box></geometry>
+        <material><ambient>0.00 0.65 0.72 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><emissive>0.00 0.10 0.12 1</emissive></material>
+      </visual>
+      <visual name="rear_charge_label">
+        <pose>-0.152 0 0.112 0 1.570796 0</pose>
+        <geometry><box><size>0.030 0.010 0.002</size></box></geometry>
+        <material><ambient>0.92 0.92 0.88 1</ambient><diffuse>0.95 0.95 0.92 1</diffuse></material>
+      </visual>
+      <visual name="rear_charge_socket">
+        <pose>-0.153 0 0.085 0 1.570796 0</pose>
+        <geometry><cylinder><radius>0.012</radius><length>0.006</length></cylinder></geometry>
+        <material><ambient>0.005 0.005 0.005 1</ambient><diffuse>0.010 0.010 0.010 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+      </visual>
+      <visual name="rear_charge_plug_cap">
+        <pose>-0.153 0 0.062 0 1.570796 0</pose>
+        <geometry><cylinder><radius>0.007</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.01 0.01 0.01 1</ambient><diffuse>0.015 0.015 0.015 1</diffuse></material>
+      </visual>
+      <visual name="lower_electronics_plate">
+        <pose>-0.005 0 0.154 0 0 0</pose>
+        <geometry><box><size>0.275 0.180 0.010</size></box></geometry>
+        <material><ambient>0.010 0.011 0.012 1</ambient><diffuse>0.018 0.019 0.020 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="electronics_front_left_standoff">
+        <pose>0.105 0.072 0.135 0 0 0</pose>
+        <geometry><box><size>0.010 0.010 0.038</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="electronics_front_right_standoff">
+        <pose>0.105 -0.072 0.135 0 0 0</pose>
+        <geometry><box><size>0.010 0.010 0.038</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="electronics_rear_left_standoff">
+        <pose>-0.105 0.072 0.135 0 0 0</pose>
+        <geometry><box><size>0.010 0.010 0.038</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="electronics_rear_right_standoff">
+        <pose>-0.105 -0.072 0.135 0 0 0</pose>
+        <geometry><box><size>0.010 0.010 0.038</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="middle_electronics_board">
+        <pose>-0.015 0 0.180 0 0 0</pose>
+        <geometry><box><size>0.165 0.085 0.024</size></box></geometry>
+        <material><ambient>0.015 0.035 0.020 1</ambient><diffuse>0.025 0.080 0.040 1</diffuse><specular>0.02 0.03 0.02 1</specular></material>
+      </visual>
+      <visual name="middle_electronics_ports">
+        <pose>0.010 -0.044 0.180 0 0 0</pose>
+        <geometry><box><size>0.085 0.006 0.010</size></box></geometry>
+        <material><ambient>0.08 0.08 0.08 1</ambient><diffuse>0.12 0.12 0.12 1</diffuse></material>
+      </visual>
+      <visual name="rear_center_riser">
+        <pose>-0.020 0 0.205 0 0 0</pose>
+        <geometry><box><size>0.035 0.060 0.085</size></box></geometry>
+        <material><ambient>0.012 0.013 0.014 1</ambient><diffuse>0.020 0.022 0.024 1</diffuse><specular>0.08 0.08 0.08 1</specular></material>
+      </visual>
+      <visual name="left_rear_antenna_stem">
+        <pose>-0.128 0.086 0.330 0 0 0</pose>
+        <geometry><cylinder><radius>0.006</radius><length>0.105</length></cylinder></geometry>
+        <material><ambient>0.006 0.006 0.006 1</ambient><diffuse>0.012 0.012 0.012 1</diffuse></material>
+      </visual>
+      <visual name="left_rear_antenna_head">
+        <pose>-0.128 0.086 0.386 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.006</radius><length>0.030</length></cylinder></geometry>
+        <material><ambient>0.006 0.006 0.006 1</ambient><diffuse>0.012 0.012 0.012 1</diffuse></material>
+      </visual>
+      <visual name="right_rear_antenna_stem">
+        <pose>-0.128 -0.086 0.330 0 0 0</pose>
+        <geometry><cylinder><radius>0.006</radius><length>0.105</length></cylinder></geometry>
+        <material><ambient>0.006 0.006 0.006 1</ambient><diffuse>0.012 0.012 0.012 1</diffuse></material>
+      </visual>
+      <visual name="right_rear_antenna_head">
+        <pose>-0.128 -0.086 0.386 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.006</radius><length>0.030</length></cylinder></geometry>
+        <material><ambient>0.006 0.006 0.006 1</ambient><diffuse>0.012 0.012 0.012 1</diffuse></material>
+      </visual>
+      <visual name="rear_cable_crossbar">
+        <pose>-0.075 0 0.305 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.004</radius><length>0.150</length></cylinder></geometry>
+        <material><ambient>0.003 0.003 0.003 1</ambient><diffuse>0.006 0.006 0.006 1</diffuse></material>
+      </visual>
+      <visual name="lidar_rear_cable_drop">
+        <pose>-0.110 -0.040 0.400 0 0 0</pose>
+        <geometry><cylinder><radius>0.004</radius><length>0.195</length></cylinder></geometry>
+        <material><ambient>0.003 0.003 0.003 1</ambient><diffuse>0.006 0.006 0.006 1</diffuse></material>
+      </visual>
+      <visual name="front_guard_tube">
+        <pose>0.070 0 0.292 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.006</radius><length>0.205</length></cylinder></geometry>
+        <material><ambient>0.008 0.008 0.008 1</ambient><diffuse>0.015 0.015 0.015 1</diffuse></material>
+      </visual>
+      <visual name="front_guard_left_post">
+        <pose>0.070 0.096 0.282 0 0 0</pose>
+        <geometry><cylinder><radius>0.004</radius><length>0.028</length></cylinder></geometry>
+        <material><ambient>0.008 0.008 0.008 1</ambient><diffuse>0.015 0.015 0.015 1</diffuse></material>
+      </visual>
+      <visual name="front_guard_right_post">
+        <pose>0.070 -0.096 0.282 0 0 0</pose>
+        <geometry><cylinder><radius>0.004</radius><length>0.028</length></cylinder></geometry>
+        <material><ambient>0.008 0.008 0.008 1</ambient><diffuse>0.015 0.015 0.015 1</diffuse></material>
+      </visual>
+
+      <visual name="laser_visual">
+        <pose>-0.075 0 0.530 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/laser_link.STL</uri></mesh></geometry>
+        <material><ambient>0.015 0.015 0.015 1</ambient><diffuse>0.020 0.020 0.020 1</diffuse><specular>0.18 0.18 0.18 1</specular></material>
+      </visual>
+      <visual name="lidar_mount_base_plate">
+        <pose>-0.075 0 0.282 0 0 0</pose>
+        <geometry><box><size>0.135 0.105 0.008</size></box></geometry>
+        <material><ambient>0.12 0.13 0.13 1</ambient><diffuse>0.15 0.16 0.16 1</diffuse></material>
+      </visual>
+      <visual name="lidar_mount_front_left_post">
+        <pose>-0.030 0.040 0.390 0 0 0</pose>
+        <geometry><box><size>0.008 0.008 0.210</size></box></geometry>
+        <material><ambient>0.34 0.36 0.37 1</ambient><diffuse>0.48 0.50 0.51 1</diffuse><specular>0.30 0.30 0.30 1</specular></material>
+      </visual>
+      <visual name="lidar_mount_front_right_post">
+        <pose>-0.030 -0.040 0.390 0 0 0</pose>
+        <geometry><box><size>0.008 0.008 0.210</size></box></geometry>
+        <material><ambient>0.34 0.36 0.37 1</ambient><diffuse>0.48 0.50 0.51 1</diffuse><specular>0.30 0.30 0.30 1</specular></material>
+      </visual>
+      <visual name="lidar_mount_rear_left_post">
+        <pose>-0.120 0.040 0.390 0 0 0</pose>
+        <geometry><box><size>0.008 0.008 0.210</size></box></geometry>
+        <material><ambient>0.34 0.36 0.37 1</ambient><diffuse>0.48 0.50 0.51 1</diffuse><specular>0.30 0.30 0.30 1</specular></material>
+      </visual>
+      <visual name="lidar_mount_rear_right_post">
+        <pose>-0.120 -0.040 0.390 0 0 0</pose>
+        <geometry><box><size>0.008 0.008 0.210</size></box></geometry>
+        <material><ambient>0.34 0.36 0.37 1</ambient><diffuse>0.48 0.50 0.51 1</diffuse><specular>0.30 0.30 0.30 1</specular></material>
+      </visual>
+      <visual name="lidar_mount_top_plate">
+        <pose>-0.075 0 0.496 0 0 0</pose>
+        <geometry><box><size>0.135 0.105 0.010</size></box></geometry>
+        <material><ambient>0.12 0.13 0.13 1</ambient><diffuse>0.15 0.16 0.16 1</diffuse></material>
+      </visual>
+      <visual name="camera_mount_plate">
+        <pose>0.085 0 0.282 0 0 0</pose>
+        <geometry><box><size>0.100 0.185 0.008</size></box></geometry>
+        <material><ambient>0.12 0.13 0.13 1</ambient><diffuse>0.15 0.16 0.16 1</diffuse></material>
+      </visual>
+      <visual name="camera_rear_upright">
+        <pose>0.095 0 0.350 0 0 0</pose>
+        <geometry><box><size>0.012 0.150 0.130</size></box></geometry>
+        <material><ambient>0.12 0.13 0.13 1</ambient><diffuse>0.15 0.16 0.16 1</diffuse></material>
+      </visual>
+      <visual name="camera_visual">
+        <pose>0.125 0 0.405 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/camera_link.STL</uri></mesh></geometry>
+        <material><ambient>0.2 0.2 0.2 1</ambient></material>
+      </visual>
+      <visual name="controller_visual">
+        <pose>-0.035 -0.020 0.192 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/controller_link.STL</uri></mesh></geometry>
+        <material><ambient>0.020 0.022 0.024 1</ambient><diffuse>0.030 0.033 0.036 1</diffuse></material>
+      </visual>
+      <visual name="middle_equipment_plate">
+        <pose>-0.005 0 0.208 0 0 0</pose>
+        <geometry><box><size>0.285 0.190 0.010</size></box></geometry>
+        <material><ambient>0.010 0.011 0.012 1</ambient><diffuse>0.018 0.019 0.020 1</diffuse><specular>0.10 0.10 0.10 1</specular></material>
+      </visual>
+      <visual name="front_camera_housing">
+        <pose>0.145 0 0.405 0 0 0</pose>
+        <geometry><box><size>0.050 0.145 0.050</size></box></geometry>
+        <material><ambient>0.018 0.020 0.022 1</ambient><diffuse>0.030 0.034 0.038 1</diffuse><specular>0.10 0.10 0.10 1</specular></material>
+      </visual>
+      <visual name="front_camera_left_lens">
+        <pose>0.172 0.043 0.405 0 1.570796 0</pose>
+        <geometry><cylinder><radius>0.016</radius><length>0.008</length></cylinder></geometry>
+        <material><ambient>0.005 0.010 0.014 1</ambient><diffuse>0.010 0.025 0.035 1</diffuse><specular>0.35 0.40 0.45 1</specular></material>
+      </visual>
+      <visual name="front_camera_right_lens">
+        <pose>0.172 -0.043 0.405 0 1.570796 0</pose>
+        <geometry><cylinder><radius>0.016</radius><length>0.008</length></cylinder></geometry>
+        <material><ambient>0.005 0.010 0.014 1</ambient><diffuse>0.010 0.025 0.035 1</diffuse><specular>0.35 0.40 0.45 1</specular></material>
+      </visual>
+      <visual name="lidar_black_base">
+        <pose>-0.075 0 0.507 0 0 0</pose>
+        <geometry><cylinder><radius>0.061</radius><length>0.020</length></cylinder></geometry>
+        <material><ambient>0.006 0.007 0.008 1</ambient><diffuse>0.012 0.014 0.016 1</diffuse><specular>0.16 0.16 0.16 1</specular></material>
+      </visual>
+      <visual name="lidar_black_tower">
+        <pose>-0.075 0 0.538 0 0 0</pose>
+        <geometry><cylinder><radius>0.058</radius><length>0.045</length></cylinder></geometry>
+        <material><ambient>0.004 0.005 0.006 1</ambient><diffuse>0.010 0.012 0.014 1</diffuse><specular>0.22 0.22 0.22 1</specular></material>
+      </visual>
+
+      <sensor name="akm_imu" type="imu">
+        <always_on>true</always_on><update_rate>100</update_rate>
+        <plugin name="v550_imu" filename="libgazebo_ros_imu_sensor.so">
+          <ros><remapping>~/out:=imu</remapping></ros>
+        </plugin>
+      </sensor>
+
+      <sensor name="v550_lidar" type="ray">
+        <pose>-0.075 0 0.540 0 0 0</pose>
+        <always_on>true</always_on><visualize>false</visualize><update_rate>15</update_rate>
+        <ray>
+          <scan><horizontal><samples>360</samples><resolution>1.0</resolution><min_angle>-3.141593</min_angle><max_angle>3.141593</max_angle></horizontal></scan>
+          <range><min>0.12</min><max>10.0</max></range>
+        </ray>
+        <plugin name="v550_laserscan" filename="libgazebo_ros_ray_sensor.so">
+          <ros><remapping>~/out:=scan</remapping></ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>base_scan</frame_name>
+        </plugin>
+      </sensor>
+    </link>
+    <!-- RB WHEEL -->
+    <joint name="rb_wheel_joint" type="revolute">
+      <pose relative_to="base_footprint">-0.05574 -0.08000 0.0332 0 0 0</pose>
+      <parent>base_footprint</parent>
+      <child>rb_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><lower>-100000</lower><upper>100000</upper><effort>18.0</effort><velocity>45</velocity></limit><dynamics><damping>0.006</damping><friction>0.001</friction></dynamics></axis>
+    </joint>
+    <link name="rb_wheel_link">
+      <pose relative_to="rb_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial><mass>0.2</mass><inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0002</iyy><iyz>0</iyz><izz>0.0001</izz></inertia></inertial>
+      <visual name="rb_wheel_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/rb_wheel_link.STL</uri></mesh></geometry>
+        <material><ambient>0.2 0.2 0.2 1</ambient></material>
+      </visual>
+      <visual name="rb_wheel_teal_hub">
+        <pose>0 -0.011 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.020</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.00 0.62 0.70 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><specular>0.12 0.12 0.12 1</specular></material>
+      </visual>
+      <!-- Collision is rotated 90 deg around X (roll) to align cylinder Z-axis with Y-axis -->
+      <collision name="rb_wheel_collision">
+        <pose>0 0 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.0332</radius><length>0.026</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>1.4</mu><mu2>1.2</mu2><slip1>0.001</slip1><slip2>0.001</slip2></ode></friction>
+          <contact><ode><kp>500000.0</kp><kd>100.0</kd></ode></contact>
+        </surface>
+      </collision>
+    </link>
+    <!-- LB WHEEL -->
+    <joint name="lb_wheel_joint" type="revolute">
+      <pose relative_to="base_footprint">-0.05574 0.08000 0.0332 0 0 0</pose>
+      <parent>base_footprint</parent>
+      <child>lb_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><lower>-100000</lower><upper>100000</upper><effort>18.0</effort><velocity>45</velocity></limit><dynamics><damping>0.006</damping><friction>0.001</friction></dynamics></axis>
+    </joint>
+    <link name="lb_wheel_link">
+      <pose relative_to="lb_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial><mass>0.2</mass><inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0002</iyy><iyz>0</iyz><izz>0.0001</izz></inertia></inertial>
+      <visual name="lb_wheel_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/lb_wheel_link.STL</uri></mesh></geometry>
+        <material><ambient>0.2 0.2 0.2 1</ambient></material>
+      </visual>
+      <visual name="lb_wheel_teal_hub">
+        <pose>0 0.011 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.020</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.00 0.62 0.70 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><specular>0.12 0.12 0.12 1</specular></material>
+      </visual>
+      <!-- Collision is rotated 90 deg around X (roll) to align cylinder Z-axis with Y-axis -->
+      <collision name="lb_wheel_collision">
+        <pose>0 0 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.0332</radius><length>0.026</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>1.4</mu><mu2>1.2</mu2><slip1>0.001</slip1><slip2>0.001</slip2></ode></friction>
+          <contact><ode><kp>500000.0</kp><kd>100.0</kd></ode></contact>
+        </surface>
+      </collision>
+    </link>
+    <!-- RF STEERING DUMMY -->
+    <joint name="rf_steer_joint" type="revolute">
+      <pose relative_to="base_footprint">0.08751 -0.08000 0.0332 0 0 0</pose>
+      <parent>base_footprint</parent>
+      <child>rf_steer_link</child>
+      <!-- Z axis is inverted for ackermann plugin convention -->
+      <axis><xyz>0 0 -1</xyz><limit><lower>-0.45</lower><upper>0.45</upper><effort>1.2</effort><velocity>3.0</velocity></limit><dynamics><damping>0.08</damping><friction>0.02</friction></dynamics></axis>
+    </joint>
+    <link name="rf_steer_link">
+      <pose relative_to="rf_steer_joint">0 0 0 0 0 0</pose>
+      <inertial><mass>0.10</mass><inertia><ixx>5e-5</ixx><ixy>0</ixy><ixz>0</ixz><iyy>5e-5</iyy><iyz>0</iyz><izz>5e-5</izz></inertia></inertial>
+    </link>
+    <!-- RF WHEEL -->
+    <joint name="rf_wheel_joint" type="revolute">
+      <pose relative_to="rf_steer_link">0 0 0 0 0 0</pose>
+      <parent>rf_steer_link</parent>
+      <child>rf_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><lower>-100000</lower><upper>100000</upper><effort>1.0</effort><velocity>45</velocity></limit><dynamics><damping>0.004</damping><friction>0.001</friction></dynamics></axis>
+    </joint>
+    <link name="rf_wheel_link">
+      <pose relative_to="rf_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial><mass>0.2</mass><inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0002</iyy><iyz>0</iyz><izz>0.0001</izz></inertia></inertial>
+      <visual name="rf_wheel_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/rf_wheel_link.STL</uri></mesh></geometry>
+        <material><ambient>0.2 0.2 0.2 1</ambient></material>
+      </visual>
+      <visual name="rf_wheel_teal_hub">
+        <pose>0 -0.011 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.020</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.00 0.62 0.70 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><specular>0.12 0.12 0.12 1</specular></material>
+      </visual>
+      <!-- Collision is rotated 90 deg around X (roll) to align cylinder Z-axis with Y-axis -->
+      <collision name="rf_wheel_collision">
+        <pose>0 0 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.0332</radius><length>0.026</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>1.4</mu><mu2>1.2</mu2><slip1>0.001</slip1><slip2>0.001</slip2></ode></friction>
+          <contact><ode><kp>500000.0</kp><kd>100.0</kd></ode></contact>
+        </surface>
+      </collision>
+    </link>
+    <!-- LF STEERING DUMMY -->
+    <joint name="lf_steer_joint" type="revolute">
+      <pose relative_to="base_footprint">0.08751 0.08000 0.0332 0 0 0</pose>
+      <parent>base_footprint</parent>
+      <child>lf_steer_link</child>
+      <!-- Z axis is inverted for ackermann plugin convention -->
+      <axis><xyz>0 0 -1</xyz><limit><lower>-0.45</lower><upper>0.45</upper><effort>1.2</effort><velocity>3.0</velocity></limit><dynamics><damping>0.08</damping><friction>0.02</friction></dynamics></axis>
+    </joint>
+    <link name="lf_steer_link">
+      <pose relative_to="lf_steer_joint">0 0 0 0 0 0</pose>
+      <inertial><mass>0.10</mass><inertia><ixx>5e-5</ixx><ixy>0</ixy><ixz>0</ixz><iyy>5e-5</iyy><iyz>0</iyz><izz>5e-5</izz></inertia></inertial>
+    </link>
+    <!-- LF WHEEL -->
+    <joint name="lf_wheel_joint" type="revolute">
+      <pose relative_to="lf_steer_link">0 0 0 0 0 0</pose>
+      <parent>lf_steer_link</parent>
+      <child>lf_wheel_link</child>
+      <axis><xyz>0 1 0</xyz><limit><lower>-100000</lower><upper>100000</upper><effort>1.0</effort><velocity>45</velocity></limit><dynamics><damping>0.004</damping><friction>0.001</friction></dynamics></axis>
+    </joint>
+    <link name="lf_wheel_link">
+      <pose relative_to="lf_wheel_joint">0 0 0 0 0 0</pose>
+      <inertial><mass>0.2</mass><inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.0002</iyy><iyz>0</iyz><izz>0.0001</izz></inertia></inertial>
+      <visual name="lf_wheel_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><mesh><uri>model://wheeltec_v550_ackermann/meshes/lf_wheel_link.STL</uri></mesh></geometry>
+        <material><ambient>0.2 0.2 0.2 1</ambient></material>
+      </visual>
+      <visual name="lf_wheel_teal_hub">
+        <pose>0 0.011 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.020</radius><length>0.004</length></cylinder></geometry>
+        <material><ambient>0.00 0.62 0.70 1</ambient><diffuse>0.00 0.78 0.86 1</diffuse><specular>0.12 0.12 0.12 1</specular></material>
+      </visual>
+      <!-- Collision is rotated 90 deg around X (roll) to align cylinder Z-axis with Y-axis -->
+      <collision name="lf_wheel_collision">
+        <pose>0 0 0 1.570796 0 0</pose>
+        <geometry><cylinder><radius>0.0332</radius><length>0.026</length></cylinder></geometry>
+        <surface>
+          <friction><ode><mu>1.4</mu><mu2>1.2</mu2><slip1>0.001</slip1><slip2>0.001</slip2></ode></friction>
+          <contact><ode><kp>500000.0</kp><kd>100.0</kd></ode></contact>
+        </surface>
+      </collision>
+    </link>
+    <plugin name="v550_ackermann_drive" filename="libv550_safe_ackermann_drive.so">
+      <ros>
+        <remapping>cmd_vel:=cmd_vel</remapping>
+        <remapping>odom:=odom</remapping>
+      </ros>
+
+      <update_rate>100.0</update_rate>
+
+      <front_left_joint>lf_wheel_joint</front_left_joint>
+      <front_right_joint>rf_wheel_joint</front_right_joint>
+      <rear_left_joint>lb_wheel_joint</rear_left_joint>
+      <rear_right_joint>rb_wheel_joint</rear_right_joint>
+
+      <left_steering_joint>lf_steer_joint</left_steering_joint>
+      <right_steering_joint>rf_steer_joint</right_steering_joint>
+
+      <wheel_separation>0.160</wheel_separation>
+      <wheel_base>0.1432</wheel_base>
+      <wheel_radius>0.0332</wheel_radius>
+
+      <min_steer>-0.35</min_steer>
+      <max_steer>0.35</max_steer>
+
+      <max_speed>1.5</max_speed>
+      <max_steering_angle>0.35</max_steering_angle>
+
+      <!-- PID gains for steering; rear drive uses a bounded velocity motor. -->
+      <right_steering_pid_gain>8.0 0.0 0.12</right_steering_pid_gain>
+      <left_steering_pid_gain>8.0 0.0 0.12</left_steering_pid_gain>
+      <steering_torque_limit>1.00</steering_torque_limit>
+      <drive_torque_limit>0.60</drive_torque_limit>
+      <brake_torque_limit>0.80</brake_torque_limit>
+      <command_timeout>0.50</command_timeout>
+      <parking_brake>true</parking_brake>
+      <parking_linear_threshold>0.10</parking_linear_threshold>
+      <parking_angular_threshold>0.50</parking_angular_threshold>
+
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>false</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+      <publish_distance_to_center>true</publish_distance_to_center>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+    </plugin>
+
+    <plugin name="v550_joint_state" filename="libgazebo_ros_joint_state_publisher.so">
+      <ros>
+        <remapping>joint_states:=joint_states_raw</remapping>
+      </ros>
+      <update_rate>30</update_rate>
+      <joint_name>rf_wheel_joint</joint_name>
+      <joint_name>lf_wheel_joint</joint_name>
+      <joint_name>rb_wheel_joint</joint_name>
+      <joint_name>lb_wheel_joint</joint_name>
+      <joint_name>rf_steer_joint</joint_name>
+      <joint_name>lf_steer_joint</joint_name>
+    </plugin>
+
+  </model>
+</sdf>

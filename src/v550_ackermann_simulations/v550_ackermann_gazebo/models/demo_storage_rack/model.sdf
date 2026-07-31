@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="demo_storage_rack">
+    <static>true</static>
+    <link name="rack">
+      <collision name="rack_keepout_collision">
+        <pose>0 0 0.90 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>3.00 0.85 1.80</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name="rear_beam">
+        <pose>0 -0.42 0.92 0 0 0</pose>
+        <geometry><box><size>3.05 0.08 1.72</size></box></geometry>
+        <material><ambient>0.88 0.46 0.04 1</ambient><diffuse>0.88 0.46 0.04 1</diffuse><specular>0.08 0.06 0.02 1</specular></material>
+      </visual>
+      <visual name="front_beam">
+        <pose>0 0.42 0.92 0 0 0</pose>
+        <geometry><box><size>3.05 0.08 1.72</size></box></geometry>
+        <material><ambient>0.88 0.46 0.04 1</ambient><diffuse>0.88 0.46 0.04 1</diffuse><specular>0.08 0.06 0.02 1</specular></material>
+      </visual>
+      <visual name="lower_deck">
+        <pose>0 0 0.42 0 0 0</pose>
+        <geometry><box><size>2.95 0.78 0.08</size></box></geometry>
+        <material><ambient>0.18 0.20 0.21 1</ambient><diffuse>0.24 0.26 0.27 1</diffuse><specular>0.03 0.03 0.03 1</specular></material>
+      </visual>
+      <visual name="middle_deck">
+        <pose>0 0 0.96 0 0 0</pose>
+        <geometry><box><size>2.95 0.78 0.08</size></box></geometry>
+        <material><ambient>0.18 0.20 0.21 1</ambient><diffuse>0.24 0.26 0.27 1</diffuse><specular>0.03 0.03 0.03 1</specular></material>
+      </visual>
+      <visual name="top_deck">
+        <pose>0 0 1.50 0 0 0</pose>
+        <geometry><box><size>2.95 0.78 0.08</size></box></geometry>
+        <material><ambient>0.18 0.20 0.21 1</ambient><diffuse>0.24 0.26 0.27 1</diffuse><specular>0.03 0.03 0.03 1</specular></material>
+      </visual>
+      <visual name="left_cartons">
+        <pose>-0.78 0 0.70 0 0 0</pose>
+        <geometry><box><size>0.72 0.58 0.42</size></box></geometry>
+        <material><ambient>0.55 0.34 0.13 1</ambient><diffuse>0.62 0.40 0.18 1</diffuse></material>
+      </visual>
+      <visual name="right_cartons">
+        <pose>0.78 0 1.23 0 0 0</pose>
+        <geometry><box><size>0.76 0.60 0.38</size></box></geometry>
+        <material><ambient>0.50 0.31 0.12 1</ambient><diffuse>0.58 0.37 0.16 1</diffuse></material>
+      </visual>
+    </link>
+  </model>
+</sdf>

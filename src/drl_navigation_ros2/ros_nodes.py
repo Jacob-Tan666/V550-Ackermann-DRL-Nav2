@@ -1,4 +1,5 @@
 import rclpy
+import os
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
 from rclpy.qos import QoSDurabilityPolicy, QoSHistoryPolicy, QoSReliabilityPolicy
@@ -10,6 +11,37 @@ from geometry_msgs.msg import Pose, Twist
 from visualization_msgs.msg import Marker
 from rclpy.logging import LoggingSeverity
 
+from gazebo_msgs.msg import ContactsState, ModelStates
+
+
+def _env_float(name, default):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except ValueError:
+        return default
+
+class BumperSubscriber(Node):
+    def __init__(self):
+        super().__init__("bumper_subscriber")
+        self.get_logger().set_level(SEVERITY)
+        self.subscriber_ = self.create_subscription(
+            ContactsState, "bumper_states", self.listener_callback, 10
+        )
+        self.latest_collision = False
+
+    def listener_callback(self, msg):
+        if len(msg.states) > 0:
+            self.latest_collision = True
+
+    def get_collision(self):
+        return self.latest_collision
+
+    def reset_collision(self):
+        self.latest_collision = False
+
 SEVERITY = LoggingSeverity.ERROR
 
 
@@ -17,11 +49,11 @@ class SensorSubscriber(Node):
     def __init__(self):
         super().__init__("sensor_subscriber")
         self.get_logger().set_level(SEVERITY)
-        self.subscriber_ = self.create_subscription(
+        self.scan_subscriber_ = self.create_subscription(
             LaserScan, "scan", self.scan_listener_callback, 1
         )
-        self.subscriber_ = self.create_subscription(
-            Odometry, "odom", self.odom_listener_callback, 1
+        self.odom_subscriber_ = self.create_subscription(
+            ModelStates, "/gazebo/model_states", self.odom_listener_callback, 1
         )
         self.latest_position = None
         self.latest_heading = None
@@ -31,8 +63,12 @@ class SensorSubscriber(Node):
         self.latest_scan = msg.ranges[:]
 
     def odom_listener_callback(self, msg):
-        self.latest_position = msg.pose.pose.position
-        self.latest_heading = msg.pose.pose.orientation
+        try:
+            index = msg.name.index("wheeltec_v550_ackermann")
+            self.latest_position = msg.pose[index].position
+            self.latest_heading = msg.pose[index].orientation
+        except ValueError:
+            pass
 
     def get_latest_sensor(self):
         # print(self.latest_scan, self.latest_position, self.latest_heading)
@@ -60,14 +96,18 @@ class OdomSubscriber(Node):
         super().__init__("odom_subscriber")
         self.get_logger().set_level(SEVERITY)
         self.subscriber_ = self.create_subscription(
-            Odometry, "odom", self.listener_callback, 1
+            ModelStates, "/gazebo/model_states", self.listener_callback, 1
         )
         self.latest_position = None
         self.latest_heading = None
 
     def listener_callback(self, msg):
-        self.latest_position = msg.pose.pose.position
-        self.latest_heading = msg.pose.pose.orientation
+        try:
+            index = msg.name.index("wheeltec_v550_ackermann")
+            self.latest_position = msg.pose[index].position
+            self.latest_heading = msg.pose[index].orientation
+        except ValueError:
+            pass
 
     def get_latest_odom(self):
         return self.latest_position, self.latest_heading
@@ -81,7 +121,8 @@ class ResetWorldClient(Node):
 
         self.wait_for_service(self.reset_client, "reset_world")
 
-    def wait_for_service(self, client, service_name, timeout=10.0):
+    def wait_for_service(self, client, service_name, timeout=None):
+        timeout = _env_float("ROS_SERVICE_TIMEOUT", 45.0) if timeout is None else timeout
         self.get_logger().info(f"Waiting for {service_name} service...")
         if not client.wait_for_service(timeout_sec=timeout):
             self.get_logger().error(
@@ -93,7 +134,9 @@ class ResetWorldClient(Node):
         self.get_logger().info("Calling /gazebo/reset_world service...")
         request = Empty.Request()
         future = self.reset_client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
+        rclpy.spin_until_future_complete(self, future, timeout_sec=_env_float("ROS_SERVICE_CALL_TIMEOUT", 15.0))
+        if not future.done():
+            raise RuntimeError("Timed out calling /reset_world.")
         if future.result() is not None:
             self.get_logger().info("World reset successfully.")
         else:
@@ -110,7 +153,8 @@ class PhysicsClient(Node):
         self.wait_for_service(self.unpause_client, "unpause_physics")
         self.wait_for_service(self.pause_client, "pause_physics")
 
-    def wait_for_service(self, client, service_name, timeout=10.0):
+    def wait_for_service(self, client, service_name, timeout=None):
+        timeout = _env_float("ROS_SERVICE_TIMEOUT", 45.0) if timeout is None else timeout
         self.get_logger().info(f"Waiting for {service_name} service...")
         if not client.wait_for_service(timeout_sec=timeout):
             self.get_logger().error(
@@ -122,7 +166,9 @@ class PhysicsClient(Node):
         self.get_logger().info("Calling /gazebo/pause_physics service...")
         request = Empty.Request()
         future = self.pause_client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
+        rclpy.spin_until_future_complete(self, future, timeout_sec=_env_float("ROS_SERVICE_CALL_TIMEOUT", 15.0))
+        if not future.done():
+            raise RuntimeError("Timed out calling /pause_physics.")
         if future.result() is not None:
             self.get_logger().info("Physics paused successfully.")
         else:
@@ -133,7 +179,9 @@ class PhysicsClient(Node):
         request = Empty.Request()
         future = self.unpause_client.call_async(request)
 
-        rclpy.spin_until_future_complete(self, future)
+        rclpy.spin_until_future_complete(self, future, timeout_sec=_env_float("ROS_SERVICE_CALL_TIMEOUT", 15.0))
+        if not future.done():
+            raise RuntimeError("Timed out calling /unpause_physics.")
         if future.result() is not None:
             self.get_logger().info("Physics unpaused successfully.")
         else:
@@ -145,14 +193,31 @@ class SetModelStateClient(Node):
         super().__init__("set_entity_state_client")
         self.get_logger().set_level(SEVERITY)
         self.client = self.create_client(SetEntityState, "/gazebo/set_entity_state")
-        while not self.client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info("Service not available, waiting again...")
+        self.wait_for_service(self.client, "set_entity_state")
         self.request = SetEntityState.Request()
+
+    def wait_for_service(self, client, service_name, timeout=None):
+        timeout = _env_float("ROS_SERVICE_TIMEOUT", 45.0) if timeout is None else timeout
+        if not client.wait_for_service(timeout_sec=timeout):
+            raise RuntimeError(
+                f"Service {service_name} not available after waiting {timeout:.1f}s. "
+                "Check that Gazebo is running and ROS_DOMAIN_ID matches the simulation."
+            )
 
     def set_state(self, name, new_pose):
         self.request.state.name = name
         self.request.state.pose = new_pose
+        # Always clear residual linear/angular velocity during pose reset.
+        self.request.state.twist = Twist()
+        self.request.state.reference_frame = "world"
         self.future = self.client.call_async(self.request)
+        rclpy.spin_until_future_complete(self, self.future, timeout_sec=_env_float("ROS_SERVICE_CALL_TIMEOUT", 15.0))
+        if not self.future.done():
+            raise RuntimeError(f"Timed out setting Gazebo entity state for {name}.")
+        result = self.future.result()
+        if result is None or not result.success:
+            message = "" if result is None else result.status_message
+            raise RuntimeError(f"Failed to set Gazebo entity state for {name}: {message}")
 
 
 class CmdVelPublisher(Node):
@@ -160,15 +225,17 @@ class CmdVelPublisher(Node):
         super().__init__("cmd_vel_publisher")
         self.get_logger().set_level(SEVERITY)
         self.publisher_ = self.create_publisher(Twist, "cmd_vel", 1)
-        self.timer = self.create_timer(0.1, self.publish_cmd_vel)
+        self._warned_reverse_clamp = False
 
     def publish_cmd_vel(self, linear_velocity=0.0, angular_velocity=0.0):
         twist_msg = Twist()
-        # Set linear and angular velocities
-        twist_msg.linear.x = float(linear_velocity)  # Example linear velocity (m/s)
-        twist_msg.angular.z = float(
-            angular_velocity
-        )  # Example angular velocity (rad/s)
+
+        linear = float(linear_velocity)
+        angular = float(angular_velocity)
+
+        # Ackermann plugin consumes signed linear.x and steering in angular.z.
+        twist_msg.linear.x = linear
+        twist_msg.angular.z = angular
         self.publisher_.publish(twist_msg)
 
 
@@ -176,7 +243,9 @@ class MarkerPublisher(Node):
     def __init__(self):
         super().__init__("marker_publisher")
         self.get_logger().set_level(SEVERITY)
-        self.publisher = self.create_publisher(Marker, "visualization_marker", 1)
+        from rclpy.qos import QoSProfile, QoSDurabilityPolicy, QoSReliabilityPolicy
+        qos = QoSProfile(depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL, reliability=QoSReliabilityPolicy.RELIABLE)
+        self.publisher = self.create_publisher(Marker, "visualization_marker", qos)
 
     def publish(self, x, y):
         marker = Marker()
@@ -189,22 +258,24 @@ class MarkerPublisher(Node):
 
         marker.pose.position.x = x
         marker.pose.position.y = y
-        marker.pose.position.z = 0.0
+        marker.pose.position.z = 0.05
         marker.pose.orientation.x = 0.0
         marker.pose.orientation.y = 0.0
         marker.pose.orientation.z = 0.0
         marker.pose.orientation.w = 1.0
 
-        marker.scale.x = 0.2
-        marker.scale.y = 0.2
-        marker.scale.z = 0.1
+        marker.scale.x = 0.5
+        marker.scale.y = 0.5
+        marker.scale.z = 0.05
 
-        marker.color.a = 1.0
+        marker.color.a = 0.9
         marker.color.r = 0.0
         marker.color.g = 1.0
         marker.color.b = 0.0
 
         self.publisher.publish(marker)
+        import rclpy
+        rclpy.spin_once(self, timeout_sec=0.05)
         self.get_logger().info("Publishing Marker")
 
 

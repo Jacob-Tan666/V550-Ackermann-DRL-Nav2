@@ -15,37 +15,41 @@ omit = [
 [tool.poetry]
 name = "drl_navigation_ros2"
 version = "0.1.0"
-description = "A template Poetry project structure."
+description = "V550 Ackermann autonomous navigation with TD3/SAC, ROS 2 Nav2, and Gazebo."
 
 packages = [
     { include = "drl_navigation_ros2", from = "src" },
 ]
 
-authors = ["Lari Liuhamo <lari.liuhamo+pypi@gmail.com>",]
-maintainers = ["Lari Liuhamo <lari.liuhamo+pypi@gmail.com>",]
+authors = ["Jacob_Tan",]
+maintainers = ["Jacob_Tan",]
 
-include = ["CHANGELOG.md", "LICENSE", "py.typed",]
+include = ["LICENSE",]
 license = "MIT"
 readme = "README.md"
 
-homepage = "https://github.com/reiniscimurs/DRL_Navigation_ROS2"
-repository = "https://github.com/reiniscimurs/DRL_Navigation_ROS2"
+homepage = "https://github.com/Jacob-Tan666/V550-Ackermann-DRL-Nav2"
+repository = "https://github.com/Jacob-Tan666/V550-Ackermann-DRL-Nav2"
 
 keywords = [
-    "python3",
+    "ros2",
+    "ackermann",
+    "v550",
+    "robot-navigation",
+    "deep-reinforcement-learning",
+    "td3",
+    "nav2",
+    "gazebo",
+    "pytorch",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
-    "Typing :: Typed",
 ]
 
 
@@ -95,8 +99,7 @@ tox-gh-actions = "^3.2.0"
 
 
 [tool.poetry.urls]
-"Tracker" = "https://github.com/reiniscimurs/DRL_Navigation_ROS2/issues"
-"Changelog" = "https://github.com/reiniscimurs/DRL_Navigation_ROS2/blob/main/CHANGELOG.md"
+"Tracker" = "https://github.com/Jacob-Tan666/V550-Ackermann-DRL-Nav2/issues"
 
 
 [tool.pytest.ini_options]

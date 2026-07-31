@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="demo_dynamic_worker">
+    <pose>0 0 0.05 0 0 0</pose>
+    <static>false</static>
+    <allow_auto_disable>false</allow_auto_disable>
+    <link name="link">
+      <gravity>false</gravity>
+      <kinematic>true</kinematic>
+      <inertial>
+        <mass>80</mass>
+        <inertia>
+          <ixx>8</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>8</iyy>
+          <iyz>0</iyz>
+          <izz>4</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <pose>0 0 0.72 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.28</radius>
+            <length>1.35</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="body_visual">
+        <pose>0 0 0.66 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>0.92</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.02 0.42 0.18 1</ambient>
+          <diffuse>0.02 0.42 0.18 1</diffuse>
+        </material>
+      </visual>
+      <visual name="vest_visual">
+        <pose>0 0 0.75 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.255</radius>
+            <length>0.18</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.95 0.95 0.10 1</ambient>
+          <diffuse>0.95 0.95 0.10 1</diffuse>
+          <emissive>0.35 0.35 0.02 1</emissive>
+        </material>
+      </visual>
+      <visual name="head_visual">
+        <pose>0 0 1.36 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.18</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.72 0.58 0.44 1</ambient>
+          <diffuse>0.72 0.58 0.44 1</diffuse>
+        </material>
+      </visual>
+      <visual name="helmet_visual">
+        <pose>0 0 1.52 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.19</radius>
+            <length>0.08</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 0.62 0.0 1</ambient>
+          <diffuse>1.0 0.62 0.0 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

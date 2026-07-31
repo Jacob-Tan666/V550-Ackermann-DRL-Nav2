@@ -1,0 +1,126 @@
+{
+  "config": {
+    "model_dir": "src/drl_navigation_ros2/models/TD3",
+    "model_name": "TD3_best",
+    "episodes": 10,
+    "max_steps": 250,
+    "scan_bins": 50,
+    "frame_stack": 3,
+    "ros_domain_id": 99,
+    "seed": 42,
+    "device": "cpu",
+    "randomize_eval": false
+  },
+  "summary": {
+    "episodes": 10,
+    "success_rate": 1.0,
+    "collision_rate": 0.0,
+    "timeout_rate": 0.0,
+    "avg_reward": 456.990798222868,
+    "avg_episode_steps": 23.3,
+    "avg_navigation_time_sec": 23.441050245601218,
+    "avg_final_distance": 0.4763105128625774
+  },
+  "episodes": [
+    {
+      "episode": 1,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 501.4120855268254,
+      "steps": 22,
+      "duration_sec": 22.018200570018962,
+      "final_distance": 0.535865608137543
+    },
+    {
+      "episode": 2,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 557.6189108765061,
+      "steps": 30,
+      "duration_sec": 30.140583927975968,
+      "final_distance": 0.5481310244524797
+    },
+    {
+      "episode": 3,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 480.75273243297926,
+      "steps": 45,
+      "duration_sec": 45.303988617961295,
+      "final_distance": 0.45626665716575393
+    },
+    {
+      "episode": 4,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 479.58186115063245,
+      "steps": 25,
+      "duration_sec": 25.18032238003798,
+      "final_distance": 0.4109168974010213
+    },
+    {
+      "episode": 5,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 265.76454673504963,
+      "steps": 7,
+      "duration_sec": 6.960158030968159,
+      "final_distance": 0.3449940006061196
+    },
+    {
+      "episode": 6,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 344.2980981087546,
+      "steps": 11,
+      "duration_sec": 11.04991785006132,
+      "final_distance": 0.5018945879038567
+    },
+    {
+      "episode": 7,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 466.9192137135292,
+      "steps": 23,
+      "duration_sec": 23.212424678029492,
+      "final_distance": 0.5044245829534508
+    },
+    {
+      "episode": 8,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 492.8901411274109,
+      "steps": 22,
+      "duration_sec": 22.113688459969126,
+      "final_distance": 0.47648836807834916
+    },
+    {
+      "episode": 9,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 531.0786379398455,
+      "steps": 27,
+      "duration_sec": 27.2028405549936,
+      "final_distance": 0.5161633770779123
+    },
+    {
+      "episode": 10,
+      "success": true,
+      "collision": false,
+      "timeout": false,
+      "reward": 449.59175461714744,
+      "steps": 21,
+      "duration_sec": 21.228377385996282,
+      "final_distance": 0.4679600248492878
+    }
+  ]
+}

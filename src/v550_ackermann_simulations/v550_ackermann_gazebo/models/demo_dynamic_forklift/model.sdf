@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="demo_dynamic_forklift">
+    <pose>0 0 0.05 0 0 0</pose>
+    <static>false</static>
+    <allow_auto_disable>false</allow_auto_disable>
+    <link name="link">
+      <gravity>false</gravity>
+      <kinematic>true</kinematic>
+      <inertial>
+        <mass>120</mass>
+        <inertia>
+          <ixx>25</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>35</iyy>
+          <iyz>0</iyz>
+          <izz>45</izz>
+        </inertia>
+      </inertial>
+      <collision name="body_collision">
+        <pose>0 0 0.45 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.05 0.62 0.78</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name="fork_collision">
+        <pose>0.72 0 0.12 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.95 0.52 0.10</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="body_visual">
+        <pose>0 0 0.45 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1.05 0.62 0.78</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1.0 0.58 0.05 1</ambient>
+          <diffuse>1.0 0.58 0.05 1</diffuse>
+          <specular>0.25 0.2 0.08 1</specular>
+        </material>
+      </visual>
+      <visual name="counterweight_visual">
+        <pose>-0.48 0 0.58 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.66 0.55</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.08 0.09 0.10 1</ambient>
+          <diffuse>0.08 0.09 0.10 1</diffuse>
+        </material>
+      </visual>
+      <visual name="mast_visual">
+        <pose>0.42 0 1.04 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.12 0.68 1.45</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.08 0.09 0.10 1</ambient>
+          <diffuse>0.08 0.09 0.10 1</diffuse>
+        </material>
+      </visual>
+      <visual name="fork_visual">
+        <pose>0.72 0 0.12 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.95 0.52 0.10</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.78 0.78 0.72 1</ambient>
+          <diffuse>0.78 0.78 0.72 1</diffuse>
+        </material>
+      </visual>
+      <visual name="left_wheel_visual">
+        <pose>0.22 0.36 0.18 1.5708 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.18</radius>
+            <length>0.12</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.02 0.02 0.02 1</ambient>
+          <diffuse>0.02 0.02 0.02 1</diffuse>
+        </material>
+      </visual>
+      <visual name="right_wheel_visual">
+        <pose>0.22 -0.36 0.18 1.5708 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.18</radius>
+            <length>0.12</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.02 0.02 0.02 1</ambient>
+          <diffuse>0.02 0.02 0.02 1</diffuse>
+        </material>
+      </visual>
+      <visual name="beacon_visual">
+        <pose>-0.18 0 0.95 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.06</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>1.0 0.05 0.02 1</ambient>
+          <diffuse>1.0 0.05 0.02 1</diffuse>
+          <emissive>1.0 0.03 0.0 1</emissive>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

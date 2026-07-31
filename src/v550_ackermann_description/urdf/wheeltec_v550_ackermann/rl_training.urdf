@@ -1,0 +1,203 @@
+<?xml version="1.0" ?>
+<robot name="wheeltec_v550_ackermann">
+  <material name="dark">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+  <link name="base_footprint">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.011 0 0.041" rpy="0 0 0"/>
+      <mass value="5.0"/>
+      <inertia ixx="0.05" ixy="0.0" ixz="0.0" iyy="0.08" iyz="0.0" izz="0.10"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.03" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.26 0.14 0.10"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin xyz="0.02 0 0.08" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.26 0.14 0.10"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="rb_wheel_link">
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0002" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+      <material name="dark"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="lb_wheel_link">
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0002" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+      <material name="dark"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="rf_steer_link">
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.00005" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="0.00005"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+  <link name="rf_wheel_link">
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0002" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+      <material name="dark"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="lf_steer_link">
+    <inertial>
+      <mass value="0.10"/>
+      <inertia ixx="0.00005" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="0.00005"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+  <link name="lf_wheel_link">
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0002" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+      <material name="dark"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570796 0 0"/>
+      <geometry>
+        <cylinder radius="0.0332" length="0.026"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0.0000 0.0000 0.0000" rpy="0 0 0"/>
+  </joint>
+  <joint name="rb_wheel_joint" type="continuous">
+    <limit effort="8.0" velocity="45.0"/>
+    <dynamics damping="0.08" friction="0.005"/>
+    <parent link="base_link"/>
+    <child link="rb_wheel_link"/>
+    <origin xyz="-0.05574 -0.09500 0.03320" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="lb_wheel_joint" type="continuous">
+    <limit effort="8.0" velocity="45.0"/>
+    <dynamics damping="0.08" friction="0.005"/>
+    <parent link="base_link"/>
+    <child link="lb_wheel_link"/>
+    <origin xyz="-0.05574 0.09500 0.03320" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="rf_steer_joint" type="revolute">
+    <limit lower="-0.45" upper="0.45" effort="8.0" velocity="3.0"/>
+    <dynamics damping="0.35" friction="0.10"/>
+    <parent link="base_link"/>
+    <child link="rf_steer_link"/>
+    <origin xyz="0.08751 -0.09500 0.03320" rpy="0 0 0"/>
+    <!-- Match Gazebo SDF steering convention. -->
+    <axis xyz="0 0 -1"/>
+  </joint>
+  <joint name="rf_wheel_joint" type="continuous">
+    <limit effort="1.0" velocity="45.0"/>
+    <dynamics damping="0.03" friction="0.001"/>
+    <parent link="rf_steer_link"/>
+    <child link="rf_wheel_link"/>
+    <origin xyz="0.0000 0.0000 0.0000" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="lf_steer_joint" type="revolute">
+    <limit lower="-0.45" upper="0.45" effort="8.0" velocity="3.0"/>
+    <dynamics damping="0.35" friction="0.10"/>
+    <parent link="base_link"/>
+    <child link="lf_steer_link"/>
+    <origin xyz="0.08751 0.09500 0.03320" rpy="0 0 0"/>
+    <!-- Match Gazebo SDF steering convention. -->
+    <axis xyz="0 0 -1"/>
+  </joint>
+  <joint name="lf_wheel_joint" type="continuous">
+    <limit effort="1.0" velocity="45.0"/>
+    <dynamics damping="0.03" friction="0.001"/>
+    <parent link="lf_steer_link"/>
+    <child link="lf_wheel_link"/>
+    <origin xyz="0.0000 0.0000 0.0000" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="base_scan"/>
+  <joint name="scan_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_scan"/>
+    <origin xyz="0.10073 0 0.086" rpy="0 0 0"/>
+  </joint>
+</robot>

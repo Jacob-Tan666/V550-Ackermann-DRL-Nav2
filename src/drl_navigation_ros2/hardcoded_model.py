@@ -66,24 +66,23 @@ class HCM(object):
         pass
 
     def prepare_state(self, latest_scan, distance, cos, sin, collision, goal, action):
-        latest_scan = np.array(latest_scan)
-
-        inf_mask = np.isinf(latest_scan)
-        latest_scan[inf_mask] = 7.0
+        latest_scan = np.asarray(latest_scan, dtype=np.float32)
+        latest_scan = np.nan_to_num(latest_scan, nan=8.0, posinf=8.0, neginf=0.0)
+        latest_scan = np.clip(latest_scan, 0.0, 8.0) / 8.0
 
         max_bins = self.state_dim - 5
-        bin_size = int(np.ceil(len(latest_scan) / max_bins))
+        split_scans = np.array_split(latest_scan, max_bins)
+        min_values = [float(np.min(segment)) if len(segment) > 0 else 1.0 for segment in split_scans]
 
-        # Initialize the list to store the minimum values of each bin
-        min_values = []
-
-        # Loop through the data and create bins
-        for i in range(0, len(latest_scan), bin_size):
-            # Get the current bin
-            bin = latest_scan[i : i + min(bin_size, len(latest_scan) - i)]
-            # Find the minimum value in the current bin and append it to the min_values list
-            min_values.append(min(bin))
-        state = min_values + [distance, cos, sin] + [action[0], action[1]]
+        distance = 8.0 if not np.isfinite(distance) else float(distance)
+        norm_distance = float(np.clip(distance / 8.0, 0.0, 1.0))
+        cos = float(np.clip(0.0 if not np.isfinite(cos) else cos, -1.0, 1.0))
+        sin = float(np.clip(0.0 if not np.isfinite(sin) else sin, -1.0, 1.0))
+        action = np.asarray(action, dtype=np.float32).reshape(-1)
+        if action.size != 2:
+            action = np.zeros(2, dtype=np.float32)
+        action = np.clip(action, -1.0, 1.0)
+        state = np.asarray(min_values + [norm_distance, cos, sin, action[0], action[1]], dtype=np.float32)
 
         assert len(state) == self.state_dim
         terminal = 1 if collision or goal else 0
@@ -95,9 +94,9 @@ class HCM(object):
             sample = {
                 self.iterator: {
                     "latest_scan": latest_scan.tolist(),
-                    "distance": distance.tolist(),
-                    "cos": cos.tolist(),
-                    "sin": sin,
+                        "distance": float(distance),
+                        "cos": float(cos),
+                        "sin": float(sin),
                     "collision": collision,
                     "goal": goal,
                     "action": action,

@@ -132,6 +132,7 @@ cov.xml
 
 # Editor config files
 .vscode
+.idea/
 
 # DeepCode/Snyk
 .dccache
@@ -146,3 +147,17 @@ tests/reports
 .ruff_cache
 /log/
 /install/
+
+# ROS 2 / Gazebo runtime outputs
+/gazebo_logs/
+/runs/
+*.tfevents.*
+
+# Local recordings and one-off development copies
+*.webm
+/ackermann.cpp
+/parse.py
+/v550_ackermann/
+
+# Redundant local checkpoint backups
+/src/drl_navigation_ros2/models/备份模型/
