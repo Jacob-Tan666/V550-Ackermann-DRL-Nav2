@@ -59,31 +59,16 @@ relative goal geometry, and recent control history.
 
 ## System Architecture
 
-```mermaid
-flowchart LR
-    subgraph DRL[TD3 training and evaluation]
-        L[LaserScan + odometry] --> E[ROS_env]
-        E --> S[Stacked state<br/>50 lidar bins + goal/action history]
-        S --> A[TD3 actor<br/>Conv1D + MLP]
-        A --> C[Normalized speed + steering]
-        C --> G[Gazebo V550]
-        E --> R[Reward and terminal state]
-        R --> P[Prioritized replay]
-        P --> Q[Twin critics and target networks]
-        Q --> A
-    end
+<p align="center">
+  <a href="./docs/assets/system-architecture.svg">
+    <img src="./docs/assets/system-architecture.svg" width="100%" alt="V550 Ackermann system architecture showing the TD3/SAC learning loop, industrial Nav2 pipeline, shared Gazebo digital twin, observability, and Ackermann actuation gateway">
+  </a>
+</p>
 
-    subgraph NAV[Industrial Nav2 navigation]
-        M[Warehouse map + AMCL] --> H[Smac Hybrid-A*]
-        H --> N[MPPI Ackermann controller]
-        D[Dynamic obstacle predictor] --> K[Local/global costmaps]
-        K --> H
-        K --> N
-        N --> V[Velocity smoother]
-        V --> X[Ackermann command adapter]
-        X --> Z[V550 Gazebo drive plugin]
-    end
-```
+Both autonomy modes share the same V550 sensor, kinematic, and actuation
+boundaries. The learning path closes the loop through prioritized replay and
+twin-critic policy updates; the Nav2 path combines predicted dynamic occupancy
+with Hybrid-A* planning and MPPI control before reaching the shared drive plugin.
 
 ### DRL state, action, and reward
 

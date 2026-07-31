@@ -1,0 +1,253 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="940" viewBox="0 0 1600 940" role="img" aria-labelledby="title desc">
+  <title id="title">V550 Ackermann autonomous navigation system architecture</title>
+  <desc id="desc">A shared Gazebo V550 digital twin connects a TD3 and SAC learning loop, an industrial Nav2 autonomy pipeline, observability tools, and an Ackermann actuation gateway.</desc>
+
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#23313d" stroke-width="1" opacity="0.24"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.32"/>
+    </filter>
+    <filter id="cyanGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="amberGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#49d6e9"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb454"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7ce38b"/>
+    </marker>
+    <style>
+      .title { font: 700 30px Inter, ui-sans-serif, system-ui, sans-serif; fill: #f5f8fb; letter-spacing: 0; }
+      .subtitle { font: 400 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #94a8ba; letter-spacing: 0; }
+      .eyebrow { font: 700 12px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .section { font: 700 20px Inter, ui-sans-serif, system-ui, sans-serif; fill: #f5f8fb; letter-spacing: 0; }
+      .nodeTitle { font: 700 16px Inter, ui-sans-serif, system-ui, sans-serif; fill: #eef4f8; letter-spacing: 0; }
+      .nodeText { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #9fb0c2; letter-spacing: 0; }
+      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #9fb0c2; letter-spacing: 0; }
+      .flowLabel { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .panel { fill: #0f1822; stroke: #2a3947; stroke-width: 1.5; }
+      .node { fill: #14212c; stroke: #334554; stroke-width: 1.25; }
+      .cyanLine { fill: none; stroke: #49d6e9; stroke-width: 2.5; marker-end: url(#arrowCyan); }
+      .amberLine { fill: none; stroke: #ffb454; stroke-width: 2.5; marker-end: url(#arrowAmber); }
+      .greenLine { fill: none; stroke: #7ce38b; stroke-width: 2.5; marker-end: url(#arrowGreen); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="940" fill="#091018"/>
+  <rect width="1600" height="940" fill="url(#grid)"/>
+  <rect x="1" y="1" width="1598" height="938" rx="8" fill="none" stroke="#283744" stroke-width="2"/>
+
+  <!-- Header -->
+  <g transform="translate(40 32)">
+    <rect x="0" y="2" width="5" height="65" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
+    <text x="23" y="30" class="title">V550 ACKERMANN AUTONOMY STACK</text>
+    <text x="23" y="56" class="subtitle">Deep reinforcement learning and ROS 2 Nav2 on a shared Gazebo digital twin</text>
+  </g>
+
+  <g transform="translate(1042 38)">
+    <rect x="0" y="0" width="116" height="32" rx="8" fill="#152530" stroke="#2d4c58"/>
+    <text x="58" y="21" class="small" text-anchor="middle" fill="#49d6e9">165-D STATE</text>
+    <rect x="126" y="0" width="108" height="32" rx="8" fill="#152530" stroke="#2d4c58"/>
+    <text x="180" y="21" class="small" text-anchor="middle" fill="#49d6e9">2-D ACTION</text>
+    <rect x="244" y="0" width="128" height="32" rx="8" fill="#292318" stroke="#604c2d"/>
+    <text x="308" y="21" class="small" text-anchor="middle" fill="#ffb454">HYBRID-A*</text>
+    <rect x="382" y="0" width="98" height="32" rx="8" fill="#292318" stroke="#604c2d"/>
+    <text x="431" y="21" class="small" text-anchor="middle" fill="#ffb454">MPPI</text>
+  </g>
+
+  <!-- Shared simulation spine -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="142" width="400" height="136" rx="8" class="panel"/>
+    <rect x="40" y="142" width="6" height="136" rx="3" fill="#e88bff"/>
+    <text x="68" y="169" class="eyebrow" fill="#e88bff">SIMULATED WORLD</text>
+    <text x="68" y="201" class="section">Industrial Warehouse</text>
+    <text x="68" y="226" class="nodeText">Gazebo Classic &#8226; static map &#8226; physics</text>
+    <text x="68" y="248" class="nodeText">forklifts &#8226; AGV &#8226; worker &#8226; randomized goals</text>
+
+    <rect x="605" y="132" width="390" height="156" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
+    <rect x="605" y="132" width="390" height="5" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
+    <g transform="translate(637 166)" stroke="#7ce38b" fill="none" stroke-width="2">
+      <rect x="8" y="3" width="48" height="30" rx="5"/>
+      <line x1="19" y1="3" x2="15" y2="-7"/>
+      <line x1="45" y1="3" x2="49" y2="-7"/>
+      <line x1="19" y1="33" x2="19" y2="42"/>
+      <line x1="45" y1="33" x2="45" y2="42"/>
+      <circle cx="32" cy="18" r="5" fill="#7ce38b" stroke="none"/>
+    </g>
+    <text x="720" y="169" class="eyebrow" fill="#7ce38b">SHARED DIGITAL TWIN</text>
+    <text x="720" y="201" class="section">WHEELTEC V550</text>
+    <text x="720" y="226" class="nodeText">Ackermann kinematics &#8226; rear-wheel drive</text>
+    <text x="720" y="248" class="nodeText">LaserScan &#8226; odometry &#8226; TF &#8226; joint states</text>
+    <rect x="720" y="262" width="177" height="20" rx="8" fill="#173629"/>
+    <text x="808" y="276" class="small" text-anchor="middle" fill="#7ce38b">0.45 m TURNING RADIUS</text>
+
+    <rect x="1160" y="142" width="400" height="136" rx="8" class="panel"/>
+    <rect x="1554" y="142" width="6" height="136" rx="3" fill="#9aa8ff"/>
+    <text x="1188" y="169" class="eyebrow" fill="#9aa8ff">OBSERVABILITY</text>
+    <text x="1188" y="201" class="section">Inspect, Measure, Replay</text>
+    <text x="1188" y="226" class="nodeText">RViz trajectories &#8226; TensorBoard learning curves</text>
+    <text x="1188" y="248" class="nodeText">CSV/JSON metrics &#8226; checkpoints &#8226; best policy</text>
+  </g>
+
+  <path d="M 440 210 L 605 210" class="greenLine"/>
+  <text x="522" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">world state</text>
+  <path d="M 995 210 L 1160 210" class="greenLine"/>
+  <text x="1078" y="197" class="flowLabel" text-anchor="middle" fill="#7ce38b">telemetry</text>
+
+  <!-- DRL panel -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="326" width="735" height="450" rx="8" class="panel"/>
+    <rect x="40" y="326" width="735" height="5" rx="2" fill="#49d6e9"/>
+  </g>
+  <text x="72" y="367" class="eyebrow" fill="#49d6e9">MODE 01 &#8226; LEARN</text>
+  <text x="72" y="397" class="section">TD3 / SAC closed-loop training</text>
+  <text x="742" y="367" class="small" text-anchor="end">single or multi-process Gazebo workers</text>
+
+  <g>
+    <rect x="72" y="424" width="205" height="98" rx="8" class="node"/>
+    <rect x="72" y="424" width="205" height="4" rx="2" fill="#49d6e9"/>
+    <text x="92" y="454" class="nodeTitle">State Encoder</text>
+    <text x="92" y="478" class="nodeText">3-frame lidar stack</text>
+    <text x="92" y="499" class="nodeText">goal + action history</text>
+
+    <rect x="304" y="424" width="205" height="98" rx="8" class="node"/>
+    <rect x="304" y="424" width="205" height="4" rx="2" fill="#49d6e9"/>
+    <text x="324" y="454" class="nodeTitle">Policy Actor</text>
+    <text x="324" y="478" class="nodeText">Conv1D + MLP</text>
+    <text x="324" y="499" class="nodeText">normalized action [-1, 1]</text>
+
+    <rect x="536" y="424" width="205" height="98" rx="8" class="node"/>
+    <rect x="536" y="424" width="205" height="4" rx="2" fill="#49d6e9"/>
+    <text x="556" y="454" class="nodeTitle">Control Mapping</text>
+    <text x="556" y="478" class="nodeText">signed speed</text>
+    <text x="556" y="499" class="nodeText">speed-aware steering limit</text>
+
+    <rect x="72" y="588" width="205" height="98" rx="8" class="node"/>
+    <rect x="72" y="588" width="205" height="4" rx="2" fill="#e88bff"/>
+    <text x="92" y="618" class="nodeTitle">Reward + Terminal</text>
+    <text x="92" y="642" class="nodeText">progress &#8226; clearance &#8226; smoothness</text>
+    <text x="92" y="663" class="nodeText">goal &#8226; collision &#8226; timeout</text>
+
+    <rect x="304" y="588" width="205" height="98" rx="8" class="node"/>
+    <rect x="304" y="588" width="205" height="4" rx="2" fill="#e88bff"/>
+    <text x="324" y="618" class="nodeTitle">Prioritized Replay</text>
+    <text x="324" y="642" class="nodeText">TD-error sampling</text>
+    <text x="324" y="663" class="nodeText">importance weights</text>
+
+    <rect x="536" y="588" width="205" height="98" rx="8" class="node"/>
+    <rect x="536" y="588" width="205" height="4" rx="2" fill="#e88bff"/>
+    <text x="556" y="618" class="nodeTitle">Twin-Critic Learner</text>
+    <text x="556" y="642" class="nodeText">target networks &#8226; soft updates</text>
+    <text x="556" y="663" class="nodeText">policy + checkpoint sync</text>
+  </g>
+
+  <path d="M 277 473 L 304 473" class="cyanLine"/>
+  <path d="M 509 473 L 536 473" class="cyanLine"/>
+  <path d="M 174 522 L 174 588" class="cyanLine"/>
+  <text x="185" y="557" class="flowLabel" fill="#49d6e9">step</text>
+  <path d="M 277 637 L 304 637" class="cyanLine"/>
+  <path d="M 509 637 L 536 637" class="cyanLine"/>
+  <path d="M 638 588 C 638 548 406 560 406 522" class="cyanLine" stroke-dasharray="7 6"/>
+  <text x="522" y="550" class="flowLabel" text-anchor="middle" fill="#49d6e9">policy update</text>
+  <path d="M 685 288 C 650 334 174 334 174 424" class="cyanLine" stroke-dasharray="7 6"/>
+  <text x="375" y="348" class="flowLabel" text-anchor="middle" fill="#49d6e9">scan + odometry feedback</text>
+
+  <rect x="72" y="719" width="669" height="32" rx="8" fill="#102832" stroke="#24505c"/>
+  <text x="406" y="740" class="small" text-anchor="middle" fill="#49d6e9">OU EXPLORATION &#8226; TARGET SMOOTHING &#8226; DOMAIN RANDOMIZATION &#8226; GRADIENT CLIPPING</text>
+
+  <!-- Nav2 panel -->
+  <g filter="url(#shadow)">
+    <rect x="825" y="326" width="735" height="450" rx="8" class="panel"/>
+    <rect x="825" y="326" width="735" height="5" rx="2" fill="#ffb454"/>
+  </g>
+  <text x="857" y="367" class="eyebrow" fill="#ffb454">MODE 02 &#8226; DEPLOY</text>
+  <text x="857" y="397" class="section">Industrial Nav2 autonomy</text>
+  <text x="1527" y="367" class="small" text-anchor="end">Ackermann-aware planning and control</text>
+
+  <g>
+    <rect x="857" y="424" width="205" height="98" rx="8" class="node"/>
+    <rect x="857" y="424" width="205" height="4" rx="2" fill="#ffb454"/>
+    <text x="877" y="454" class="nodeTitle">Map + Localization</text>
+    <text x="877" y="478" class="nodeText">warehouse occupancy map</text>
+    <text x="877" y="499" class="nodeText">AMCL pose + TF</text>
+
+    <rect x="1089" y="424" width="205" height="98" rx="8" class="node"/>
+    <rect x="1089" y="424" width="205" height="4" rx="2" fill="#ffb454"/>
+    <text x="1109" y="454" class="nodeTitle">Layered Costmaps</text>
+    <text x="1109" y="478" class="nodeText">static + obstacle layers</text>
+    <text x="1109" y="499" class="nodeText">local and global prediction</text>
+
+    <rect x="1321" y="424" width="205" height="98" rx="8" class="node"/>
+    <rect x="1321" y="424" width="205" height="4" rx="2" fill="#ffb454"/>
+    <text x="1341" y="454" class="nodeTitle">Smac Hybrid-A*</text>
+    <text x="1341" y="478" class="nodeText">kinematically feasible path</text>
+    <text x="1341" y="499" class="nodeText">minimum-radius constraints</text>
+
+    <rect x="857" y="588" width="205" height="98" rx="8" class="node"/>
+    <rect x="857" y="588" width="205" height="4" rx="2" fill="#9aa8ff"/>
+    <text x="877" y="618" class="nodeTitle">Motion Predictor</text>
+    <text x="877" y="642" class="nodeText">forklift + AGV + worker</text>
+    <text x="877" y="663" class="nodeText">short-horizon swept paths</text>
+
+    <rect x="1089" y="588" width="205" height="98" rx="8" class="node"/>
+    <rect x="1089" y="588" width="205" height="4" rx="2" fill="#ffb454"/>
+    <text x="1109" y="618" class="nodeTitle">MPPI Controller</text>
+    <text x="1109" y="642" class="nodeText">Ackermann motion model</text>
+    <text x="1109" y="663" class="nodeText">trajectory sampling + critics</text>
+
+    <rect x="1321" y="588" width="205" height="98" rx="8" class="node"/>
+    <rect x="1321" y="588" width="205" height="4" rx="2" fill="#ffb454"/>
+    <text x="1341" y="618" class="nodeTitle">Velocity Smoother</text>
+    <text x="1341" y="642" class="nodeText">acceleration constraints</text>
+    <text x="1341" y="663" class="nodeText">stable /cmd_vel_nav</text>
+  </g>
+
+  <path d="M 1062 473 L 1089 473" class="amberLine"/>
+  <path d="M 1294 473 L 1321 473" class="amberLine"/>
+  <path d="M 959 588 C 959 548 1191 560 1191 522" class="amberLine" stroke-dasharray="7 6"/>
+  <text x="1075" y="550" class="flowLabel" text-anchor="middle" fill="#ffb454">predicted occupancy</text>
+  <path d="M 1423 522 C 1423 556 1248 548 1228 588" class="amberLine"/>
+  <path d="M 1191 522 L 1191 588" class="amberLine"/>
+  <path d="M 1294 637 L 1321 637" class="amberLine"/>
+  <path d="M 915 288 C 950 334 959 334 959 424" class="amberLine" stroke-dasharray="7 6"/>
+  <text x="974" y="348" class="flowLabel" fill="#ffb454">pose + sensors</text>
+
+  <rect x="857" y="719" width="669" height="32" rx="8" fill="#2a2217" stroke="#604a29"/>
+  <text x="1191" y="740" class="small" text-anchor="middle" fill="#ffb454">AMCL &#8226; BEHAVIOR TREE &#8226; DYNAMIC COSTMAPS &#8226; HYBRID-A* &#8226; MPPI</text>
+
+  <!-- Shared actuation -->
+  <path d="M 638 522 L 638 798 L 692 798 L 692 820" class="cyanLine"/>
+  <text x="650" y="797" class="flowLabel" fill="#49d6e9">speed + steering</text>
+  <path d="M 1423 686 L 1423 798 L 908 798 L 908 820" class="amberLine"/>
+  <text x="1310" y="793" class="flowLabel" text-anchor="middle" fill="#ffb454">smoothed velocity</text>
+
+  <g filter="url(#shadow)">
+    <rect x="530" y="820" width="540" height="80" rx="8" fill="#13231f" stroke="#3a7d58" stroke-width="2"/>
+    <rect x="530" y="820" width="540" height="5" rx="2" fill="#7ce38b" filter="url(#cyanGlow)"/>
+    <text x="800" y="852" class="nodeTitle" text-anchor="middle">ACKERMANN ACTUATION GATEWAY</text>
+    <text x="800" y="878" class="nodeText" text-anchor="middle">command adapter &#8226; steering bounds &#8226; V550 Gazebo drive plugin</text>
+  </g>
+  <path d="M 800 820 L 800 288" class="greenLine" stroke-dasharray="9 7"/>
+  <rect x="744" y="302" width="112" height="24" rx="8" fill="#153026" stroke="#315c44"/>
+  <text x="800" y="318" class="small" text-anchor="middle" fill="#7ce38b">/cmd_vel</text>
+
+  <g transform="translate(40 918)">
+    <circle cx="5" cy="0" r="4" fill="#49d6e9"/>
+    <text x="17" y="4" class="small">learning path</text>
+    <circle cx="132" cy="0" r="4" fill="#ffb454"/>
+    <text x="144" y="4" class="small">Nav2 path</text>
+    <circle cx="242" cy="0" r="4" fill="#7ce38b"/>
+    <text x="254" y="4" class="small">shared platform</text>
+    <text x="1520" y="4" class="small" text-anchor="end">ROS 2 Humble &#8226; Gazebo Classic &#8226; PyTorch</text>
+  </g>
+</svg>
