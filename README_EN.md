@@ -99,6 +99,20 @@ clearance, high-speed curvature, abrupt steering, stagnation, and elapsed time.
 Goals and collisions produce terminal rewards of `+200` and `-200`; timeouts add a
 configurable penalty.
 
+### TD3 neural network architecture
+
+<p align="center">
+  <a href="./docs/assets/td3-network-architecture.png">
+    <img src="./docs/assets/td3-network-architecture.png" width="100%" alt="V550 Ackermann TD3 actor, twin critics, Conv1D feature encoders, and target networks">
+  </a>
+</p>
+
+The default state is explicitly split into a `150-D` lidar sequence and `15-D`
+kinematic context. The actor and both critics use independent Conv1D encoders. The
+actor produces normalized speed and steering, while each critic fuses encoded state
+features with the action projection for target estimation, priority updates, and
+delayed policy optimization.
+
 ### Parallel training data flow
 
 <p align="center">
@@ -128,6 +142,12 @@ Nav2 publishes smoothed velocity commands on `/cmd_vel_nav`; the adapter convert
 Gazebo plugin.
 
 ## Repository Layout
+
+<p align="center">
+  <a href="./docs/assets/workspace-module-map.png">
+    <img src="./docs/assets/workspace-module-map.png" width="100%" alt="V550 Ackermann launcher scripts, TD3 Python package, robot description package, Gazebo Nav2 package, and platform dependency map">
+  </a>
+</p>
 
 ```text
 .
@@ -231,6 +251,16 @@ Run the `source` and `export` commands in every new terminal, or adapt
 `src/test.env` to your shell initialization.
 
 ## Running the Project
+
+<p align="center">
+  <a href="./docs/assets/experiment-lifecycle.png">
+    <img src="./docs/assets/experiment-lifecycle.png" width="100%" alt="V550 Ackermann workflow from environment preparation through industrial navigation, single and parallel training, evaluation, and outputs">
+  </a>
+</p>
+
+After dependency installation and the Colcon build, the same workspace can run
+industrial Nav2, single-environment TD3, parallel TD3, or standalone checkpoint
+evaluation without rebuilding.
 
 ### Industrial warehouse navigation
 

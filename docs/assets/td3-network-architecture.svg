@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="780" viewBox="0 0 1440 780" role="img" aria-labelledby="title desc">
+  <title id="title">V550 TD3 neural network architecture</title>
+  <desc id="desc">The default 165-dimensional state is split into 150 lidar values and 15 kinematic values, encoded by Conv1D layers, and processed by an actor and two independent critic branches with target networks.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#d6dee8" stroke-width="1" opacity="0.64"/>
+    </pattern>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#1e293b" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#087f8c"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16803a"/>
+    </marker>
+    <style>
+      .title { font: 700 29px Inter, ui-sans-serif, system-ui, sans-serif; fill: #10243e; letter-spacing: 0; }
+      .subtitle { font: 400 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #596b80; letter-spacing: 0; }
+      .eyebrow { font: 700 12px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .heading { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .nodeTitle { font: 700 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .body { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #586b82; letter-spacing: 0; }
+      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #5f7289; letter-spacing: 0; }
+      .tiny { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; fill: #65788f; letter-spacing: 0; }
+      .label { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; paint-order: stroke fill; stroke: #f3f6fa; stroke-width: 6px; }
+      .actorFlow { fill: none; stroke: #087f8c; stroke-width: 2.5; marker-end: url(#arrowTeal); }
+      .criticFlow { fill: none; stroke: #7c3aed; stroke-width: 2.4; marker-end: url(#arrowPurple); }
+      .targetFlow { fill: none; stroke: #16803a; stroke-width: 2.3; marker-end: url(#arrowGreen); stroke-dasharray: 8 6; }
+      .panel { fill: #ffffff; stroke: #c5d1dd; stroke-width: 1.5; }
+      .node { fill: #f8fafc; stroke: #c5d1dd; stroke-width: 1.25; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="780" fill="#f3f6fa"/>
+  <rect width="1440" height="780" fill="url(#grid)"/>
+  <rect x="1" y="1" width="1438" height="778" rx="8" fill="none" stroke="#c5d1dd" stroke-width="2"/>
+
+  <g transform="translate(40 31)">
+    <rect x="0" y="2" width="5" height="62" rx="2" fill="#087f8c"/>
+    <text x="23" y="29" class="title">TD3 NEURAL ARCHITECTURE</text>
+    <text x="23" y="54" class="subtitle">Independent Conv1D encoders, kinematic fusion, twin critics, delayed policy updates, and soft targets</text>
+  </g>
+  <g transform="translate(1010 38)">
+    <rect width="104" height="31" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="52" y="20" class="small" text-anchor="middle" fill="#087f8c">ACTOR</text>
+    <rect x="114" width="116" height="31" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+    <text x="172" y="20" class="small" text-anchor="middle" fill="#7c3aed">TWIN CRITIC</text>
+    <rect x="240" width="150" height="31" rx="8" fill="#f0faf3" stroke="#93c5a3"/>
+    <text x="315" y="20" class="small" text-anchor="middle" fill="#16803a">SOFT TARGETS</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="40" y="126" width="260" height="546" rx="8" class="panel"/>
+    <rect x="40" y="126" width="260" height="5" rx="2" fill="#4959c7"/>
+  </g>
+  <text x="64" y="160" class="eyebrow" fill="#4959c7">DEFAULT STATE INPUT</text>
+  <text x="64" y="188" class="heading">165-D observation</text>
+
+  <rect x="64" y="214" width="212" height="78" rx="8" fill="#eef0fb" stroke="#b6bce9"/>
+  <text x="170" y="242" class="nodeTitle" text-anchor="middle">3 synchronized frames</text>
+  <text x="170" y="266" class="body" text-anchor="middle">normalized and finite-clamped</text>
+
+  <path d="M 170 292 L 170 326" fill="none" stroke="#4959c7" stroke-width="2"/>
+  <path d="M 170 326 L 112 326 L 112 350" fill="none" stroke="#4959c7" stroke-width="2"/>
+  <path d="M 170 326 L 228 326 L 228 350" fill="none" stroke="#4959c7" stroke-width="2"/>
+
+  <rect x="64" y="350" width="100" height="130" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="114" y="381" class="nodeTitle" text-anchor="middle">Lidar</text>
+  <text x="114" y="410" class="heading" text-anchor="middle">150-D</text>
+  <text x="114" y="437" class="tiny" text-anchor="middle">50 bins</text>
+  <text x="114" y="456" class="tiny" text-anchor="middle">x 3 frames</text>
+
+  <rect x="176" y="350" width="100" height="130" rx="8" fill="#fff7ed" stroke="#e6bd84"/>
+  <text x="226" y="381" class="nodeTitle" text-anchor="middle">Kinematics</text>
+  <text x="226" y="410" class="heading" text-anchor="middle">15-D</text>
+  <text x="226" y="437" class="tiny" text-anchor="middle">goal geometry</text>
+  <text x="226" y="456" class="tiny" text-anchor="middle">action history</text>
+
+  <rect x="64" y="514" width="212" height="70" rx="8" class="node"/>
+  <text x="170" y="542" class="nodeTitle" text-anchor="middle">Tensor layout</text>
+  <text x="170" y="566" class="small" text-anchor="middle">[batch, features]</text>
+  <rect x="64" y="608" width="212" height="38" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+  <text x="170" y="632" class="small" text-anchor="middle" fill="#4959c7">state split is explicit</text>
+
+  <!-- Actor lane -->
+  <g filter="url(#shadow)">
+    <rect x="340" y="126" width="1060" height="250" rx="8" class="panel"/>
+    <rect x="340" y="126" width="1060" height="5" rx="2" fill="#087f8c"/>
+  </g>
+  <text x="364" y="160" class="eyebrow" fill="#087f8c">POLICY ACTOR</text>
+  <text x="364" y="188" class="heading">State to normalized Ackermann action</text>
+
+  <rect x="364" y="214" width="150" height="112" rx="8" class="node"/>
+  <text x="439" y="242" class="nodeTitle" text-anchor="middle">Conv1D + LN</text>
+  <text x="439" y="268" class="body" text-anchor="middle">1 x 150 &#8594; 32 x 75</text>
+  <text x="439" y="291" class="tiny" text-anchor="middle">kernel 5 &#8226; stride 2 &#8226; Mish</text>
+
+  <rect x="544" y="214" width="150" height="112" rx="8" class="node"/>
+  <text x="619" y="242" class="nodeTitle" text-anchor="middle">Conv1D + LN</text>
+  <text x="619" y="268" class="body" text-anchor="middle">32 x 75 &#8594; 64 x 38</text>
+  <text x="619" y="291" class="tiny" text-anchor="middle">kernel 3 &#8226; stride 2 &#8226; Mish</text>
+
+  <rect x="724" y="214" width="160" height="112" rx="8" fill="#fff7ed" stroke="#e6bd84"/>
+  <text x="804" y="242" class="nodeTitle" text-anchor="middle">Feature Fusion</text>
+  <text x="804" y="268" class="body" text-anchor="middle">2432 lidar + 15 kin</text>
+  <text x="804" y="291" class="small" text-anchor="middle" fill="#b85f00">2447-D</text>
+
+  <rect x="914" y="214" width="180" height="112" rx="8" class="node"/>
+  <text x="1004" y="242" class="nodeTitle" text-anchor="middle">Policy MLP</text>
+  <text x="1004" y="268" class="body" text-anchor="middle">2447 &#8594; 512 &#8594; 512</text>
+  <text x="1004" y="291" class="tiny" text-anchor="middle">LayerNorm + Mish</text>
+
+  <rect x="1124" y="214" width="246" height="112" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="1247" y="242" class="nodeTitle" text-anchor="middle">Tanh Action Head</text>
+  <text x="1247" y="268" class="body" text-anchor="middle">linear command + steering command</text>
+  <text x="1247" y="292" class="small" text-anchor="middle" fill="#087f8c">2-D in [-1, 1]</text>
+
+  <path d="M 300 404 L 320 404 L 320 270 L 364 270" class="actorFlow"/>
+  <path d="M 514 270 L 544 270" class="actorFlow"/>
+  <path d="M 694 270 L 724 270" class="actorFlow"/>
+  <path d="M 300 438 L 324 438 L 324 344 L 804 344 L 804 326" class="actorFlow"/>
+  <text x="566" y="357" class="label" text-anchor="middle" fill="#087f8c">15-D kinematic bypass</text>
+  <path d="M 884 270 L 914 270" class="actorFlow"/>
+  <path d="M 1094 270 L 1124 270" class="actorFlow"/>
+
+  <!-- Critic lane -->
+  <g filter="url(#shadow)">
+    <rect x="340" y="408" width="1060" height="264" rx="8" class="panel"/>
+    <rect x="340" y="408" width="1060" height="5" rx="2" fill="#7c3aed"/>
+  </g>
+  <text x="364" y="442" class="eyebrow" fill="#7c3aed">TWIN VALUE ESTIMATORS</text>
+  <text x="364" y="470" class="heading">Two independent state-action critics</text>
+
+  <rect x="364" y="496" width="190" height="126" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+  <text x="459" y="525" class="nodeTitle" text-anchor="middle">Independent Encoders</text>
+  <text x="459" y="550" class="body" text-anchor="middle">Q1 Conv1D stack</text>
+  <text x="459" y="571" class="body" text-anchor="middle">Q2 Conv1D stack</text>
+  <text x="459" y="597" class="tiny" text-anchor="middle">same shape &#8226; separate weights</text>
+
+  <rect x="584" y="496" width="178" height="126" rx="8" class="node"/>
+  <text x="673" y="525" class="nodeTitle" text-anchor="middle">State Features</text>
+  <text x="673" y="550" class="body" text-anchor="middle">2447 &#8594; 512</text>
+  <rect x="616" y="574" width="114" height="28" rx="7" fill="#fff3e3" stroke="#e2ba80"/>
+  <text x="673" y="592" class="tiny" text-anchor="middle" fill="#b85f00">action 2 &#8594; 512</text>
+
+  <rect x="792" y="486" width="214" height="66" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+  <text x="899" y="513" class="nodeTitle" text-anchor="middle">Critic Q1</text>
+  <text x="899" y="536" class="body" text-anchor="middle">sum &#8594; LN + Mish &#8594; scalar</text>
+  <rect x="792" y="566" width="214" height="66" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+  <text x="899" y="593" class="nodeTitle" text-anchor="middle">Critic Q2</text>
+  <text x="899" y="616" class="body" text-anchor="middle">sum &#8594; LN + Mish &#8594; scalar</text>
+
+  <rect x="1036" y="486" width="334" height="146" rx="8" class="node"/>
+  <text x="1203" y="515" class="nodeTitle" text-anchor="middle">TD3 Optimization</text>
+  <text x="1203" y="541" class="body" text-anchor="middle">min(Q1, Q2) target + policy smoothing</text>
+  <text x="1203" y="563" class="body" text-anchor="middle">weighted TD loss + priority feedback</text>
+  <text x="1203" y="585" class="body" text-anchor="middle">actor update every 2 critic updates</text>
+  <rect x="1095" y="599" width="216" height="20" rx="5" fill="#e4dcf8"/>
+  <text x="1203" y="613" class="tiny" text-anchor="middle" fill="#7c3aed">gradient norm clipped to 10.0</text>
+
+  <path d="M 300 438 L 320 438 L 320 559 L 364 559" class="criticFlow"/>
+  <path d="M 554 559 L 584 559" class="criticFlow"/>
+  <path d="M 762 535 L 792 519" class="criticFlow"/>
+  <path d="M 762 583 L 792 599" class="criticFlow"/>
+  <path d="M 1006 519 L 1036 535" class="criticFlow"/>
+  <path d="M 1006 599 L 1036 583" class="criticFlow"/>
+
+  <rect x="40" y="710" width="1360" height="38" rx="8" fill="#eaf8ee" stroke="#93c5a3"/>
+  <text x="720" y="734" class="small" text-anchor="middle" fill="#16803a">Actor target + critic target &#8226; Polyak soft update with tau &#8226; resumable optimizer and trainer state</text>
+  <path d="M 1247 326 L 1247 392 L 1322 392 L 1322 710" class="targetFlow"/>
+  <path d="M 1203 632 L 1203 690 L 1110 690 L 1110 710" class="targetFlow"/>
+</svg>

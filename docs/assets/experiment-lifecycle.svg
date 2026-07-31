@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="800" viewBox="0 0 1440 800" role="img" aria-labelledby="title desc">
+  <title id="title">V550 experiment lifecycle and runtime selection</title>
+  <desc id="desc">A practical workflow from dependency installation and Colcon build to industrial Nav2, single-environment TD3, parallel TD3, checkpoint evaluation, visualization, and reproducible artifacts.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#d6dee8" stroke-width="1" opacity="0.64"/>
+    </pattern>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#1e293b" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4959c7"/>
+    </marker>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#087f8c"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b85f00"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16803a"/>
+    </marker>
+    <style>
+      .title { font: 700 29px Inter, ui-sans-serif, system-ui, sans-serif; fill: #10243e; letter-spacing: 0; }
+      .subtitle { font: 400 14px Inter, ui-sans-serif, system-ui, sans-serif; fill: #596b80; letter-spacing: 0; }
+      .eyebrow { font: 700 12px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; }
+      .heading { font: 700 19px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .nodeTitle { font: 700 15px Inter, ui-sans-serif, system-ui, sans-serif; fill: #182a42; letter-spacing: 0; }
+      .body { font: 400 12px Inter, ui-sans-serif, system-ui, sans-serif; fill: #586b82; letter-spacing: 0; }
+      .small { font: 600 11px Inter, ui-sans-serif, system-ui, sans-serif; fill: #5f7289; letter-spacing: 0; }
+      .tiny { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; fill: #65788f; letter-spacing: 0; }
+      .label { font: 600 10px Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; paint-order: stroke fill; stroke: #f3f6fa; stroke-width: 6px; }
+      .prepare { fill: none; stroke: #4959c7; stroke-width: 2.5; marker-end: url(#arrowBlue); }
+      .industrial { fill: none; stroke: #b85f00; stroke-width: 2.4; marker-end: url(#arrowAmber); }
+      .single { fill: none; stroke: #087f8c; stroke-width: 2.4; marker-end: url(#arrowTeal); }
+      .parallel { fill: none; stroke: #7c3aed; stroke-width: 2.4; marker-end: url(#arrowPurple); }
+      .result { fill: none; stroke: #16803a; stroke-width: 2.3; marker-end: url(#arrowGreen); stroke-dasharray: 8 6; }
+      .panel { fill: #ffffff; stroke: #c5d1dd; stroke-width: 1.5; }
+      .node { fill: #f8fafc; stroke: #c5d1dd; stroke-width: 1.25; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="800" fill="#f3f6fa"/>
+  <rect width="1440" height="800" fill="url(#grid)"/>
+  <rect x="1" y="1" width="1438" height="798" rx="8" fill="none" stroke="#c5d1dd" stroke-width="2"/>
+
+  <g transform="translate(40 31)">
+    <rect x="0" y="2" width="5" height="62" rx="2" fill="#4959c7"/>
+    <text x="23" y="29" class="title">EXPERIMENT LIFECYCLE</text>
+    <text x="23" y="54" class="subtitle">From a clean checkout to navigation, training, evaluation, metrics, and reusable V550 checkpoints</text>
+  </g>
+  <g transform="translate(1018 38)">
+    <rect width="108" height="31" rx="8" fill="#eef0fb" stroke="#b6bce9"/>
+    <text x="54" y="20" class="small" text-anchor="middle" fill="#4959c7">PREPARE</text>
+    <rect x="118" width="128" height="31" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+    <text x="182" y="20" class="small" text-anchor="middle" fill="#087f8c">RUN</text>
+    <rect x="256" width="126" height="31" rx="8" fill="#f0faf3" stroke="#93c5a3"/>
+    <text x="319" y="20" class="small" text-anchor="middle" fill="#16803a">MEASURE</text>
+  </g>
+
+  <!-- Preparation sequence -->
+  <text x="40" y="126" class="eyebrow" fill="#4959c7">ONE-TIME WORKSPACE PREPARATION</text>
+  <g filter="url(#shadow)">
+    <rect x="40" y="146" width="286" height="116" rx="8" class="panel"/>
+    <rect x="40" y="146" width="286" height="5" rx="2" fill="#4959c7"/>
+    <rect x="368" y="146" width="286" height="116" rx="8" class="panel"/>
+    <rect x="368" y="146" width="286" height="5" rx="2" fill="#4959c7"/>
+    <rect x="696" y="146" width="286" height="116" rx="8" class="panel"/>
+    <rect x="696" y="146" width="286" height="5" rx="2" fill="#4959c7"/>
+    <rect x="1024" y="146" width="376" height="116" rx="8" class="panel"/>
+    <rect x="1024" y="146" width="376" height="5" rx="2" fill="#16803a"/>
+  </g>
+  <text x="64" y="180" class="nodeTitle">1. Clone + system dependencies</text>
+  <text x="64" y="205" class="body">ROS 2 Humble &#8226; Gazebo &#8226; Nav2</text>
+  <text x="64" y="230" class="tiny">git clone + rosdep install</text>
+  <text x="392" y="180" class="nodeTitle">2. Python environment</text>
+  <text x="392" y="205" class="body">Python 3.10 + locked Poetry packages</text>
+  <text x="392" y="230" class="tiny">venv with ROS system site packages</text>
+  <text x="720" y="180" class="nodeTitle">3. Build + source</text>
+  <text x="720" y="205" class="body">colcon build --symlink-install</text>
+  <text x="720" y="230" class="tiny">source ROS and install/setup.bash</text>
+  <text x="1048" y="180" class="nodeTitle">4. Runtime readiness</text>
+  <text x="1048" y="205" class="body">models, services, topics, TF, and sensor streams</text>
+  <text x="1048" y="230" class="tiny">launchers wait for Gazebo before starting control</text>
+  <path d="M 326 204 L 368 204" class="prepare"/>
+  <path d="M 654 204 L 696 204" class="prepare"/>
+  <path d="M 982 204 L 1024 204" class="prepare"/>
+
+  <!-- Runtime choice bus -->
+  <path d="M 1212 262 L 1212 302 L 184 302 L 184 342" class="prepare"/>
+  <path d="M 530 302 L 530 342" class="prepare"/>
+  <path d="M 876 302 L 876 342" class="prepare"/>
+  <path d="M 1222 302 L 1222 342" class="prepare"/>
+  <text x="700" y="294" class="label" text-anchor="middle" fill="#4959c7">select a workflow without rebuilding the workspace</text>
+
+  <!-- Four runtime modes -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="342" width="302" height="310" rx="8" class="panel"/>
+    <rect x="40" y="342" width="302" height="5" rx="2" fill="#b85f00"/>
+    <rect x="386" y="342" width="302" height="310" rx="8" class="panel"/>
+    <rect x="386" y="342" width="302" height="5" rx="2" fill="#087f8c"/>
+    <rect x="732" y="342" width="302" height="310" rx="8" class="panel"/>
+    <rect x="732" y="342" width="302" height="5" rx="2" fill="#7c3aed"/>
+    <rect x="1078" y="342" width="322" height="310" rx="8" class="panel"/>
+    <rect x="1078" y="342" width="322" height="5" rx="2" fill="#16803a"/>
+  </g>
+
+  <text x="64" y="378" class="eyebrow" fill="#b85f00">INDUSTRIAL AUTONOMY</text>
+  <text x="64" y="406" class="heading">Nav2 demonstration</text>
+  <rect x="64" y="430" width="254" height="50" rx="8" fill="#fff7ed" stroke="#e6bd84"/>
+  <text x="191" y="460" class="small" text-anchor="middle" fill="#b85f00">./run_industrial_nav2.sh</text>
+  <rect x="64" y="504" width="254" height="76" rx="8" class="node"/>
+  <text x="191" y="531" class="nodeTitle" text-anchor="middle">Gazebo + Nav2 + RViz</text>
+  <text x="191" y="555" class="body" text-anchor="middle">dynamic warehouse navigation</text>
+  <rect x="64" y="598" width="254" height="30" rx="7" fill="#fff3e3" stroke="#e2ba80"/>
+  <text x="191" y="618" class="tiny" text-anchor="middle" fill="#b85f00">pose, path, traffic, costmaps</text>
+  <path d="M 191 480 L 191 504" class="industrial"/>
+
+  <text x="410" y="378" class="eyebrow" fill="#087f8c">LOCAL RESEARCH LOOP</text>
+  <text x="410" y="406" class="heading">Single TD3 training</text>
+  <rect x="410" y="430" width="254" height="50" rx="8" fill="#e8f6f7" stroke="#9dcfd4"/>
+  <text x="537" y="460" class="small" text-anchor="middle" fill="#087f8c">./run_single_train.sh</text>
+  <rect x="410" y="504" width="254" height="76" rx="8" class="node"/>
+  <text x="537" y="531" class="nodeTitle" text-anchor="middle">Domain 1</text>
+  <text x="537" y="555" class="body" text-anchor="middle">one environment + one trainer</text>
+  <rect x="410" y="598" width="254" height="30" rx="7" fill="#d8f0f2" stroke="#9dcfd4"/>
+  <text x="537" y="618" class="tiny" text-anchor="middle" fill="#087f8c">interactive debugging + checkpoints</text>
+  <path d="M 537 480 L 537 504" class="single"/>
+
+  <text x="756" y="378" class="eyebrow" fill="#7c3aed">THROUGHPUT MODE</text>
+  <text x="756" y="406" class="heading">Parallel TD3 training</text>
+  <rect x="756" y="430" width="254" height="50" rx="8" fill="#f2effd" stroke="#c5b5ed"/>
+  <text x="883" y="460" class="small" text-anchor="middle" fill="#7c3aed">NUM_WORKERS=N ./run_multi_train.sh</text>
+  <rect x="756" y="504" width="254" height="76" rx="8" class="node"/>
+  <text x="883" y="531" class="nodeTitle" text-anchor="middle">Domains 1..N + 99</text>
+  <text x="883" y="555" class="body" text-anchor="middle">samplers + learner + evaluator</text>
+  <rect x="756" y="598" width="254" height="30" rx="7" fill="#e4dcf8" stroke="#c5b5ed"/>
+  <text x="883" y="618" class="tiny" text-anchor="middle" fill="#7c3aed">best-policy selection + resume state</text>
+  <path d="M 883 480 L 883 504" class="parallel"/>
+
+  <text x="1102" y="378" class="eyebrow" fill="#16803a">REPRODUCIBLE REPORTING</text>
+  <text x="1102" y="406" class="heading">Evaluate and inspect</text>
+  <rect x="1102" y="430" width="274" height="50" rx="8" fill="#eaf8ee" stroke="#93c5a3"/>
+  <text x="1239" y="460" class="small" text-anchor="middle" fill="#16803a">./run_td3_test.sh</text>
+  <rect x="1102" y="504" width="274" height="76" rx="8" class="node"/>
+  <text x="1239" y="531" class="nodeTitle" text-anchor="middle">Fixed evaluation scenarios</text>
+  <text x="1239" y="555" class="body" text-anchor="middle">deterministic actor + trajectory markers</text>
+  <rect x="1102" y="598" width="274" height="30" rx="7" fill="#d9f0e0" stroke="#93c5a3"/>
+  <text x="1239" y="618" class="tiny" text-anchor="middle" fill="#16803a">CSV / JSON + TensorBoard</text>
+  <path d="M 1239 480 L 1239 504" class="result"/>
+
+  <!-- Training results feed evaluation along an unobstructed lower bus. -->
+  <path d="M 537 628 L 537 678 L 1060 678 L 1060 550 L 1102 550" class="result"/>
+  <path d="M 883 628 L 883 678" class="result"/>
+  <text x="798" y="694" class="label" text-anchor="middle" fill="#16803a">current or best checkpoint</text>
+
+  <rect x="40" y="724" width="1360" height="40" rx="8" fill="#ffffff" stroke="#c5d1dd"/>
+  <text x="720" y="749" class="small" text-anchor="middle">Reusable outputs: actor / critic / target / trainer checkpoints &#8226; evaluation summaries &#8226; trajectories &#8226; logs &#8226; learning curves</text>
+</svg>

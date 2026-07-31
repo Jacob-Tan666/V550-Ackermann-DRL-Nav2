@@ -68,6 +68,16 @@ TD3 与 Nav2 两条自主导航路径共享同一套 V550 传感器、运动学�
 
 奖励函数综合目标距离进展、运动方向一致性与安全间距，并对高速大曲率、突变转向、停滞和时间消耗施加惩罚。到达目标和发生碰撞对应 `+200` 与 `-200` 的终止奖励，超时惩罚可通过环境变量配置。
 
+### TD3 神经网络结构
+
+<p align="center">
+  <a href="./docs/assets/td3-network-architecture.png">
+    <img src="./docs/assets/td3-network-architecture.png" width="100%" alt="V550 Ackermann TD3 Actor、双 Critic、Conv1D 特征编码和目标网络结构图">
+  </a>
+</p>
+
+默认状态会被显式拆分为 `150-D` 雷达序列和 `15-D` 运动学量。Actor 与两个 Critic 分别使用独立的 Conv1D 编码器；Actor 输出归一化速度与转向动作，双 Critic 则将状态特征与动作投影融合，用于目标值计算、优先级更新和延迟策略优化。
+
 ### 并行训练数据流
 
 <p align="center">
@@ -89,6 +99,12 @@ TD3 与 Nav2 两条自主导航路径共享同一套 V550 传感器、运动学�
 工业导航入口会启动 Gazebo、robot state publisher、AMCL、Nav2 服务、动态障碍物、速度指令转换、TF 同步、轨迹记录和 RViz。Nav2 将平滑后的速度发布到 `/cmd_vel_nav`；适配器把 `angular.z` 转换为有界转向角，再通过 `/cmd_vel` 发送给 V550 Gazebo 驱动插件。
 
 ## 目录结构
+
+<p align="center">
+  <a href="./docs/assets/workspace-module-map.png">
+    <img src="./docs/assets/workspace-module-map.png" width="100%" alt="V550 Ackermann 项目启动脚本、TD3 Python 包、机器人描述包、Gazebo Nav2 包及底层依赖关系图">
+  </a>
+</p>
 
 ```text
 .
@@ -186,6 +202,14 @@ export GAZEBO_MODEL_PATH="${GAZEBO_MODEL_PATH:+${GAZEBO_MODEL_PATH}:}$PWD/src/v5
 每次打开新终端后均需重新执行 `source` 与 `export`，也可以根据实际环境调整 `src/test.env`。
 
 ## 运行方式
+
+<p align="center">
+  <a href="./docs/assets/experiment-lifecycle.png">
+    <img src="./docs/assets/experiment-lifecycle.png" width="100%" alt="V550 Ackermann 从环境准备到工业导航、单环境训练、并行训练、模型评估与结果输出的实验流程图">
+  </a>
+</p>
+
+完成依赖安装和 Colcon 构建后，可在同一工作空间中选择工业 Nav2、单环境 TD3、并行 TD3 或独立模型评估流程，无需重新构建。
 
 ### 工业仓储导航
 
